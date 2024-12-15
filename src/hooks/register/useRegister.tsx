@@ -25,7 +25,7 @@ const useRegister = ({navigation}: any) => {
 
     const sendRegisterData = async () => {
         if (!formValues.name || !formValues.email || !formValues.password || !formValues.confirmPassword) {
-            return showToast('error', '¡Registro!', 'Todos los campos son obligatorios');
+            return showToast('error', '¡Ocurrió un error!', 'Todos los campos son obligatorios');
         }
 
         navigation.navigate("Login")

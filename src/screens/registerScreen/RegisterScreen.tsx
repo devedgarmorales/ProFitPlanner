@@ -173,7 +173,6 @@ const styles = StyleSheet.create({
         textDecorationLine: "underline",
     },
     containerInput: {
-        width: "90%",
         borderRadius: 8,
         backgroundColor: "#fff",
         marginTop: 15

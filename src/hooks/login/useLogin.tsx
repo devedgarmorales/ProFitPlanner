@@ -46,7 +46,7 @@ const useLogin = () => {
 
         if (!email || !password) {
             return showToast(
-                'error', 'Ocurrió un error', 'Los campos son requeridos'
+                'error', '¡Ocurrió un error!', 'Los campos son requeridos'
             );
         }
         const body = {
