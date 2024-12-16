@@ -1,8 +1,7 @@
 import useFolderStore from "../../store/folderStore.tsx";
-import {Dimensions, FlatList, Image, StyleSheet, Text, View} from "react-native";
+import {FlatList, Image, StyleSheet, Text, View} from "react-native";
 import DropShadow from "react-native-drop-shadow";
 
-const screenWidth = Dimensions.get('window').width;
 // @ts-ignore
 const CardItem = ({image, title}) => (
     <View style={styles.card}>
@@ -32,7 +31,7 @@ const FolderDetail = () => {
                 data={dataFolders}
                 keyExtractor={(_, index) => index.toString()}
                 numColumns={2}
-                renderItem={({ item }) => (
+                renderItem={({item}) => (
                     <DropShadow
                         style={styles.shadow}
                     >

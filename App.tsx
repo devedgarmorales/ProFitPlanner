@@ -55,7 +55,7 @@ function App() {
     return (
         <>
             <NavigationContainer>
-                <Stack.Navigator initialRouteName="DashboardTabs">
+                <Stack.Navigator initialRouteName="Welcome">
                     <Stack.Screen
                         name="Welcome"
                         component={WelcomeScreen}
