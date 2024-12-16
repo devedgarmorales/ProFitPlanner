@@ -2,9 +2,9 @@ import * as React from "react";
 import {NavigationContainer} from "@react-navigation/native";
 import {createNativeStackNavigator} from "@react-navigation/native-stack";
 import WelcomeScreen from "./src/screens/welcomeScreen/WelcomeScreen";
-import LoginScreen from "./src/screens/loginScreen/LoginScreen";
-import RegisterScreen from "./src/screens/registerScreen/RegisterScreen";
-import RecoverPassword from "./src/screens/recoverPassword/RecoverPassword";
+import LoginScreen from "./src/screens/auth/loginScreen/LoginScreen";
+import RegisterScreen from "./src/screens/auth/registerScreen/RegisterScreen";
+import RecoverPassword from "./src/screens/auth/recoverPassword/RecoverPassword";
 import BottomTabs from "./src/navigate/BottomTabs";
 import {RootStackParamList} from "./src/types/types";
 import Toast, {BaseToast, ErrorToast} from 'react-native-toast-message';
@@ -18,8 +18,8 @@ const toastConfig = {
     success: (props: any) => (
         <BaseToast
             {...props}
-            style={{ borderLeftColor: 'green' }}
-            contentContainerStyle={{ paddingHorizontal: 15 }}
+            style={{borderLeftColor: 'green'}}
+            contentContainerStyle={{paddingHorizontal: 15}}
             text1Style={{
                 fontSize: 17,
             }}
@@ -42,7 +42,7 @@ const toastConfig = {
 };
 
 function App() {
-    const { position } = useToastStore();
+    const {position} = useToastStore();
 
     React.useEffect(() => {
         Orientation.lockToPortrait();
@@ -55,7 +55,7 @@ function App() {
     return (
         <>
             <NavigationContainer>
-                <Stack.Navigator initialRouteName="Welcome">
+                <Stack.Navigator initialRouteName="DashboardTabs">
                     <Stack.Screen
                         name="Welcome"
                         component={WelcomeScreen}
@@ -81,7 +81,6 @@ function App() {
                         component={BottomTabs}
                         options={{headerShown: false}}
                     />
-
                 </Stack.Navigator>
             </NavigationContainer>
             <Loader/>

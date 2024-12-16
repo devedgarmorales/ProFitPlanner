@@ -1,18 +1,18 @@
 import * as React from "react";
 import { Image, StyleSheet, View, Dimensions } from "react-native";
-import ModalLogin from "../../components/ModalLogin";
+import ModalLogin from "../../../components/ModalLogin.tsx";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { RootStackParamList } from "../../types/types";
+import { RootStackParamList } from "../../../types/types.ts";
 
 type LoginScreenProps = NativeStackScreenProps<RootStackParamList, "Login">;
 
 const LoginScreen = ({ navigation }: LoginScreenProps) => {
-  
+
   return (
     <View>
       <View style={styles.content}>
         <Image
-          source={require("../../assets/img/image.png")}
+          source={require("../../../assets/img/image.png")}
           style={styles.image}
           resizeMode="cover"
         />

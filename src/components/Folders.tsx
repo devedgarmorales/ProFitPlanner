@@ -1,5 +1,6 @@
-import {Dimensions, FlatList, Image, StyleSheet, Text, View} from "react-native";
+import {Dimensions, FlatList, Image, StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import DropShadow from "react-native-drop-shadow";
+import useFolderStore from "../store/folderStore.tsx";
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -24,8 +25,8 @@ const combineFoldersAndImages = (folders: any, images: any) => {
     }));
 };
 
-const Folders = ({dataFolders}: any) => {
-
+const Folders = ({dataFolders, navigation}: any) => {
+    const {setDataFolders} = useFolderStore();
     const images = [
         {uri: 'https://reactjs.org/logo-og.png'},
         {uri: 'https://picsum.photos/id/238/200/300'},
@@ -33,17 +34,35 @@ const Folders = ({dataFolders}: any) => {
         {uri: 'https://picsum.photos/id/240/200/300'},
         {uri: 'https://picsum.photos/id/241/200/300'},
         {uri: 'https://picsum.photos/id/242/200/300'},
+        {uri: 'https://picsum.photos/id/243/200/300'},
+        {uri: 'https://picsum.photos/id/244/200/300'},
     ];
 
     const combinedData = combineFoldersAndImages(dataFolders, images);
 
+    const handleShowMore = () => {
+        setDataFolders(combinedData);
+        navigation.navigate('FolderDetails');
+    };
+
     return (
         <View>
-            <Text style={{
-                fontSize: 26,
-                color: "black",
-                marginHorizontal: 20
-            }}>Mis Folders</Text>
+            <View style={{
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between"
+            }}>
+                <Text style={{
+                    fontSize: 26,
+                    color: "black",
+                    marginHorizontal: 20
+                }}>Mis Folders</Text>
+                {dataFolders.length > 3 && (
+                    <TouchableOpacity onPress={handleShowMore}>
+                        <Text style={styles.buttonText}>Ver Más...</Text>
+                    </TouchableOpacity>
+                )}
+            </View>
 
             {
                 dataFolders.length === 0 && (
@@ -125,6 +144,12 @@ const styles = StyleSheet.create({
         },
         shadowOpacity: 1,
         shadowRadius: 5,
+    },
+    buttonText: {
+        color: '#494949',
+        fontSize: 16,
+        fontWeight: 'bold',
+        paddingRight: 10
     },
 });
 

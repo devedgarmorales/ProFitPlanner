@@ -8,8 +8,8 @@ import {
     View,
 } from "react-native";
 import CheckBox from "@react-native-community/checkbox";
-import CustomInput from "../../components/CustomInput.tsx";
-import useRegister from "../../hooks/register/useRegister";
+import CustomInput from "../../../components/CustomInput.tsx";
+import useRegister from "../../../hooks/register/useRegister.tsx";
 
 const RegisterScreen = ({navigation}: any) => {
 
@@ -28,7 +28,7 @@ const RegisterScreen = ({navigation}: any) => {
     return (
         <View style={styles.container}>
             <Image
-                source={require("../../assets/img/backgroundVertical.png")}
+                source={require("../../../assets/img/backgroundVertical.png")}
                 style={styles.image}
                 resizeMode="cover"
             />
@@ -100,6 +100,10 @@ const RegisterScreen = ({navigation}: any) => {
                     <CheckBox
                         value={isSelected}
                         onValueChange={handleCheckboxChange}
+                        tintColors={{
+                            true: "#1a1a1a",
+                            false: "#1a1a1a",
+                        }}
                         style={styles.checkbox}
                     />
                     <Text style={styles.text}>
@@ -163,6 +167,7 @@ const styles = StyleSheet.create({
     },
     checkbox: {
         marginRight: 10,
+        color: "#1a1a1a",
     },
     text: {
         fontSize: 16,

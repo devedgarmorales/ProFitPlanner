@@ -14,13 +14,16 @@ const ActionSheetCreateFolder = forwardRef<ActionSheetRef, { navigation: any, da
         }));
 
         const handleCreateFolder = () => {
-            actionSheetRef.current?.hide(); // Cierra el ActionSheet
+            actionSheetRef.current?.hide();
             setFolderName("");
             setDataFolders([...dataFolders, {title: folderName}]);
         };
 
         return (
-            <ActionSheet ref={actionSheetRef}>
+            <ActionSheet ref={actionSheetRef} gestureEnabled={true}
+                         indicatorStyle={{
+                             width: 100,
+                         }}>
                 <View style={styles.actionSheetContent}>
                     <Text style={styles.sheetTitle}>Crear un nuevo folder</Text>
                     <View style={styles.containerInput}>
@@ -46,7 +49,7 @@ const ActionSheetCreateFolder = forwardRef<ActionSheetRef, { navigation: any, da
 
 const styles = StyleSheet.create({
     actionSheetContent: {padding: 20},
-    sheetTitle: {fontSize: 18, fontWeight: 'bold', marginBottom: 10},
+    sheetTitle: {fontSize: 18, fontWeight: 'bold', marginBottom: 10, color: "black"},
     containerInput: {flexDirection: 'row', alignItems: 'center'},
     input: {
         flex: 1,
@@ -55,6 +58,7 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         padding: 10,
         marginRight: 10,
+        color: "#4b4b4b",
     },
     createButton: {
         backgroundColor: '#007BFF',

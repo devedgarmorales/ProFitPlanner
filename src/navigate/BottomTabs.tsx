@@ -2,7 +2,7 @@ import React, {useEffect} from "react";
 import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
 import Icon from "react-native-vector-icons/Ionicons";
 import {BackHandler, Text, TouchableOpacity, View} from "react-native";
-import DashboardScreen from "../screens/dashboardScreen/DashboardScreen.tsx";
+import DashboardStack from "../stack/DashboardStack.tsx";
 import {MMKV} from "react-native-mmkv";
 import {showToast} from "../service/toast.tsx";
 import authFunctions from "../service/auth/authFunctions.tsx";
@@ -133,7 +133,7 @@ export default function BottomTabs() {
                 headerShown: false,
             })}
         >
-            <Tab.Screen name="Inicio" component={DashboardScreen}/>
+            <Tab.Screen name="Inicio" component={DashboardStack}/>
             <Tab.Screen name="Entrenamientos" component={WorkoutScreen}/>
             <Tab.Screen name="Historial" component={HistoryScreen}/>
             <Tab.Screen name="Perfil" component={ProfileScreen}/>

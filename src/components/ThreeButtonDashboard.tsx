@@ -1,4 +1,4 @@
-import {useEffect, useRef, useState} from "react";
+import {useRef, useState} from "react";
 import {StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import {ActionSheetRef} from "react-native-actions-sheet";
 import Separator from "../components/Separator.tsx";
@@ -35,10 +35,11 @@ const ThreeButtonDashboard = ({navigation}: any) => {
                     <Separator/>
                 </View>
 
-                <Folders dataFolders={dataFolders} />
+                <Folders dataFolders={dataFolders} navigation={navigation}/>
             </View>
 
-            <ActionSheetCreateFolder ref={actionSheetRef} navigation={navigation} dataFolders={dataFolders} setDataFolders={setDataFolders}/>
+            <ActionSheetCreateFolder ref={actionSheetRef} navigation={navigation} dataFolders={dataFolders}
+                                     setDataFolders={setDataFolders}/>
         </>
     )
 };

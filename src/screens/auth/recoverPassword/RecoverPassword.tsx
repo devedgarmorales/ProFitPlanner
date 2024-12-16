@@ -6,7 +6,7 @@ import {
     StyleSheet,
     TouchableOpacity, Animated, Image, Dimensions,
 } from "react-native";
-import CustomInput from "../../components/CustomInput.tsx";
+import CustomInput from "../../../components/CustomInput.tsx";
 
 const RecoverPassword = ({navigation}: any) => {
     const [formValues, setFormValues] = useState({
@@ -31,7 +31,7 @@ const RecoverPassword = ({navigation}: any) => {
     return (
         <View style={styles.container}>
             <Image
-                source={require("../../assets/img/backgroundVertical.png")}
+                source={require("../../../assets/img/backgroundVertical.png")}
                 style={styles.image}
                 resizeMode="cover"
             />
