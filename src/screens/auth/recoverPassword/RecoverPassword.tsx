@@ -1,14 +1,28 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {
     View,
     Text,
-    TextInput,
     StyleSheet,
-    TouchableOpacity, Animated, Image, Dimensions,
+    TouchableOpacity, Image, Dimensions, Alert,
 } from "react-native";
 import CustomInput from "../../../components/CustomInput.tsx";
+import {useActionSheetStore} from "../../../store/actionSheetLoginStore.tsx";
 
 const RecoverPassword = ({navigation}: any) => {
+    const showActionSheet = useActionSheetStore((state) => state.showActionSheet);
+
+    useEffect(() => {
+        const handleBeforeRemove = () => {
+            showActionSheet();
+        };
+
+        const unsubscribe = navigation.addListener('beforeRemove', handleBeforeRemove);
+
+        return () => {
+            unsubscribe();
+        };
+    }, [navigation]);
+
     const [formValues, setFormValues] = useState({
         email: "",
     });
@@ -71,7 +85,7 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         padding: 20,
-        backgroundColor: "#fff", // Fondo claro
+        backgroundColor: "#fff",
     },
     image: {
         position: "absolute",

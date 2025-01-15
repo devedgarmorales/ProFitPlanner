@@ -1,65 +1,90 @@
-import React, {useEffect} from "react";
+import React from "react";
 import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
 import Icon from "react-native-vector-icons/Ionicons";
-import {BackHandler, Text, TouchableOpacity, View} from "react-native";
+import {Text, TouchableOpacity, View} from "react-native";
 import DashboardStack from "../stack/DashboardStack.tsx";
 import {MMKV} from "react-native-mmkv";
 import {showToast} from "../service/toast.tsx";
 import authFunctions from "../service/auth/authFunctions.tsx";
 import useLoaderStore from "../store/loaderStore.tsx";
+import {useToastStore} from "../store/toastStore.tsx";
+import {useCheckTokenValidate} from "../utils/checkTokenValidate.tsx";
 
 const Tab = createBottomTabNavigator();
 
 const storage = new MMKV();
 
-const WorkoutScreen = () => (
-    <View style={{flex: 1, justifyContent: "center", alignItems: "center"}}>
-        <Text
-            style={{
-                fontSize: 20,
-                fontWeight: "bold",
-                color: "blue",
-            }}
-        >
-            Workout Screen
-        </Text>
-    </View>
-);
+const WorkoutScreen = () => {
 
-const HistoryScreen = () => (
-    <View style={{flex: 1, justifyContent: "center", alignItems: "center"}}>
-        <Text
-            style={{
-                fontSize: 20,
-                fontWeight: "bold",
-                color: "blue",
-            }}
-        >
-            History Screen
-        </Text>
-    </View>
-);
+    // useBackHandler(() => {
+    //     exitApp();
+    //     return true;
+    // });
+    useCheckTokenValidate();
+
+    return (
+        <View style={{flex: 1, justifyContent: "center", alignItems: "center"}}>
+            <Text
+                style={{
+                    fontSize: 20,
+                    fontWeight: "bold",
+                    color: "blue",
+                }}
+            >
+                Workout Screen
+            </Text>
+        </View>
+    )
+}
+
+const HistoryScreen = () => {
+
+    useCheckTokenValidate();
+
+    return (
+        <View style={{flex: 1, justifyContent: "center", alignItems: "center"}}>
+            <Text
+                style={{
+                    fontSize: 20,
+                    fontWeight: "bold",
+                    color: "blue",
+                }}
+            >
+                History Screen
+            </Text>
+        </View>
+    )
+}
 
 const ProfileScreen = ({navigation}: any) => {
     const {showLoader, hideLoader} = useLoaderStore();
+    const {setSizeToast, setToastPosition} = useToastStore();
+
+    useCheckTokenValidate();
 
     const handleLogout = async () => {
-        const token = storage.getString("refresh_token");
-        const tokenObject = token ? JSON.parse(token) : null;
+        const tokens = JSON.parse(storage.getString('auth_tokens') || '{}');
+        const accessToken = tokens.access;
+
         const body = {
-            "refresh_token": tokenObject,
+            "token": accessToken,
         };
 
+        setSizeToast(80);
+        setToastPosition('top');
         try {
             showLoader();
-            const res = await authFunctions.loginAndLogout("token/revoke", body, hideLoader)
-            console.log("Response", res);
+            const res = await authFunctions.loginAndLogout("token/revoke/", body, hideLoader, () => {}, () => {});
+
             const { data } = res || {};
-            //data.code === 200
+
             if (data !== undefined && data.code === 200) {
                 hideLoader();
                 showToast("success", "Sesión cerrada", "Has cerrado sesión exitosamente.");
-                navigation.navigate('Welcome');
+                navigation.reset({
+                    index: 0,
+                    routes: [{ name: "Login" }],
+                })
                 storage.clearAll();
             }
         } catch (e) {
@@ -96,17 +121,6 @@ const ProfileScreen = ({navigation}: any) => {
 }
 
 export default function BottomTabs() {
-
-    useEffect(() => {
-        const backAction = () => {
-            BackHandler.exitApp();
-            return true;
-        };
-
-        const backHandler = BackHandler.addEventListener("hardwareBackPress", backAction);
-
-        return () => backHandler.remove();
-    }, []);
 
     return (
         <Tab.Navigator

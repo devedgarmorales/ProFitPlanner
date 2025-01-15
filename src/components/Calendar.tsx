@@ -2,7 +2,6 @@ import React from 'react';
 import {View, Text, StyleSheet, FlatList} from 'react-native';
 import DropShadow from "react-native-drop-shadow";
 
-
 const actualDayNumber = new Date().getDate();
 // @ts-ignore
 const DateBadge = ({day, date}) => {
@@ -40,7 +39,7 @@ const Calendar = () => {
         <View style={styles.container}>
             <FlatList
                 data={dates}
-                keyExtractor={(item, index) => index.toString()}
+                keyExtractor={(_, index) => index.toString()}
                 horizontal
                 scrollEnabled={false}
                 showsHorizontalScrollIndicator={false}
@@ -63,12 +62,12 @@ const styles = StyleSheet.create({
         marginTop: 10,
     },
     badgeContainer: {
+        alignItems: 'center',
+        justifyContent: 'center',
         height: 80,
         borderRadius: 40,
         paddingVertical: 10,
         paddingHorizontal: 14,
-        alignItems: 'center',
-        justifyContent: 'center',
         marginRight: 4,
         shadowColor: '#000',
         shadowOffset: {width: 0, height: 4},

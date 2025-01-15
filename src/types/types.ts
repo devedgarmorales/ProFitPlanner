@@ -6,6 +6,7 @@ export type RootStackParamList = {
   Register: undefined;
   RecoverPassword: undefined;
   DashboardTabs: undefined;
+  Dashboard: undefined;
 };
 
 export type ScreenProps<T extends keyof RootStackParamList> = NativeStackScreenProps<RootStackParamList, T>;

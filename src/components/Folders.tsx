@@ -3,7 +3,6 @@ import DropShadow from "react-native-drop-shadow";
 import useFolderStore from "../store/folderStore.tsx";
 
 const screenWidth = Dimensions.get('window').width;
-
 // @ts-ignore
 const CardItem = ({image, title}) => (
     <View style={styles.card}>
@@ -19,10 +18,10 @@ const CardItem = ({image, title}) => (
 );
 
 const combineFoldersAndImages = (folders: any, images: any) => {
-    return folders.map((folder: any, index: number) => ({
+    return (folders !== undefined && folders.length > 0) ? folders.map((folder: any, index: number) => ({
         ...folder,
         image: images[index]?.uri || null,
-    }));
+    })) : [];
 };
 
 const Folders = ({dataFolders, navigation}: any) => {
@@ -57,7 +56,7 @@ const Folders = ({dataFolders, navigation}: any) => {
                     color: "black",
                     marginHorizontal: 20
                 }}>Mis Folders</Text>
-                {dataFolders.length > 3 && (
+                {(dataFolders !== undefined && dataFolders.length > 3) && (
                     <TouchableOpacity onPress={handleShowMore}>
                         <Text style={styles.buttonText}>Ver Más...</Text>
                     </TouchableOpacity>
@@ -65,7 +64,7 @@ const Folders = ({dataFolders, navigation}: any) => {
             </View>
 
             {
-                dataFolders.length === 0 && (
+                (dataFolders !== undefined && dataFolders.length === 0) && (
                     <Text style={{
                         fontSize: 22,
                         textAlign: "center",
@@ -149,7 +148,8 @@ const styles = StyleSheet.create({
         color: '#494949',
         fontSize: 16,
         fontWeight: 'bold',
-        paddingRight: 10
+        paddingRight: 10,
+        paddingTop: 10
     },
 });
 

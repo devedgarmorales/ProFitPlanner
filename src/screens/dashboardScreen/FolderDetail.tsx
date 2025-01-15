@@ -1,7 +1,12 @@
 import useFolderStore from "../../store/folderStore.tsx";
-import {FlatList, Image, StyleSheet, Text, View} from "react-native";
+import {BackHandler, FlatList, Image, StyleSheet, Text, View} from "react-native";
 import DropShadow from "react-native-drop-shadow";
+import {useEffect} from "react";
+import {useNavigation} from "@react-navigation/native";
+import {NativeStackNavigationProp} from "@react-navigation/native-stack";
+import {RootStackParamList} from "../../types/types.ts";
 
+type NavigationProps = NativeStackNavigationProp<RootStackParamList>;
 // @ts-ignore
 const CardItem = ({image, title}) => (
     <View style={styles.card}>
@@ -18,6 +23,19 @@ const CardItem = ({image, title}) => (
 
 const FolderDetail = () => {
     const {dataFolders} = useFolderStore();
+    const navigation = useNavigation<NavigationProps>();
+
+    useEffect(() => {
+        const handler = BackHandler.addEventListener(
+            'hardwareBackPress',
+            () => {
+                navigation.navigate('Dashboard');
+                return true;
+            }
+        );
+
+        return () => handler.remove();
+    }, []);
 
     return (
         <View style={styles.container}>
@@ -25,7 +43,7 @@ const FolderDetail = () => {
                 fontSize: 26,
                 color: "black",
                 marginHorizontal: 20,
-                marginTop: 20,
+                marginVertical: 20,
             }}>Mis Folders</Text>
             <FlatList
                 data={dataFolders}
@@ -52,6 +70,7 @@ const styles = StyleSheet.create({
     container: {
         backgroundColor: '#fff',
         height: '100%',
+        paddingHorizontal: 10,
     },
     shadow: {
         shadowColor: '#6c6b6b',
@@ -69,11 +88,10 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
     },
     card: {
-        aspectRatio: 1,
-        borderRadius: 24,
+        width: 160,
+        height: 160,
+        borderRadius: 10,
         overflow: 'hidden',
-        marginTop: 6,
-        position: 'relative',
     },
     image: {
         width: '100%',

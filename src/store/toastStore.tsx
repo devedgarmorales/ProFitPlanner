@@ -5,10 +5,12 @@ interface ToastStore {
     toastConfig: any;
     setToastPosition: (position: 'top' | 'bottom') => void;
     setToastConfig: (config: any) => void;
+    sizeToast: number;
+    setSizeToast: (size: number) => void;
 }
 
 export const useToastStore = create<ToastStore>((set) => ({
-    position: 'top', // valor por defecto
+    position: 'top',
     toastConfig: {
         success: {
             backgroundColor: 'green',
@@ -21,4 +23,6 @@ export const useToastStore = create<ToastStore>((set) => ({
     },
     setToastPosition: (position) => set({ position }),
     setToastConfig: (config) => set({ toastConfig: config }),
+    sizeToast: 80,
+    setSizeToast: (size) => set({ sizeToast: size }),
 }));

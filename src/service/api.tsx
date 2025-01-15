@@ -1,65 +1,75 @@
 import axios from 'axios';
 import Config from 'react-native-config';
 import {showToast} from "./toast.tsx";
+import {MMKV} from "react-native-mmkv";
+
+const storage = new MMKV();
 
 const api = axios.create({
     baseURL: Config.BASE_URL_API,
-    timeout: 10000,
+    timeout: 5000,
     headers: {
         'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'Access-Control-Allow-Origin': '*',
     },
 });
 
 api.interceptors.request.use(
     (config) => {
-        // const token = storage.getString("refresh_token");
-        // const tokenObject = token ? JSON.parse(token) : null;
-        // console.log("Token interceptors:", tokenObject);
-        // if (tokenObject && config.url !== "token/revoke") {
-        //     console.log("entra  la condicion:", tokenObject);
-        //     config.headers['Authorization'] = `Bearer ${tokenObject}`;
-        // }
+        const tokens = JSON.parse(storage.getString("auth_tokens") || "{}");
+        const accessToken = tokens?.access;
+        if (accessToken) {
+            config.headers['Authorization'] = `Bearer ${accessToken}`;
+        }
+
+        console.log('Headers de la petición:', config.headers);
         return config;
     },
     (error) => {
-        console.error('Request error:', error);
         return Promise.reject(error);
     }
 );
 
 api.interceptors.response.use(
     (response) => {
-        // You can process the response globally here
+        console.log('Respuesta de la petición:', response.data);
         return response;
     },
     (error) => {
-        // Handle global response errors
-        //console.error('Response error:', error);
+        console.log('Error en la petición:', error);
         return Promise.reject(error);
     }
 );
 
-const handleApiError = (error: any, hideLoader: any) => {
+const handleApiError = (error: any, hideLoader: any, showActionSheet: any, showModal: any) => {
     if (axios.isAxiosError(error)) {
+        console.log("error", error)
         const status = error.response?.status;
         const resError = error.response?.data || {};
 
         switch (status) {
             case 400:
-                showToast(
-                    'error',
-                    '¡Ocurrió un error!',
-                    resError.password || resError.message || 'Solicitud incorrecta (400)'
-                );
+                //console.error('Solicitud incorrecta (400):', resError);
+                const errorMessage =
+                    resError?.password ? `Contraseña: ${resError.password}` :
+                        resError?.message ? resError.message :
+                            resError?.username ? `Usuario: ${resError.username}` :
+                                'Solicitud incorrecta (400)';
+
+                showToast('error', '¡Ocurrió un error!', errorMessage);
                 hideLoader && hideLoader();
                 break;
             case 401:
-                console.error('401 No autorizado (401):', resError);
+                //console.error('No autorizado (401):', resError.detail);
+                showToast(
+                    'error',
+                    '¡Ocurrió un error!',
+                    resError.detail || 'No autorizado (401)'
+                )
+                hideLoader && hideLoader();
+                showActionSheet && showActionSheet();
                 break;
             case 403:
-                console.error('403 No autorizado (403):', resError);
+                //console.error('No autorizado (403):', resError);
                 showToast(
                     'error',
                     '¡Ocurrió un error!',
@@ -71,23 +81,41 @@ const handleApiError = (error: any, hideLoader: any) => {
                 console.error('No encontrado (404):', resError);
                 break;
             case 500:
-                console.error('Error interno del servidor (500):', resError);
+                //console.error('Error interno del servidor (500):', resError);
+                if (resError.message === 'Error interno del servidor: Token is invalid or expired') {
+                    showModal && showModal();
+                }
                 break;
             default:
                 hideLoader && hideLoader();
-                console.error('Error desconocido:', resError || error.message);
+                showActionSheet && showActionSheet();
+                //console.error('Error en el servidor:', resError || error.message);
+                showToast(
+                    'error',
+                    '¡Ocurrió un error!',
+                    resError.message || 'Error en el servidor'
+                );
         }
     } else {
         console.error('Error no relacionado con Axios:', error.message);
     }
 };
 
-export const makePostRequest = async (endpoint = "", body = {}, hideLoader: () => void) => {
+export const makeGetRequest = async (endpoint = "", hideLoader: () => void, showActionSheet: () => void, showModal: () => void) => {
+    try {
+        const response = await api.get(endpoint);
+        return {data: response.data};
+    } catch (error) {
+        handleApiError(error, hideLoader, showActionSheet, showModal);
+    }
+}
+
+export const makePostRequest = async (endpoint = "", body = {}, hideLoader: () => void, showActionSheet: () => void, showModal: () => void) => {
     try {
         const response = await api.post(endpoint, body);
         return {data: response.data};
     } catch (error) {
-        handleApiError(error, hideLoader);
+        handleApiError(error, hideLoader, showActionSheet, showModal);
     }
 };
 

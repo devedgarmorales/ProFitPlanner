@@ -1,9 +1,13 @@
-import {useRef, useState} from "react";
+import React, {useRef, useState} from "react";
 import {StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import {ActionSheetRef} from "react-native-actions-sheet";
 import Separator from "../components/Separator.tsx";
 import Folders from "../components/Folders.tsx";
 import ActionSheetCreateFolder from "./actionSheet/ActionSheetCreateFolder.tsx";
+import {useToastStore} from "../store/toastStore.tsx";
+import routinesFunctions from "../service/routines/routinesFunctions.tsx";
+import useUpdateToken from "../store/updateTokenRefresh.tsx";
+import {useFocusEffect} from "@react-navigation/native";
 
 const ThreeButtonDashboard = ({navigation}: any) => {
     const actionSheetRef = useRef<ActionSheetRef>(null);
@@ -11,6 +15,49 @@ const ThreeButtonDashboard = ({navigation}: any) => {
     const activateActionSheet = () => {
         actionSheetRef.current?.show();
     };
+    const {setSizeToast, setToastPosition} = useToastStore();
+    const {update, stopUpdate} = useUpdateToken();
+
+    const petition = async () => {
+        if (!update) {
+            stopUpdate();
+        }
+
+        await routinesFunctions.getFolders("routines/folders/", () => {
+        }, () => {
+        }, () => {
+        }, () => {
+        }).then((res: any) => {
+            //const {data} = res;
+
+            if (res) {
+                setSizeToast(240);
+                setToastPosition("top");
+                setDataFolders(res?.data);
+            }
+
+        });
+    }
+
+    useFocusEffect(
+        React.useCallback(() => {
+            setTimeout(() => {
+                petition().then();
+            }, 1500);
+
+            return () => {
+
+            };
+        }, [])
+    );
+
+    React.useEffect(() => {
+        if (update) {
+            setTimeout(() => {
+                petition().then();
+            }, 1500);
+        }
+    }, [update]);
 
     return (
         <>

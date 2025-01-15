@@ -1,10 +1,13 @@
-import React, {useState} from "react";
-import {useFocusEffect} from '@react-navigation/native';
+import {useEffect, useState, useRef} from "react";
+import {BackHandler, Keyboard} from "react-native";
+import {ActionSheetRef} from "react-native-actions-sheet";
 import authFunctions from "../../service/auth/authFunctions.tsx";
 import {MMKV} from 'react-native-mmkv';
 import useLoaderStore from "../../store/loaderStore.tsx";
 import {useToastStore} from "../../store/toastStore.tsx";
 import {showToast} from "../../service/toast.tsx";
+import {useActionSheetStore} from "../../store/actionSheetLoginStore.tsx";
+import axios from "axios";
 
 const useLogin = () => {
     const storage = new MMKV();
@@ -14,12 +17,13 @@ const useLogin = () => {
         email: "",
         password: "",
     });
-    const [isModalVisible, setModalVisible] = useState(true);
     const {showLoader, hideLoader} = useLoaderStore();
-    const {setToastPosition} = useToastStore();
+    const {setToastPosition, setSizeToast} = useToastStore();
+
+    const actionSheetRef = useRef<ActionSheetRef>(null);
+    const setActionSheetRef = useActionSheetStore((state) => state.setActionSheetRef);
 
     const unMount = () => {
-        setModalVisible(false);
         setFormValues({
             name: "",
             email: "",
@@ -27,12 +31,25 @@ const useLogin = () => {
         })
     };
 
-    useFocusEffect(
-        React.useCallback(() => {
-            setModalVisible(true);
-            return () => unMount();
-        }, [])
-    );
+    useEffect(() => {
+        const backAction = () => {
+            showActionSheet();
+            unMount();
+            return false;
+        };
+
+        const backHandler = BackHandler.addEventListener("hardwareBackPress", backAction);
+
+        return () => {
+            backHandler.remove();
+        }
+    }, []);
+
+    useEffect(() => {
+        if (actionSheetRef.current) {
+            showActionSheet();
+        }
+    }, []);
 
     const handleInputChange = (field: string, value: any) => {
         setFormValues({
@@ -45,10 +62,16 @@ const useLogin = () => {
         const {email, password} = formValues;
 
         if (!email || !password) {
+            setSizeToast(80);
+            setToastPosition('top');
             return showToast(
                 'error', '¡Ocurrió un error!', 'Los campos son requeridos'
             );
         }
+
+        setSizeToast(240);
+        Keyboard.dismiss();
+
         const body = {
             username: email,
             password,
@@ -56,32 +79,58 @@ const useLogin = () => {
 
         try {
             showLoader();
-            const res = await authFunctions.loginAndLogout("token", body, hideLoader)
 
-            const {data} = res || {};
+            await authFunctions.loginAndLogout("token/", body, hideLoader,  showActionSheet, () => {}).then((res) => {
+                console.log("res", res);
 
-            if (data !== undefined && data.code === 200) {
-                setToastPosition('bottom');
-                storage.set(
-                    'refresh_token',
-                    JSON.stringify(data.data.refresh),
-                )
-                navigation.navigate({
-                    name: "DashboardTabs",
-                });
-                showToast('success', '¡Bienvenido!', data.message);
-                hideLoader();
-            }
+                const {data} = res || {};
+
+                const {code} = data || {};
+
+                if (data !== undefined && code === 200) {
+                    hideActionSheet();
+                    setToastPosition('bottom');
+
+                    const {access, refresh} = data.data || {};
+
+                    storage.set(
+                        'auth_tokens',
+                        JSON.stringify({
+                            access: access,
+                            refresh: refresh,
+                        })
+                    )
+                    navigation.navigate({
+                        name: "DashboardTabs",
+                    });
+                    showToast('success', '¡Bienvenido!', 'Inicio de sesión exitoso');
+                }
+            });
+
+            hideLoader();
         } catch (error) {
             console.error("Error sending login request: ", error);
         }
     };
 
     const onClose = (navigation: any) => {
-        setModalVisible(false);
         navigation.navigate({
             name: "Welcome",
         });
+    };
+
+    const showActionSheet = () => {
+        if (actionSheetRef.current) {
+            actionSheetRef.current.show();
+            setActionSheetRef(actionSheetRef.current);
+            //unMount();
+        }
+    };
+
+    const hideActionSheet = () => {
+        if (actionSheetRef.current) {
+            actionSheetRef.current.hide();
+        }
     };
 
     return {
@@ -91,8 +140,9 @@ const useLogin = () => {
         sendLogin,
         formValues,
         setFormValues,
-        isModalVisible,
         onClose,
+        actionSheetRef,
+        hideActionSheet
     };
 };
 

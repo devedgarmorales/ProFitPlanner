@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import {
     Dimensions,
     Image,
@@ -6,12 +6,28 @@ import {
     Text,
     TouchableOpacity,
     View,
+    Platform
 } from "react-native";
 import CheckBox from "@react-native-community/checkbox";
 import CustomInput from "../../../components/CustomInput.tsx";
 import useRegister from "../../../hooks/register/useRegister.tsx";
+import {useActionSheetStore} from "../../../store/actionSheetLoginStore.tsx";
 
 const RegisterScreen = ({navigation}: any) => {
+
+    const showActionSheet = useActionSheetStore((state) => state.showActionSheet);
+
+    useEffect(() => {
+        const handleBeforeRemove = () => {
+            showActionSheet();
+        };
+
+        const unsubscribe = navigation.addListener('beforeRemove', handleBeforeRemove);
+
+        return () => {
+            unsubscribe();
+        };
+    }, [navigation]);
 
     const {
         formValues,
@@ -37,8 +53,9 @@ const RegisterScreen = ({navigation}: any) => {
             <Text style={styles.subtitle}>Crea tu cuenta para comenzar</Text>
             <View style={{
                 backgroundColor: "#fff",
-                paddingHorizontal: 24,
+                paddingHorizontal: 20,
                 borderRadius: 10,
+                marginHorizontal: 20,
             }}>
 
                 <View style={[styles.containerInput, {marginTop: 30}]}>
@@ -119,7 +136,7 @@ const RegisterScreen = ({navigation}: any) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        paddingTop: 50,
+        paddingTop: Platform.OS === "ios" ? 70 : 50,
         alignItems: "center",
         backgroundColor: "#fff",
     },

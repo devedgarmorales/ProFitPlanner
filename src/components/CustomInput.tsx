@@ -72,7 +72,7 @@ const CustomInput: React.FC<CustomInputProps> = ({
         backgroundColor: showBackground ? backgroundColor : undefined,
     });
 
-    const getUnderlineStyle = (
+    /*const getUnderlineStyle = (
         animatedValue: any,
         isFocused: any
     ) => ({
@@ -86,7 +86,7 @@ const CustomInput: React.FC<CustomInputProps> = ({
                 }),
             },
         ],
-    });
+    });*/
 
     return (
         <View style={

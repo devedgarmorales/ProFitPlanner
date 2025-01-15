@@ -12,17 +12,25 @@ import {
 } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../../types/types";
 import {MMKV} from 'react-native-mmkv';
+import {useActionSheetStore} from "../../store/actionSheetLoginStore.tsx";
 
 type WelcomeScreenProps = NativeStackScreenProps<RootStackParamList, "Welcome">;
 
 const WelcomeScreen = ({ navigation }: WelcomeScreenProps) => {
   const storage = new MMKV();
+  const hideActionSheet = useActionSheetStore((state) => state.hideActionSheet);
 
   useEffect(() => {
-    const token = storage.getString('refresh_token');
+    const tokens = JSON.parse(storage.getString("auth_tokens") || "{}");
+    const accessToken = tokens.access;
+    const refreshToken = tokens.refresh;
 
-    if (!token) return navigation.navigate('Welcome');
-    navigation.navigate('DashboardTabs')
+    if (!accessToken || !refreshToken) {
+      navigation.navigate("Welcome");
+    } else {
+      hideActionSheet();
+      navigation.navigate("DashboardTabs");
+    }
   }, []);
 
   return (
