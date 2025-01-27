@@ -1,4 +1,4 @@
-import React, {useState, useRef} from "react";
+import React, {useState, useRef, useEffect} from "react";
 import {
     View,
     TextInput,
@@ -18,6 +18,7 @@ interface CustomInputProps extends TextInputProps {
     color?: string;
     backgroundColor?: string;
     showBackground?: boolean;
+    showOnFocus?: boolean;
 }
 
 const CustomInput: React.FC<CustomInputProps> = ({
@@ -31,6 +32,7 @@ const CustomInput: React.FC<CustomInputProps> = ({
                                                      passwordVisible,
                                                      color, backgroundColor = "#fff",
                                                      showBackground = true,
+                                                     showOnFocus = false,
                                                      ...textInputProps
                                                  }) => {
     const [isFocused, setIsFocused] = useState(false);
@@ -71,6 +73,12 @@ const CustomInput: React.FC<CustomInputProps> = ({
         color: isFocused ? "#007BFF" : "#999",
         backgroundColor: showBackground ? backgroundColor : undefined,
     });
+
+    useEffect(() => {
+        if (showOnFocus) {
+            handleFocus();
+        }
+    }, [showOnFocus]);
 
     /*const getUnderlineStyle = (
         animatedValue: any,

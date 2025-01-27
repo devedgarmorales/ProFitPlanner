@@ -7,7 +7,7 @@ import useLoaderStore from "../../store/loaderStore.tsx";
 import {useToastStore} from "../../store/toastStore.tsx";
 import {showToast} from "../../service/toast.tsx";
 import {useActionSheetStore} from "../../store/actionSheetLoginStore.tsx";
-import axios from "axios";
+import userFunctions from "../../service/user/userFunctions.tsx";
 
 const useLogin = () => {
     const storage = new MMKV();
@@ -80,14 +80,15 @@ const useLogin = () => {
         try {
             showLoader();
 
-            await authFunctions.loginAndLogout("token/", body, hideLoader,  showActionSheet, () => {}).then((res) => {
-                console.log("res", res);
-
+            await authFunctions.loginAndLogout("token/", body, hideLoader, showActionSheet, () => {
+            }).then(async (res) => {
                 const {data} = res || {};
+
+                if (data === undefined) return;
 
                 const {code} = data || {};
 
-                if (data !== undefined && code === 200) {
+                if (code === 200) {
                     hideActionSheet();
                     setToastPosition('bottom');
 
@@ -100,16 +101,42 @@ const useLogin = () => {
                             refresh: refresh,
                         })
                     )
+
+                    await userFunctions.getUserInfo("auth/user/", hideLoader, showActionSheet, () => {
+                    }).then((response) => {
+                        console.log("response", response);
+                        const {data} = response || {};
+
+                        if (data === undefined) return;
+
+                        const {code, data: respond} = data || {};
+                        console.log("data", respond);
+
+                        if (code === 200) {
+                            const { email, username, first_name, last_name, } = respond || {};
+                            console.log(email. username, first_name, last_name);
+                            storage.set(
+                                'user_info',
+                                JSON.stringify({
+                                    email,
+                                    username,
+                                    first_name,
+                                    last_name,
+                                })
+                            )
+                        }
+                    });
+
                     navigation.navigate({
                         name: "DashboardTabs",
                     });
                     showToast('success', '¡Bienvenido!', 'Inicio de sesión exitoso');
+                    hideLoader();
                 }
             });
-
-            hideLoader();
         } catch (error) {
             console.error("Error sending login request: ", error);
+            hideLoader();
         }
     };
 

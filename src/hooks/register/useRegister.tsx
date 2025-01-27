@@ -51,44 +51,44 @@ const useRegister = ({navigation}: any) => {
             return showToast('error', '¡Ocurrió un error!', 'Todos los campos son obligatorios');
         }
 
-        setSizeToast(240);
+        setSizeToast(200);
         Keyboard.dismiss();
 
         const body = {
             username: formValues.name,
             email: formValues.email,
-            password: formValues.password,
+            password1: formValues.password,
+            password2: formValues.confirmPassword,
         }
 
         try {
             showLoader();
-            const res = await authFunctions.loginAndLogout("register/", body, hideLoader, () => {
-            }, () => {});
+            await authFunctions.loginAndLogout("auth/registration2/", body, hideLoader, () => {
+            }, () => {
+            }).then((res: any) => {
+                const {data} = res || {};
 
-            const {data} = res || {};
-            console.log("sendRegisterData", data);
-            //&& data.code === 200
-            if (data !== undefined) {
-                storage.set(
-                    'refresh_token',
-                    JSON.stringify(data.token),
-                )
-                navigation.navigate({
-                    name: "Login",
-                });
-                showToast('success', '¡Bienvenido!', data.message);
-            }
+                const {code} = data || {};
 
-            if (data !== undefined && data.code === 400) {
-                const {msg} = data || {};
+                if (code === 201) {
+                    navigation.navigate({
+                        name: "Login",
+                    });
+                    showToast('success', 'Inicia sesión', data.message);
+                }
 
-                const message = `Email: ${msg.email || ''}\nPassword: ${msg.password || ''}`;
+                if (code === 400) {
+                    const {msg} = data || {};
 
-                const finalMessage = message || 'Solicitud incorrecta (400)';
+                    const message = `Email: ${msg.email || ''}\nPassword: ${msg.password || ''}`;
 
-                showToast('error', '¡Ocurrió un error!', finalMessage);
-            }
-            hideLoader();
+                    const finalMessage = message || 'Solicitud incorrecta (400)';
+
+                    showToast('error', '¡Ocurrió un error!', finalMessage);
+                }
+
+                hideLoader();
+            });
         } catch (error) {
             console.log(error);
         }

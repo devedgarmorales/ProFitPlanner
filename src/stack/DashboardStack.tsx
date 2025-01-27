@@ -1,5 +1,5 @@
 import React from 'react';
-import { createStackNavigator } from '@react-navigation/stack';
+import {createStackNavigator} from '@react-navigation/stack';
 import DashboardScreen from '../screens/dashboardScreen/DashboardScreen.tsx';
 import FolderDetail from "../screens/dashboardScreen/FolderDetail.tsx";
 import {useCheckTokenValidate} from "../utils/checkTokenValidate.tsx";
@@ -15,12 +15,18 @@ export default function TabStack() {
             <Stack.Screen
                 name="Dashboard"
                 component={DashboardScreen}
-                options={{ headerShown: false }}
+                options={{
+                    headerShown: false,
+                    gestureEnabled: false,
+                    title: '',
+                }}
             />
             <Stack.Screen
                 name="FolderDetails"
                 component={FolderDetail}
-                options={{ headerShown: false }}
+                options={{
+                    title: 'Mis Folders',
+                }}
             />
         </Stack.Navigator>
     );

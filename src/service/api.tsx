@@ -21,7 +21,6 @@ api.interceptors.request.use(
             config.headers['Authorization'] = `Bearer ${accessToken}`;
         }
 
-        console.log('Headers de la petición:', config.headers);
         return config;
     },
     (error) => {
@@ -31,11 +30,9 @@ api.interceptors.request.use(
 
 api.interceptors.response.use(
     (response) => {
-        console.log('Respuesta de la petición:', response.data);
         return response;
     },
     (error) => {
-        console.log('Error en la petición:', error);
         return Promise.reject(error);
     }
 );
@@ -55,7 +52,20 @@ const handleApiError = (error: any, hideLoader: any, showActionSheet: any, showM
                             resError?.username ? `Usuario: ${resError.username}` :
                                 'Solicitud incorrecta (400)';
 
-                showToast('error', '¡Ocurrió un error!', errorMessage);
+                if (resError?.errors?.length > 0) {
+                    resError.errors.forEach((error: any, index: number) => {
+                        setTimeout(() => {
+                            showToast('error', resError?.message, `${error?.message}` || 'Solicitud incorrecta (400)');
+                        }, index * 3000);
+                    });
+                }
+
+                if (!resError?.errors || resError.errors.length === 0) {
+                    setTimeout(() => {
+                        showToast('error', '¡Ocurrió un error!', errorMessage);
+                    }, (resError?.errors?.length || 0) * 1000);
+                }
+
                 hideLoader && hideLoader();
                 break;
             case 401:
@@ -119,3 +129,11 @@ export const makePostRequest = async (endpoint = "", body = {}, hideLoader: () =
     }
 };
 
+export const makePutRequest = async (endpoint = "", body = {}, hideLoader: () => void, showActionSheet: () => void, showModal: () => void) => {
+    try {
+        const response = await api.put(endpoint, body);
+        return {data: response.data};
+    } catch (error) {
+        handleApiError(error, hideLoader, showActionSheet, showModal);
+    }
+}

@@ -1,5 +1,5 @@
 import React, {useRef, useState} from "react";
-import {StyleSheet, Text, TouchableOpacity, View} from "react-native";
+import {StyleSheet, Text, TextInput, TouchableOpacity, View} from "react-native";
 import {ActionSheetRef} from "react-native-actions-sheet";
 import Separator from "../components/Separator.tsx";
 import Folders from "../components/Folders.tsx";
@@ -8,15 +8,22 @@ import {useToastStore} from "../store/toastStore.tsx";
 import routinesFunctions from "../service/routines/routinesFunctions.tsx";
 import useUpdateToken from "../store/updateTokenRefresh.tsx";
 import {useFocusEffect} from "@react-navigation/native";
+import {useCheckTokenValidate} from "../utils/checkTokenValidate.tsx";
 
 const ThreeButtonDashboard = ({navigation}: any) => {
     const actionSheetRef = useRef<ActionSheetRef>(null);
+    const inputRef = useRef<TextInput>(null);
     const [dataFolders, setDataFolders] = useState<Array<string>>([]);
     const activateActionSheet = () => {
         actionSheetRef.current?.show();
+        setTimeout(() => {
+            inputRef.current?.focus();
+        }, 100);
     };
     const {setSizeToast, setToastPosition} = useToastStore();
     const {update, stopUpdate} = useUpdateToken();
+
+    useCheckTokenValidate();
 
     const petition = async () => {
         if (!update) {
@@ -28,12 +35,21 @@ const ThreeButtonDashboard = ({navigation}: any) => {
         }, () => {
         }, () => {
         }).then((res: any) => {
-            //const {data} = res;
+            if (res === undefined) return;
 
-            if (res) {
+            const {code, data} = res.data;
+
+            if (code === 200) {
                 setSizeToast(240);
                 setToastPosition("top");
-                setDataFolders(res?.data);
+                const allDataFolders = data.folders.map((folder: any) => {
+                    return {
+                        title: folder.name,
+                        image: folder.cover_image_url,
+                    };
+                });
+
+                setDataFolders(allDataFolders.reverse());
             }
 
         });
@@ -41,21 +57,13 @@ const ThreeButtonDashboard = ({navigation}: any) => {
 
     useFocusEffect(
         React.useCallback(() => {
-            setTimeout(() => {
-                petition().then();
-            }, 1500);
-
-            return () => {
-
-            };
+            petition().then();
         }, [])
     );
 
     React.useEffect(() => {
         if (update) {
-            setTimeout(() => {
-                petition().then();
-            }, 1500);
+            petition().then();
         }
     }, [update]);
 
@@ -86,7 +94,7 @@ const ThreeButtonDashboard = ({navigation}: any) => {
             </View>
 
             <ActionSheetCreateFolder ref={actionSheetRef} navigation={navigation} dataFolders={dataFolders}
-                                     setDataFolders={setDataFolders}/>
+                                     setDataFolders={setDataFolders} inputRef={inputRef} />
         </>
     )
 };

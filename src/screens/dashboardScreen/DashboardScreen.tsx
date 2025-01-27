@@ -1,5 +1,5 @@
 import React, {useEffect} from "react";
-import {StyleSheet, View} from "react-native";
+import {StyleSheet, View, Platform} from "react-native";
 import Header from "../../components/Header";
 import Calendar from "../../components/Calendar.tsx";
 import ThreeButtonDashboard from "../../components/ThreeButtonDashboard.tsx";
@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         paddingHorizontal: 14,
-        paddingTop: 40,
+        paddingTop: Platform.OS === "ios" ? 60 :  40,
         backgroundColor: "#f9f9f9",
     },
     input: {

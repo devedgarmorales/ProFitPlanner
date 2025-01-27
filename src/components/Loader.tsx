@@ -1,4 +1,3 @@
-// Loader.tsx
 import React from 'react';
 import { View, ActivityIndicator, Modal, StyleSheet } from 'react-native';
 import useLoaderStore from '../store/loaderStore.tsx';

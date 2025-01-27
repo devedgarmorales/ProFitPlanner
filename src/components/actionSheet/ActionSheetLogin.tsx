@@ -35,13 +35,13 @@ const ActionSheetLogin = ({navigation}: any) => {
                 }}>
                 <View style={styles.modalContainer}>
                     <View style={styles.actionSheet}>
-                        <Text style={styles.title}>Bienvenido a GymTracker</Text>
+                        <Text style={styles.title}>Bienvenido a ProFitPlanner</Text>
                         <Text style={styles.subtitle}>Ingresa tus credenciales</Text>
 
                         <View style={styles.container}>
 
                             <CustomInput
-                                label="Ingresa tu email"
+                                label="Ingresa tu usuario"
                                 value={formValues.email}
                                 name="email"
                                 onValueChange={handleInputChange}

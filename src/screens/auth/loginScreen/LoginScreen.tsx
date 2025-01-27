@@ -9,7 +9,7 @@ type LoginScreenProps = NativeStackScreenProps<RootStackParamList, "Login">;
 const LoginScreen = ({navigation}: LoginScreenProps) => {
 
     return (
-        <View>
+        <>
             <View style={styles.content}>
                 <Image
                     source={require("../../../assets/img/image.png")}
@@ -18,7 +18,7 @@ const LoginScreen = ({navigation}: LoginScreenProps) => {
                 />
             </View>
             <ActionSheetLogin key={Math.random()} navigation={navigation}/>
-        </View>
+        </>
     );
 };
 

@@ -1,21 +1,45 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import {Image, StyleSheet, Text, TouchableOpacity, View} from "react-native";
+import {MMKV} from 'react-native-mmkv';
 
 const Header = ({navigation}: any) => {
-  return (
-      <View style={styles.header}>
-          <View>
-              <Text style={styles.text}>Buenas tardes,</Text>
-              <Text style={styles.userText}>Usuario de GymTracker</Text>
-          </View>
-          <TouchableOpacity onPress={() => navigation.navigate("Perfil")}>
-              <Image
-                  source={{ uri: "https://picsum.photos/200/300" }}
-                  style={styles.profileImage}
-              />
-          </TouchableOpacity>
-      </View>
-  );
+
+    const storage = new MMKV();
+
+    const [user, setUser] = useState({
+        first_name: "",
+        last_name: "",
+        username: "",
+        email: "",
+    });
+
+    useEffect(() => {
+        const userData = JSON.parse(storage.getString("user_info") || "{}");
+
+        const {first_name, last_name, username, email} = userData;
+
+        setUser({
+            first_name: first_name,
+            last_name: last_name,
+            username: username,
+            email: email,
+        });
+    }, []);
+
+    return (
+        <View style={styles.header}>
+            <View>
+                <Text style={styles.text}>Buenas tardes,</Text>
+                <Text style={styles.userText}>{user.first_name !== '' ? user.first_name + " " + user.last_name : user.username}</Text>
+            </View>
+            <TouchableOpacity onPress={() => navigation.navigate("Perfil")}>
+                <Image
+                    source={{uri: "https://picsum.photos/200/300"}}
+                    style={styles.profileImage}
+                />
+            </TouchableOpacity>
+        </View>
+    );
 }
 
 const styles = StyleSheet.create({

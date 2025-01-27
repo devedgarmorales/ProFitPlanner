@@ -17,30 +17,11 @@ const CardItem = ({image, title}) => (
     </View>
 );
 
-const combineFoldersAndImages = (folders: any, images: any) => {
-    return (folders !== undefined && folders.length > 0) ? folders.map((folder: any, index: number) => ({
-        ...folder,
-        image: images[index]?.uri || null,
-    })) : [];
-};
-
 const Folders = ({dataFolders, navigation}: any) => {
     const {setDataFolders} = useFolderStore();
-    const images = [
-        {uri: 'https://reactjs.org/logo-og.png'},
-        {uri: 'https://picsum.photos/id/238/200/300'},
-        {uri: 'https://picsum.photos/id/239/200/300'},
-        {uri: 'https://picsum.photos/id/240/200/300'},
-        {uri: 'https://picsum.photos/id/241/200/300'},
-        {uri: 'https://picsum.photos/id/242/200/300'},
-        {uri: 'https://picsum.photos/id/243/200/300'},
-        {uri: 'https://picsum.photos/id/244/200/300'},
-    ];
-
-    const combinedData = combineFoldersAndImages(dataFolders, images);
 
     const handleShowMore = () => {
-        setDataFolders(combinedData);
+        setDataFolders(dataFolders);
         navigation.navigate('FolderDetails');
     };
 
@@ -58,7 +39,7 @@ const Folders = ({dataFolders, navigation}: any) => {
                 }}>Mis Folders</Text>
                 {(dataFolders !== undefined && dataFolders.length > 3) && (
                     <TouchableOpacity onPress={handleShowMore}>
-                        <Text style={styles.buttonText}>Ver Más...</Text>
+                        <Text style={styles.buttonText}>Ver más...</Text>
                     </TouchableOpacity>
                 )}
             </View>
@@ -74,7 +55,7 @@ const Folders = ({dataFolders, navigation}: any) => {
                 )
             }
             <FlatList
-                data={combinedData.reverse()}
+                data={dataFolders}
                 keyExtractor={(_, index) => index.toString()}
                 horizontal
                 renderItem={({item}) => (

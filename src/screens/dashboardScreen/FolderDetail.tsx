@@ -29,7 +29,7 @@ const FolderDetail = () => {
         const handler = BackHandler.addEventListener(
             'hardwareBackPress',
             () => {
-                navigation.navigate('Dashboard');
+                navigation.goBack();
                 return true;
             }
         );
@@ -39,12 +39,6 @@ const FolderDetail = () => {
 
     return (
         <View style={styles.container}>
-            <Text style={{
-                fontSize: 26,
-                color: "black",
-                marginHorizontal: 20,
-                marginVertical: 20,
-            }}>Mis Folders</Text>
             <FlatList
                 data={dataFolders}
                 keyExtractor={(_, index) => index.toString()}
@@ -61,6 +55,8 @@ const FolderDetail = () => {
                 )}
                 columnWrapperStyle={styles.columnWrapper}
                 showsVerticalScrollIndicator={false}
+                ListHeaderComponent={<View style={{ height: 14 }} />}
+                ListFooterComponent={<View style={{ height: 14 }} />}
             />
         </View>
     )
@@ -70,7 +66,7 @@ const styles = StyleSheet.create({
     container: {
         backgroundColor: '#fff',
         height: '100%',
-        paddingHorizontal: 10,
+        paddingHorizontal: 10
     },
     shadow: {
         shadowColor: '#6c6b6b',
@@ -112,7 +108,7 @@ const styles = StyleSheet.create({
         textShadowColor: 'rgba(0, 0, 0, 0.75)',
         textShadowOffset: {width: 1, height: 1},
         textShadowRadius: 5,
-        paddingLeft: 20
+        paddingLeft: 10
     },
 });
 

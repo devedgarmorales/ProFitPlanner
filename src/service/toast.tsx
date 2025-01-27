@@ -1,7 +1,7 @@
 import Toast from "react-native-toast-message";
 
 export const showToast = (
-    type: "success" | "error" | "info",
+    type: string,
     title: string,
     description: string,
 ) => {
