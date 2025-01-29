@@ -129,8 +129,10 @@ export const makePostRequest = async (endpoint = "", body = {}, hideLoader: () =
     }
 };
 
-export const makePutRequest = async (endpoint = "", body = {}, hideLoader: () => void, showActionSheet: () => void, showModal: () => void) => {
+export const makePutRequest = async (endpoint = "", body = {}, hideLoader: () => void, showActionSheet: () => void, showModal: () => void, token = false) => {
     try {
+        api.defaults.headers['Content-Type'] = token ? 'multipart/form-data' : 'application/json';
+
         const response = await api.put(endpoint, body);
         return {data: response.data};
     } catch (error) {

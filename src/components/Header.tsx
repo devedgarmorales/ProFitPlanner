@@ -11,18 +11,20 @@ const Header = ({navigation}: any) => {
         last_name: "",
         username: "",
         email: "",
+        image_profile: "",
     });
 
     useEffect(() => {
         const userData = JSON.parse(storage.getString("user_info") || "{}");
 
-        const {first_name, last_name, username, email} = userData;
+        const {first_name, last_name, username, email, image_profile} = userData;
 
         setUser({
-            first_name: first_name,
-            last_name: last_name,
-            username: username,
-            email: email,
+            first_name,
+            last_name,
+            username,
+            email,
+            image_profile,
         });
     }, []);
 
@@ -34,7 +36,7 @@ const Header = ({navigation}: any) => {
             </View>
             <TouchableOpacity onPress={() => navigation.navigate("Perfil")}>
                 <Image
-                    source={{uri: "https://picsum.photos/200/300"}}
+                    source={{uri: user.image_profile || "https://picsum.photos/200/300"}}
                     style={styles.profileImage}
                 />
             </TouchableOpacity>

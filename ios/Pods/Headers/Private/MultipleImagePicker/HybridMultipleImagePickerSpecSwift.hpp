@@ -1,0 +1,1 @@
+../../../../../node_modules/@baronha/react-native-multiple-image-picker/nitrogen/generated/ios/c++/HybridMultipleImagePickerSpecSwift.hpp

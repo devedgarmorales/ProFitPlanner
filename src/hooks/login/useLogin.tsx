@@ -104,7 +104,7 @@ const useLogin = () => {
 
                     await userFunctions.getUserInfo("auth/user/", hideLoader, showActionSheet, () => {
                     }).then((response) => {
-                        console.log("response", response);
+                        console.log("sendLogin", response);
                         const {data} = response || {};
 
                         if (data === undefined) return;
@@ -113,8 +113,8 @@ const useLogin = () => {
                         console.log("data", respond);
 
                         if (code === 200) {
-                            const { email, username, first_name, last_name, } = respond || {};
-                            console.log(email. username, first_name, last_name);
+                            const { email, username, first_name, last_name, image_profile} = respond || {};
+                            console.log(email. username, first_name, last_name, image_profile);
                             storage.set(
                                 'user_info',
                                 JSON.stringify({
@@ -122,6 +122,7 @@ const useLogin = () => {
                                     username,
                                     first_name,
                                     last_name,
+                                    image_profile
                                 })
                             )
                         }

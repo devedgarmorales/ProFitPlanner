@@ -10,9 +10,87 @@ PODS:
   - hermes-engine (0.75.3):
     - hermes-engine/Pre-built (= 0.75.3)
   - hermes-engine/Pre-built (0.75.3)
+  - HXPhotoPicker/Camera/Lite (4.2.4):
+    - HXPhotoPicker/Core
+  - HXPhotoPicker/Core (4.2.4):
+    - HXPhotoPicker/Resources
+  - HXPhotoPicker/Editor (4.2.4):
+    - HXPhotoPicker/Editor/KF (= 4.2.4)
+    - HXPhotoPicker/Editor/Lite (= 4.2.4)
+  - HXPhotoPicker/Editor/KF (4.2.4):
+    - HXPhotoPicker/Editor/Lite
+    - HXPhotoPicker/EditorView/KF
+    - Kingfisher (~> 8.0)
+  - HXPhotoPicker/Editor/Lite (4.2.4):
+    - HXPhotoPicker/EditorView/Lite
+  - HXPhotoPicker/EditorView/KF (4.2.4):
+    - HXPhotoPicker/EditorView/Lite
+    - Kingfisher (~> 8.0)
+  - HXPhotoPicker/EditorView/Lite (4.2.4):
+    - HXPhotoPicker/Core
+  - HXPhotoPicker/Picker (4.2.4):
+    - HXPhotoPicker/Picker/KF (= 4.2.4)
+    - HXPhotoPicker/Picker/Lite (= 4.2.4)
+  - HXPhotoPicker/Picker/KF (4.2.4):
+    - HXPhotoPicker/Picker/Lite
+    - Kingfisher (~> 8.0)
+  - HXPhotoPicker/Picker/Lite (4.2.4):
+    - HXPhotoPicker/Core
+  - HXPhotoPicker/Resources (4.2.4)
+  - Kingfisher (8.1.3)
   - MMKV (2.0.2):
     - MMKVCore (~> 2.0.2)
   - MMKVCore (2.0.2)
+  - MultipleImagePicker (2.2.0):
+    - DoubleConversion
+    - glog
+    - hermes-engine
+    - HXPhotoPicker/Camera/Lite (= 4.2.4)
+    - HXPhotoPicker/Editor (= 4.2.4)
+    - HXPhotoPicker/Picker (= 4.2.4)
+    - NitroModules
+    - RCT-Folly (= 2024.01.01.00)
+    - RCTRequired
+    - RCTTypeSafety
+    - React-callinvoker
+    - React-Core
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-ImageManager
+    - React-jsi
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-rendererdebug
+    - React-utils
+    - ReactCodegen
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - Yoga
+  - NitroModules (0.20.1):
+    - DoubleConversion
+    - glog
+    - hermes-engine
+    - RCT-Folly (= 2024.01.01.00)
+    - RCTRequired
+    - RCTTypeSafety
+    - React-callinvoker
+    - React-Core
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-ImageManager
+    - React-jsi
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-rendererdebug
+    - React-utils
+    - ReactCodegen
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - Yoga
   - RCT-Folly (2024.01.01.00):
     - boost
     - DoubleConversion
@@ -1249,27 +1327,6 @@ PODS:
     - React-Core
   - react-native-get-random-values (1.11.0):
     - React-Core
-  - react-native-image-picker (7.2.3):
-    - DoubleConversion
-    - glog
-    - hermes-engine
-    - RCT-Folly (= 2024.01.01.00)
-    - RCTRequired
-    - RCTTypeSafety
-    - React-Core
-    - React-debug
-    - React-Fabric
-    - React-featureflags
-    - React-graphics
-    - React-ImageManager
-    - React-NativeModulesApple
-    - React-RCTFabric
-    - React-rendererdebug
-    - React-utils
-    - ReactCodegen
-    - ReactCommon/turbomodule/bridging
-    - ReactCommon/turbomodule/core
-    - Yoga
   - react-native-mmkv (2.12.2):
     - DoubleConversion
     - glog
@@ -1725,6 +1782,8 @@ DEPENDENCIES:
   - fmt (from `../node_modules/react-native/third-party-podspecs/fmt.podspec`)
   - glog (from `../node_modules/react-native/third-party-podspecs/glog.podspec`)
   - hermes-engine (from `../node_modules/react-native/sdks/hermes-engine/hermes-engine.podspec`)
+  - "MultipleImagePicker (from `../node_modules/@baronha/react-native-multiple-image-picker`)"
+  - NitroModules (from `../node_modules/react-native-nitro-modules`)
   - RCT-Folly (from `../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec`)
   - RCT-Folly/Fabric (from `../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec`)
   - RCTDeprecation (from `../node_modules/react-native/ReactApple/Libraries/RCTFoundation/RCTDeprecation`)
@@ -1758,7 +1817,6 @@ DEPENDENCIES:
   - React-microtasksnativemodule (from `../node_modules/react-native/ReactCommon/react/nativemodule/microtasks`)
   - react-native-config (from `../node_modules/react-native-config`)
   - react-native-get-random-values (from `../node_modules/react-native-get-random-values`)
-  - react-native-image-picker (from `../node_modules/react-native-image-picker`)
   - react-native-mmkv (from `../node_modules/react-native-mmkv`)
   - react-native-orientation-locker (from `../node_modules/react-native-orientation-locker`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
@@ -1800,6 +1858,8 @@ DEPENDENCIES:
 SPEC REPOS:
   trunk:
     - BEMCheckBox
+    - HXPhotoPicker
+    - Kingfisher
     - MMKV
     - MMKVCore
     - SocketRocket
@@ -1820,6 +1880,10 @@ EXTERNAL SOURCES:
   hermes-engine:
     :podspec: "../node_modules/react-native/sdks/hermes-engine/hermes-engine.podspec"
     :tag: hermes-2024-08-15-RNv0.75.1-4b3bf912cc0f705b51b71ce1a5b8bd79b93a451b
+  MultipleImagePicker:
+    :path: "../node_modules/@baronha/react-native-multiple-image-picker"
+  NitroModules:
+    :path: "../node_modules/react-native-nitro-modules"
   RCT-Folly:
     :podspec: "../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec"
   RCTDeprecation:
@@ -1882,8 +1946,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-config"
   react-native-get-random-values:
     :path: "../node_modules/react-native-get-random-values"
-  react-native-image-picker:
-    :path: "../node_modules/react-native-image-picker"
   react-native-mmkv:
     :path: "../node_modules/react-native-mmkv"
   react-native-orientation-locker:
@@ -1968,8 +2030,12 @@ SPEC CHECKSUMS:
   fmt: 4c2741a687cc09f0634a2e2c72a838b99f1ff120
   glog: 69ef571f3de08433d766d614c73a9838a06bf7eb
   hermes-engine: 8d2103d6c0176779aea4e25df6bb1410f9946680
+  HXPhotoPicker: 8a3f819f00675ea529866a195077f6f695890408
+  Kingfisher: f2af9028b16baf9dc6c07c570072bc41cbf009ef
   MMKV: 3eacda84cd1c4fc95cf848d3ecb69d85ed56006c
   MMKVCore: 508b4d3a8ce031f1b5c8bd235f0517fb3f4c73a9
+  MultipleImagePicker: 874c8aa3223efc4812a230e860724bee5f1be69a
+  NitroModules: 7dd275026a2f860c79014816ba50dccddedd5113
   RCT-Folly: 4464f4d875961fce86008d45f4ecf6cef6de0740
   RCTDeprecation: 4191f6e64b72d9743f6fe1a8a16e89e868f5e9e7
   RCTRequired: 9bb589570f2bb3abc6518761e3fd1ad9b7f7f06c
@@ -2001,7 +2067,6 @@ SPEC CHECKSUMS:
   React-microtasksnativemodule: 4943ad8f99be8ccf5a63329fa7d269816609df9e
   react-native-config: 8f7283449bbb048902f4e764affbbf24504454af
   react-native-get-random-values: 21325b2244dfa6b58878f51f9aa42821e7ba3d06
-  react-native-image-picker: df4f6aefbc662b0a5f991065650662c9731977a3
   react-native-mmkv: 7d0b6c2a79e73100b933f2947a9c8741d664e18b
   react-native-orientation-locker: 5819fd23ca89cbac0d736fb4314745f62716d517
   react-native-safe-area-context: 141eca0fd4e4191288dfc8b96a7c7e1c2983447a

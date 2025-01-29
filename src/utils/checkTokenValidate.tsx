@@ -25,7 +25,7 @@ export const useCheckTokenValidate = () => {
                 () => {},
                 showModal
             );
-
+            console.log("verify response", response);
             const { data } = response || {};
 
             const { code } = data || {};

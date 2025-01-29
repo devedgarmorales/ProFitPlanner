@@ -1,0 +1,123 @@
+{
+  "name": "MultipleImagePicker",
+  "version": "2.2.0",
+  "summary": "� react-native-multiple-image-picker enables applications to pick images and videos from multiple smart albums in iOS/Android �",
+  "homepage": "https://github.com/baronha/react-native-multiple-image-picker#readme",
+  "license": "MIT",
+  "authors": "Bảo Hà. <baronn.ha@gmail.com> (https://github.com/baronha)",
+  "platforms": {
+    "ios": "13.4"
+  },
+  "source": {
+    "git": "https://github.com/baronha/react-native-multiple-image-picker.git",
+    "tag": "2.2.0"
+  },
+  "source_files": [
+    "ios/**/*.{swift}",
+    "ios/**/*.{m,mm}",
+    "cpp/**/*.{hpp,cpp}",
+    "nitrogen/generated/shared/**/*.{h,hpp,c,cpp,swift}",
+    "nitrogen/generated/ios/**/*.{h,hpp,c,cpp,mm,swift}"
+  ],
+  "resource_bundles": {
+    "MultipleImagePicker": [
+      "ios/Assets.xcassets"
+    ]
+  },
+  "dependencies": {
+    "HXPhotoPicker/Picker": [
+      "4.2.4"
+    ],
+    "HXPhotoPicker/Camera/Lite": [
+      "4.2.4"
+    ],
+    "HXPhotoPicker/Editor": [
+      "4.2.4"
+    ],
+    "NitroModules": [
+
+    ],
+    "React-jsi": [
+
+    ],
+    "React-callinvoker": [
+
+    ],
+    "React-Core": [
+
+    ],
+    "RCT-Folly": [
+      "2024.01.01.00"
+    ],
+    "glog": [
+
+    ],
+    "React-RCTFabric": [
+
+    ],
+    "ReactCodegen": [
+
+    ],
+    "RCTRequired": [
+
+    ],
+    "RCTTypeSafety": [
+
+    ],
+    "ReactCommon/turbomodule/bridging": [
+
+    ],
+    "ReactCommon/turbomodule/core": [
+
+    ],
+    "React-NativeModulesApple": [
+
+    ],
+    "Yoga": [
+
+    ],
+    "React-Fabric": [
+
+    ],
+    "React-graphics": [
+
+    ],
+    "React-utils": [
+
+    ],
+    "React-featureflags": [
+
+    ],
+    "React-debug": [
+
+    ],
+    "React-ImageManager": [
+
+    ],
+    "React-rendererdebug": [
+
+    ],
+    "DoubleConversion": [
+
+    ],
+    "hermes-engine": [
+
+    ]
+  },
+  "pod_target_xcconfig": {
+    "CLANG_CXX_LANGUAGE_STANDARD": "c++20",
+    "GCC_PREPROCESSOR_DEFINITIONS": "$(inherited) FOLLY_NO_CONFIG FOLLY_CFG_NO_COROUTINES FOLLY_MOBILE",
+    "SWIFT_OBJC_INTEROP_MODE": "objcxx",
+    "DEFINES_MODULE": "YES",
+    "HEADER_SEARCH_PATHS": "\"$(PODS_ROOT)/boost\" \"$(PODS_ROOT)/Headers/Private/Yoga\"",
+    "OTHER_CPLUSPLUSFLAGS": "$(inherited) -DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1 -DFOLLY_CFG_NO_COROUTINES=1 -DFOLLY_HAVE_CLOCK_GETTIME=1 -Wno-comma -Wno-shorten-64-to-32"
+  },
+  "public_header_files": [
+    "nitrogen/generated/shared/**/*.{h,hpp}",
+    "nitrogen/generated/ios/MultipleImagePicker-Swift-Cxx-Bridge.hpp"
+  ],
+  "private_header_files": [
+    "nitrogen/generated/ios/c++/**/*.{h,hpp}"
+  ],
+  "compiler_flags": "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1 -DFOLLY_CFG_NO_COROUTINES=1 -DFOLLY_HAVE_CLOCK_GETTIME=1 -Wno-comma -Wno-shorten-64-to-32"
+}
