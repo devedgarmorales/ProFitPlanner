@@ -111,29 +111,48 @@ const handleApiError = (error: any, hideLoader: any, showActionSheet: any, showM
     }
 };
 
-export const makeGetRequest = async (endpoint = "", hideLoader: () => void, showActionSheet: () => void, showModal: () => void) => {
-    try {
-        const response = await api.get(endpoint);
-        return {data: response.data};
-    } catch (error) {
-        handleApiError(error, hideLoader, showActionSheet, showModal);
-    }
-}
+type HttpMethod = "GET" | "POST" | "PUT";
 
-export const makePostRequest = async (endpoint = "", body = {}, hideLoader: () => void, showActionSheet: () => void, showModal: () => void) => {
+const makeRequest = async (
+    method: HttpMethod,
+    endpoint: string,
+    body: any = {},
+    hideLoader: () => void,
+    showActionSheet: () => void,
+    showModal: () => void,
+    token: boolean = false
+) => {
     try {
-        const response = await api.post(endpoint, body);
-        return {data: response.data};
+        api.defaults.headers["Content-Type"] = token ? "multipart/form-data" : "application/json";
+
+        let response;
+        switch (method) {
+            case "GET":
+                response = await api.get(endpoint);
+                break;
+            case "POST":
+                response = await api.post(endpoint, body);
+                break;
+            case "PUT":
+                response = await api.put(endpoint, body);
+                break;
+            default:
+                console.error(`Unsupported method: ${method}`);
+        }
+
+        return { data: response?.data };
     } catch (error) {
         handleApiError(error, hideLoader, showActionSheet, showModal);
     }
 };
 
-export const makePutRequest = async (endpoint = "", body = {}, hideLoader: () => void, showActionSheet: () => void, showModal: () => void) => {
-    try {
-        const response = await api.put(endpoint, body);
-        return {data: response.data};
-    } catch (error) {
-        handleApiError(error, hideLoader, showActionSheet, showModal);
-    }
-}
+export const makeGetRequest = (endpoint: string, hideLoader: () => void, showActionSheet: () => void, showModal: () => void, token?: boolean) =>
+    makeRequest("GET", endpoint, {}, hideLoader, showActionSheet, showModal, token);
+
+export const makePostRequest = (endpoint: string, body: any, hideLoader: () => void, showActionSheet: () => void, showModal: () => void, token?: boolean) =>
+    makeRequest("POST", endpoint, body, hideLoader, showActionSheet, showModal, token);
+
+export const makePutRequest = (endpoint: string, body: any, hideLoader: () => void, showActionSheet: () => void, showModal: () => void, token?: boolean) =>
+    makeRequest("PUT", endpoint, body, hideLoader, showActionSheet, showModal, token);
+
+

@@ -24,13 +24,23 @@ const ProfileScreen = ({navigation}: any) => {
         last_name: "",
         username: "",
         email: "",
+        image_profile: {
+            uri: "",
+            name: "",
+            type: "",
+        },
     });
     const [formValues, setFormValues] = useState({
         username: "",
         first_name: "",
         last_name: "",
         email: "",
-    })
+        image_profile: {
+            uri: "",
+            name: "",
+            type: "",
+        },
+    });
 
     useEffect(() => {
         const userData = JSON.parse(storage.getString("user_info") || "{}");
@@ -40,6 +50,11 @@ const ProfileScreen = ({navigation}: any) => {
             last_name: userData.last_name,
             username: userData.username,
             email: userData.email,
+            image_profile: {
+                uri: userData.image_profile,
+                name: "",
+                type: "",
+            },
         });
 
         setFormValues({
@@ -47,7 +62,12 @@ const ProfileScreen = ({navigation}: any) => {
             last_name: userData.last_name,
             username: userData.username,
             email: userData.email,
-        })
+            image_profile: {
+                uri: userData.image_profile,
+                name: "",
+                type: "",
+            }
+        });
     }, []);
 
     useCheckTokenValidate();
@@ -102,35 +122,54 @@ const ProfileScreen = ({navigation}: any) => {
     };
 
     const handleUpdateProfile = async () => {
-        const body = {
-            "username": formValues.username || "",
-            "first_name": formValues.first_name || "",
-            "last_name": formValues.last_name || "",
-            "email": formValues.email || "",
-        }
-
+        const body = new FormData();
+        body.append("username", formValues.username || "");
+        body.append("first_name", formValues.first_name || "");
+        body.append("last_name", formValues.last_name || "");
+        body.append("email", formValues.email || "");
+        body.append("image_profile", formValues.image_profile);
         console.log("body", body);
-        setSizeToast(80);
+        setSizeToast(120);
         setToastPosition('top');
 
         try {
             showLoader();
-            await userFunctions.updateProfile("auth/user/", body, hideLoader, () => {
-            }, () => {
-            }).then(
-                (res: any) => {
-                    console.log("res", res);
-                    const {data} = res || {};
-                    console.log("handleUpdateProfile", data);
-                    if (data !== undefined && data.code === 200) {
-                        hideLoader();
-                        showToast("success", "Perfil actualizado", "Tu perfil ha sido actualizado exitosamente.");
-                    } else {
-                        hideLoader();
-                        showToast("error", "Error al actualizar", "Ha ocurrido un error al actualizar tu perfil.");
+            const res = await userFunctions.updateProfile("auth/user/", body, hideLoader, () => {}, () => {}, true);
+
+            const {code, data} = res?.data || {};
+
+            if (code === 200) {
+                showToast("success", "Perfil actualizado", "Tu perfil ha sido actualizado exitosamente.");
+                setUser({
+                    first_name: data.first_name,
+                    last_name: data.last_name,
+                    username: data.username,
+                    email: data.email,
+                    image_profile: {
+                        uri: data.image_profile,
+                        name: "",
+                        type: "",
                     }
-                }
-            );
+                });
+
+                setFormValues({
+                    first_name: data.first_name,
+                    last_name: data.last_name,
+                    username: data.username,
+                    email: data.email,
+                    image_profile: {
+                        uri: data.image_profile,
+                        name: "",
+                        type: "",
+                    }
+                });
+
+                storage.set("user_info", JSON.stringify(data));
+            } else {
+                showToast("error", "¡Ocurrió un error!", "No se pudo actualizar tu perfil.");
+            }
+
+            hideLoader();
         } catch (e) {
             console.error("Error en la solicitud:", e);
         }
@@ -144,7 +183,7 @@ const ProfileScreen = ({navigation}: any) => {
                 <View style={styles.imageContainer}>
                     <TouchableOpacity onPress={activateActionSheet}>
                         <Image
-                            source={{uri: "https://picsum.photos/200/300"}}
+                            source={{uri: user.image_profile.uri || "https://picsum.photos/200/300"}}
                             style={styles.profileImage}
                         />
                         <View style={styles.editIcon}>
@@ -221,7 +260,8 @@ const ProfileScreen = ({navigation}: any) => {
                 </View>
             </View>
 
-            <ActionSheetUpdateProfile ref={actionSheetRef} navigation={navigation}/>
+            <ActionSheetUpdateProfile ref={actionSheetRef} navigation={navigation} setImageData={setUser}
+                                      setFormValue={setFormValues} />
         </ScrollView>
     )
 }

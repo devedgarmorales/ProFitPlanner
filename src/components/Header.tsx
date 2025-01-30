@@ -1,6 +1,7 @@
-import React, {useEffect, useState} from "react";
+import React, {useCallback, useState} from "react";
 import {Image, StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import {MMKV} from 'react-native-mmkv';
+import {useFocusEffect} from "@react-navigation/native";
 
 const Header = ({navigation}: any) => {
 
@@ -11,30 +12,40 @@ const Header = ({navigation}: any) => {
         last_name: "",
         username: "",
         email: "",
+        image_profile: "",
     });
 
-    useEffect(() => {
-        const userData = JSON.parse(storage.getString("user_info") || "{}");
+    useFocusEffect(
+        useCallback(() => {
+            try {
+                const storedUser = storage.getString("user_info");
+                if (storedUser) {
+                    const userData = JSON.parse(storedUser);
 
-        const {first_name, last_name, username, email} = userData;
-
-        setUser({
-            first_name: first_name,
-            last_name: last_name,
-            username: username,
-            email: email,
-        });
-    }, []);
+                    setUser({
+                        first_name: userData.first_name || "",
+                        last_name: userData.last_name || "",
+                        username: userData.username || "",
+                        email: userData.email || "",
+                        image_profile: userData.image_profile || "",
+                    });
+                }
+            } catch (error) {
+                console.error("Error parsing user_info:", error);
+            }
+        }, [])
+    );
 
     return (
         <View style={styles.header}>
             <View>
                 <Text style={styles.text}>Buenas tardes,</Text>
-                <Text style={styles.userText}>{user.first_name !== '' ? user.first_name + " " + user.last_name : user.username}</Text>
+                <Text
+                    style={styles.userText}>{user.first_name !== '' ? user.first_name + " " + user.last_name : user.username}</Text>
             </View>
             <TouchableOpacity onPress={() => navigation.navigate("Perfil")}>
                 <Image
-                    source={{uri: "https://picsum.photos/200/300"}}
+                    source={{uri: user.image_profile || "https://picsum.photos/200/300"}}
                     style={styles.profileImage}
                 />
             </TouchableOpacity>

@@ -26,9 +26,7 @@ export const useCheckTokenValidate = () => {
                 showModal
             );
 
-            const { data } = response || {};
-
-            const { code } = data || {};
+            const { code } = response?.data || {};
 
             if (code === 401) {
                 return showModal();
