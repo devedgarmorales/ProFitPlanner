@@ -79,6 +79,8 @@
     <string>Esta aplicación necesita acceso a la cámara.</string>
     <key>NSPhotoLibraryUsageDescription</key>
     <string>Esta aplicación necesita acceso a tus fotos.</string>
+    <key>NSPhotoLibraryAddUsageDescription</key>
+    <string>Esta aplicación necesita acceso a tus fotos.</string>
 
     <key>BASE_URL_API</key>
     <string>${BASE_URL_API}</string>
