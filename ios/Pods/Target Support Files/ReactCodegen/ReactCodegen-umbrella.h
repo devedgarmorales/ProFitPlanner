@@ -12,6 +12,8 @@
 
 #import "FBReactNativeSpec/FBReactNativeSpec.h"
 #import "FBReactNativeSpecJSI.h"
+#import "NitroModulesSpec/NitroModulesSpec.h"
+#import "NitroModulesSpecJSI.h"
 #import "RCTModulesConformingToProtocolsProvider.h"
 #import "react/renderer/components/rngesturehandler_codegen/ComponentDescriptors.h"
 #import "react/renderer/components/rngesturehandler_codegen/EventEmitters.h"

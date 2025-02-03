@@ -27,18 +27,24 @@
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSExceptionDomains</key>
-            <dict>
-                <key>ec2-52-91-63-173.compute-1.amazonaws.com</key>
-                <dict>
-                    <key>NSIncludesSubdomains</key>
-                    <true/>
-                    <key>NSAllowsArbitraryLoads</key>
-                    <true/>
-                </dict>
-            </dict>
+		<dict>
+			<key>ec2-52-91-63-173.compute-1.amazonaws.com</key>
+			<dict>
+				<key>NSIncludesSubdomains</key>
+				<true/>
+				<key>NSAllowsArbitraryLoads</key>
+				<true/>
+			</dict>
+		</dict>
 	</dict>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>$(PRODUCT_NAME) needs photo library permissions</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>$(PRODUCT_NAME) needs photo library permissions</string>
+	<key>NSCameraUsageDescription</key>
+	<string>$(PRODUCT_NAME) needs to access your Camera</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>$(PRODUCT_NAME) needs to access your microphone so that you can record audio.</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIRequiredDeviceCapabilities</key>
@@ -53,37 +59,26 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-
-	<!-- Agregar las fuentes de los iconos aquí -->
 	<key>UIAppFonts</key>
 	<array>
-		 <string>Ionicons.ttf</string>
-		 <string>AntDesign.ttf</string>
-          <string>Entypo.ttf</string>
-          <string>EvilIcons.ttf</string>
-          <string>Feather.ttf</string>
-          <string>FontAwesome.ttf</string>
-          <string>FontAwesome5_Brands.ttf</string>
-          <string>FontAwesome5_Regular.ttf</string>
-          <string>FontAwesome5_Solid.ttf</string>
-          <string>Foundation.ttf</string>
-          <string>Ionicons.ttf</string>
-          <string>MaterialIcons.ttf</string>
-          <string>MaterialCommunityIcons.ttf</string>
-          <string>SimpleLineIcons.ttf</string>
-          <string>Octicons.ttf</string>
-          <string>Zocial.ttf</string>
+		<string>Ionicons.ttf</string>
+		<string>AntDesign.ttf</string>
+		<string>Entypo.ttf</string>
+		<string>EvilIcons.ttf</string>
+		<string>Feather.ttf</string>
+		<string>FontAwesome.ttf</string>
+		<string>FontAwesome5_Brands.ttf</string>
+		<string>FontAwesome5_Regular.ttf</string>
+		<string>FontAwesome5_Solid.ttf</string>
+		<string>Foundation.ttf</string>
+		<string>Ionicons.ttf</string>
+		<string>MaterialIcons.ttf</string>
+		<string>MaterialCommunityIcons.ttf</string>
+		<string>SimpleLineIcons.ttf</string>
+		<string>Octicons.ttf</string>
+		<string>Zocial.ttf</string>
 	</array>
-
-	<key>NSCameraUsageDescription</key>
-    <string>Esta aplicación necesita acceso a la cámara.</string>
-    <key>NSPhotoLibraryUsageDescription</key>
-    <string>Esta aplicación necesita acceso a tus fotos.</string>
-    <key>NSPhotoLibraryAddUsageDescription</key>
-    <string>Esta aplicación necesita acceso a tus fotos.</string>
-
-    <key>BASE_URL_API</key>
-    <string>${BASE_URL_API}</string>
-
+	<key>BASE_URL_API</key>
+	<string>${BASE_URL_API}</string>
 </dict>
 </plist>
