@@ -99,9 +99,6 @@
     ],
     "DoubleConversion": [
 
-    ],
-    "hermes-engine": [
-
     ]
   },
   "pod_target_xcconfig": {

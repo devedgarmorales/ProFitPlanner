@@ -56,9 +56,6 @@
     ],
     "React-debug": [
       "0.75.3"
-    ],
-    "hermes-engine": [
-
     ]
   },
   "resource_bundles": {
