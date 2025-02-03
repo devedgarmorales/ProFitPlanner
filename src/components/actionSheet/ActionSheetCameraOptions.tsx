@@ -16,7 +16,6 @@ const ActionSheetCameraOptions = forwardRef<ActionSheetRef, ActionSheetCameraOpt
         const actionSheetRefCamera = useRef<ActionSheetRef>(null);
 
         async function takePhoto(type: "front" | "back") {
-            actionSheetRefCamera.current?.hide();
             try {
                 const response = await openCamera({
                     mediaType: 'image',
@@ -44,7 +43,7 @@ const ActionSheetCameraOptions = forwardRef<ActionSheetRef, ActionSheetCameraOpt
                         type: 'image/jpeg',
                     },
                 }));
-                console.log(response)
+                actionSheetRefCamera.current?.hide();
             } catch (e) {
                 console.log(e)
             }
