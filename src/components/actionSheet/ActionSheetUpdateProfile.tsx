@@ -17,8 +17,6 @@ const ActionSheetCreateFolder = forwardRef<ActionSheetRef, ActionSheetCreateFold
         const actionSheetRefCamera = useRef<ActionSheetRef>(null);
 
         async function selectImage() {
-            actionSheetRef.current?.hide();
-
             try {
                 const response = await openPicker({
                     mediaType: 'image',
@@ -48,6 +46,8 @@ const ActionSheetCreateFolder = forwardRef<ActionSheetRef, ActionSheetCreateFold
                         type: 'image/jpeg',
                     },
                 }));
+
+                actionSheetRef.current?.hide();
             } catch (e) {
                 console.log(e)
             }

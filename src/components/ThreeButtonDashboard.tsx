@@ -68,7 +68,7 @@ const ThreeButtonDashboard = ({navigation}: any) => {
     }, [update]);
 
     return (
-        <>
+        <View style={{flex: 1}}>
             <View style={styles.buttonContainer}>
                 <View style={styles.row}>
                     <TouchableOpacity style={styles.button}>
@@ -95,7 +95,7 @@ const ThreeButtonDashboard = ({navigation}: any) => {
 
             <ActionSheetCreateFolder ref={actionSheetRef} navigation={navigation} dataFolders={dataFolders}
                                      setDataFolders={setDataFolders} inputRef={inputRef} />
-        </>
+        </View>
     )
 };
 

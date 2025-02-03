@@ -1,5 +1,5 @@
 import React, {useEffect} from "react";
-import {StyleSheet, View, Platform} from "react-native";
+import {StyleSheet, View, Platform, ScrollView} from "react-native";
 import Header from "../../components/Header";
 import Calendar from "../../components/Calendar.tsx";
 import ThreeButtonDashboard from "../../components/ThreeButtonDashboard.tsx";
@@ -19,11 +19,11 @@ const DashboardScreen = ({navigation}: any) => {
     }, []);
 
     return (
-        <View style={styles.container}>
+        <ScrollView style={styles.container}>
             <Header navigation={navigation}/>
             <Calendar/>
             <ThreeButtonDashboard navigation={navigation}/>
-        </View>
+        </ScrollView>
     );
 };
 
@@ -31,7 +31,6 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         paddingHorizontal: 14,
-        paddingTop: Platform.OS === "ios" ? 60 :  40,
         backgroundColor: "#f9f9f9",
     },
     input: {

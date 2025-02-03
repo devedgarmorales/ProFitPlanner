@@ -1,5 +1,5 @@
 import React, {useCallback, useState} from "react";
-import {Image, StyleSheet, Text, TouchableOpacity, View} from "react-native";
+import {Image, Platform, StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import {MMKV} from 'react-native-mmkv';
 import {useFocusEffect} from "@react-navigation/native";
 
@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
     header: {
         flexDirection: "row",
         alignItems: "center",
-        paddingTop: 10,
+        paddingTop: Platform.OS === "ios" ? 60 :  40,
         paddingBottom: 20,
         justifyContent: "space-between",
     },

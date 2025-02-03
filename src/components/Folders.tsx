@@ -30,7 +30,7 @@ const Folders = ({dataFolders, navigation}: any) => {
             <View style={{
                 flexDirection: "row",
                 alignItems: "center",
-                justifyContent: "space-between"
+                justifyContent: "space-between",
             }}>
                 <Text style={{
                     fontSize: 26,
@@ -78,6 +78,8 @@ const Folders = ({dataFolders, navigation}: any) => {
                     </DropShadow>
                 )}
                 showsHorizontalScrollIndicator={false}
+                ListHeaderComponent={<View style={{ height: 14 }} />}
+                ListFooterComponent={<View style={{ height: 14 }} />}
             />
         </View>
     )
