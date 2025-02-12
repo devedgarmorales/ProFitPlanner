@@ -127,50 +127,61 @@ const ProfileScreen = ({navigation}: any) => {
         body.append("first_name", formValues.first_name || "");
         body.append("last_name", formValues.last_name || "");
         body.append("email", formValues.email || "");
-        body.append("image_profile", formValues.image_profile);
-        console.log("body", body);
+
+        if (formValues.image_profile.uri) {
+            const imageFile = {
+                uri: formValues.image_profile.uri,
+                name: formValues.image_profile.name || "profile.jpg",
+                type: formValues.image_profile.type || "image/jpeg",
+            };
+            body.append("image_profile", imageFile);
+        }
+
         setSizeToast(120);
         setToastPosition('top');
 
         try {
             showLoader();
-            const res = await userFunctions.updateProfile("auth/user/", body, hideLoader, () => {}, () => {}, true);
+            await userFunctions.updateProfile("auth/user/", body, hideLoader, () => {}, () => {}, true).then(
+                (res: any) => {
+                    const {code, data} = res?.data || {};
 
-            const {code, data} = res?.data || {};
+                    if (code === 200) {
+                        showToast("success", "Perfil actualizado", "Tu perfil ha sido actualizado exitosamente.");
+                        setUser({
+                            first_name: data.first_name,
+                            last_name: data.last_name,
+                            username: data.username,
+                            email: data.email,
+                            image_profile: {
+                                uri: data.image_profile,
+                                name: "",
+                                type: "",
+                            }
+                        });
 
-            if (code === 200) {
-                showToast("success", "Perfil actualizado", "Tu perfil ha sido actualizado exitosamente.");
-                setUser({
-                    first_name: data.first_name,
-                    last_name: data.last_name,
-                    username: data.username,
-                    email: data.email,
-                    image_profile: {
-                        uri: data.image_profile,
-                        name: "",
-                        type: "",
+                        setFormValues({
+                            first_name: data.first_name,
+                            last_name: data.last_name,
+                            username: data.username,
+                            email: data.email,
+                            image_profile: {
+                                uri: data.image_profile,
+                                name: "",
+                                type: "",
+                            }
+                        });
+
+                        storage.set("user_info", JSON.stringify(data));
+                    } else {
+                        showToast("error", "¡Ocurrió un error!", "No se pudo actualizar tu perfil.");
                     }
-                });
 
-                setFormValues({
-                    first_name: data.first_name,
-                    last_name: data.last_name,
-                    username: data.username,
-                    email: data.email,
-                    image_profile: {
-                        uri: data.image_profile,
-                        name: "",
-                        type: "",
-                    }
-                });
-
-                storage.set("user_info", JSON.stringify(data));
-            } else {
-                showToast("error", "¡Ocurrió un error!", "No se pudo actualizar tu perfil.");
-            }
-
-            hideLoader();
+                    hideLoader();
+                }
+            );
         } catch (e) {
+            hideLoader();
             console.error("Error en la solicitud:", e);
         }
     }
@@ -269,9 +280,9 @@ const ProfileScreen = ({navigation}: any) => {
 const styles = StyleSheet.create({
     container: {
         alignItems: 'center',
-        paddingTop: 40,
         height: '100%',
         backgroundColor: '#fff',
+        paddingVertical: 30,
     },
     imageContainer: {
         position: 'relative',

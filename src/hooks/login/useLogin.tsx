@@ -1,4 +1,4 @@
-import {useEffect, useState, useRef} from "react";
+import React, {useEffect, useState, useRef} from "react";
 import {BackHandler, Keyboard} from "react-native";
 import {ActionSheetRef} from "react-native-actions-sheet";
 import authFunctions from "../../service/auth/authFunctions.tsx";
@@ -8,6 +8,7 @@ import {useToastStore} from "../../store/toastStore.tsx";
 import {showToast} from "../../service/toast.tsx";
 import {useActionSheetStore} from "../../store/actionSheetLoginStore.tsx";
 import userFunctions from "../../service/user/userFunctions.tsx";
+import {useFocusEffect} from "@react-navigation/native";
 
 const useLogin = () => {
     const storage = new MMKV();
@@ -34,7 +35,6 @@ const useLogin = () => {
     useEffect(() => {
         const backAction = () => {
             showActionSheet();
-            unMount();
             return false;
         };
 
@@ -50,6 +50,14 @@ const useLogin = () => {
             showActionSheet();
         }
     }, []);
+
+    useFocusEffect(
+        React.useCallback(() => {
+            return () => {
+                unMount();
+            };
+        }, [])
+    )
 
     const handleInputChange = (field: string, value: any) => {
         setFormValues({
@@ -111,7 +119,7 @@ const useLogin = () => {
                         const {code, data: respond} = data || {};
 
                         if (code === 200) {
-                            const { email, username, first_name, last_name, image_profile } = respond || {};
+                            const {email, username, first_name, last_name, image_profile} = respond || {};
 
                             storage.set(
                                 'user_info',
@@ -149,7 +157,6 @@ const useLogin = () => {
         if (actionSheetRef.current) {
             actionSheetRef.current.show();
             setActionSheetRef(actionSheetRef.current);
-            //unMount();
         }
     };
 

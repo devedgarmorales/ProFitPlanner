@@ -20,7 +20,6 @@ const DashboardScreen = ({navigation}: any) => {
 
     return (
         <ScrollView style={styles.container}>
-            <Header navigation={navigation}/>
             <Calendar/>
             <ThreeButtonDashboard navigation={navigation}/>
         </ScrollView>
@@ -31,7 +30,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         paddingHorizontal: 14,
-        backgroundColor: "#f9f9f9",
+        backgroundColor: "#ffffff",
     },
     input: {
         borderWidth: 1,

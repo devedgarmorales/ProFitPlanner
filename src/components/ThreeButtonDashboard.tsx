@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
     buttonContainer: {
         flex: 1,
         marginTop: 40,
-        backgroundColor: "#F5F5F5",
+        backgroundColor: "#ffffff",
     },
     row: {
         flexDirection: "row",

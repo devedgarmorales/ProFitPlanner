@@ -3,6 +3,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import DashboardScreen from '../screens/dashboardScreen/DashboardScreen.tsx';
 import FolderDetail from "../screens/dashboardScreen/FolderDetail.tsx";
 import {useCheckTokenValidate} from "../utils/checkTokenValidate.tsx";
+import Header from "../components/Header.tsx";
 
 const Stack = createStackNavigator();
 
@@ -16,8 +17,9 @@ export default function TabStack() {
                 name="Dashboard"
                 component={DashboardScreen}
                 options={{
-                    headerShown: false,
-                    gestureEnabled: false,
+                    headerShown: true,
+                    headerLeft: () => <></>,
+                    header: () => <Header />,
                     title: '',
                 }}
             />
@@ -26,6 +28,11 @@ export default function TabStack() {
                 component={FolderDetail}
                 options={{
                     title: 'Mis Folders',
+                    headerTitleAlign: 'center',
+                    headerTitleStyle: {
+                        fontWeight: 'bold',
+                        fontSize: 18,
+                    },
                 }}
             />
         </Stack.Navigator>

@@ -84,6 +84,11 @@ export default function BottomTabs() {
                 options={{
                     title: 'Mi Perfil',
                     headerShown: true,
+                    headerTitleAlign: 'center',
+                    headerTitleStyle: {
+                        fontWeight: 'bold',
+                        fontSize: 18,
+                    },
                 }}
             />
         </Tab.Navigator>

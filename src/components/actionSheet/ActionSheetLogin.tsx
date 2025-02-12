@@ -39,7 +39,6 @@ const ActionSheetLogin = ({navigation}: any) => {
                         <Text style={styles.subtitle}>Ingresa tus credenciales</Text>
 
                         <View style={styles.container}>
-
                             <CustomInput
                                 label="Ingresa tu usuario"
                                 value={formValues.email}
@@ -49,11 +48,9 @@ const ActionSheetLogin = ({navigation}: any) => {
                                 autoCapitalize="none"
                                 placeholder=""
                             />
-
                         </View>
 
                         <View style={styles.passwordContainer}>
-
                             <CustomInput
                                 label="Ingresa tu contraseña"
                                 value={formValues.password}
@@ -64,7 +61,6 @@ const ActionSheetLogin = ({navigation}: any) => {
                                 setPasswordVisible={setPasswordVisible}
                                 passwordVisible={passwordVisible}
                             />
-
                         </View>
 
                         <View style={styles.linksContainer}>

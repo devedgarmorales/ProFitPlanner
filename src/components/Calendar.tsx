@@ -59,7 +59,8 @@ const Calendar = () => {
 const styles = StyleSheet.create({
     container: {
         height: 90,
-        marginTop: 10,
+        marginTop: 20,
+        backgroundColor: '#ffffff',
     },
     badgeContainer: {
         alignItems: 'center',

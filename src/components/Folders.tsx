@@ -78,8 +78,8 @@ const Folders = ({dataFolders, navigation}: any) => {
                     </DropShadow>
                 )}
                 showsHorizontalScrollIndicator={false}
-                ListHeaderComponent={<View style={{ height: 14 }} />}
-                ListFooterComponent={<View style={{ height: 14 }} />}
+                ListHeaderComponent={<View style={{ height: 24 }} />}
+                ListFooterComponent={<View style={{ height: 24 }} />}
             />
         </View>
     )

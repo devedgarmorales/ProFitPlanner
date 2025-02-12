@@ -1,11 +1,21 @@
 import React, {useCallback, useState} from "react";
-import {Image, Platform, StyleSheet, Text, TouchableOpacity, View} from "react-native";
+import {Image, StatusBar, StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import {MMKV} from 'react-native-mmkv';
 import {useFocusEffect} from "@react-navigation/native";
+import {useNavigation} from "@react-navigation/native";
+import {NativeStackNavigationProp} from "@react-navigation/native-stack";
+import {SafeAreaView} from "react-native-safe-area-context";
 
-const Header = ({navigation}: any) => {
+type RootStackParamList = {
+    Perfil: undefined;
+};
+
+type NavigationProps = NativeStackNavigationProp<RootStackParamList>;
+
+const Header = () => {
 
     const storage = new MMKV();
+    const navigation = useNavigation<NavigationProps>();
 
     const [user, setUser] = useState({
         first_name: "",
@@ -37,43 +47,52 @@ const Header = ({navigation}: any) => {
     );
 
     return (
-        <View style={styles.header}>
-            <View>
-                <Text style={styles.text}>Buenas tardes,</Text>
-                <Text
-                    style={styles.userText}>{user.first_name !== '' ? user.first_name + " " + user.last_name : user.username}</Text>
+        <SafeAreaView edges={["top"]} style={styles.safeArea}>
+            <StatusBar barStyle="dark-content" />
+            <View style={styles.header}>
+                <View>
+                    <Text style={styles.text}>Buenas tardes,</Text>
+                    <Text
+                        style={styles.userText}>{user.first_name !== '' ? user.first_name + " " + user.last_name : user.username}</Text>
+                </View>
+                <TouchableOpacity onPress={() => navigation.navigate("Perfil")}>
+                    <Image
+                        source={{uri: user.image_profile || "https://picsum.photos/200/300"}}
+                        style={styles.profileImage}
+                    />
+                </TouchableOpacity>
             </View>
-            <TouchableOpacity onPress={() => navigation.navigate("Perfil")}>
-                <Image
-                    source={{uri: user.image_profile || "https://picsum.photos/200/300"}}
-                    style={styles.profileImage}
-                />
-            </TouchableOpacity>
-        </View>
+        </SafeAreaView>
     );
 }
 
 const styles = StyleSheet.create({
+    safeArea: {
+        backgroundColor: "#ffffff",
+    },
     header: {
         flexDirection: "row",
-        alignItems: "center",
-        paddingTop: Platform.OS === "ios" ? 60 :  40,
-        paddingBottom: 20,
         justifyContent: "space-between",
+        alignItems: "center",
+        paddingHorizontal: 20,
+        paddingVertical: 10,
+        backgroundColor: "#ffffff",
+        borderBottomWidth: 1,
+        borderBottomColor: "#e0e0e0",
     },
     profileImage: {
-        width: 80,
-        height: 80,
+        width: 60,
+        height: 60,
         borderRadius: 40,
     },
     text: {
-        fontSize: 24,
+        fontSize: 16,
         fontWeight: "bold",
         color: "#333",
         textTransform: "uppercase",
     },
     userText: {
-        fontSize: 24,
+        fontSize: 16,
         color: "#333",
     },
 });
