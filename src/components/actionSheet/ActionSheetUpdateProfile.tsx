@@ -3,6 +3,11 @@ import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import Icon from "react-native-vector-icons/FontAwesome";
 import {openCamera, openPicker} from "@baronha/react-native-multiple-image-picker";
 import ActionSheet, {ActionSheetRef} from 'react-native-actions-sheet';
+import userFunctions from "../../service/user/userFunctions.tsx";
+import useLoaderStore from "../../store/loaderStore.tsx";
+import {showToast} from "../../service/toast.tsx";
+import {useToastStore} from "../../store/toastStore.tsx";
+import {MMKV} from "react-native-mmkv";
 
 interface ActionSheetCreateFolderProps {
     setImageData: any;
@@ -12,6 +17,9 @@ interface ActionSheetCreateFolderProps {
 const ActionSheetCreateFolder = forwardRef<ActionSheetRef, ActionSheetCreateFolderProps>(
     ({setImageData, setFormValue}, ref) => {
         const actionSheetRef = useRef<ActionSheetRef>(null);
+        const {showLoader, hideLoader} = useLoaderStore();
+        const {setSizeToast, setToastPosition} = useToastStore();
+        const storage = new MMKV();
 
         async function selectImage() {
             try {
@@ -50,11 +58,11 @@ const ActionSheetCreateFolder = forwardRef<ActionSheetRef, ActionSheetCreateFold
             }
         }
 
-        async function openCameraActionSheet () {
+        async function openCameraActionSheet() {
             if (actionSheetRef.current) {
                 actionSheetRef.current?.hide();
 
-                setTimeout(async() => {
+                setTimeout(async () => {
                     try {
                         const response = await openCamera({
                             mediaType: 'image',
@@ -89,6 +97,46 @@ const ActionSheetCreateFolder = forwardRef<ActionSheetRef, ActionSheetCreateFold
             }
         }
 
+        async function delteImageProfile() {
+            showLoader();
+            setSizeToast(120);
+            setToastPosition('top');
+            const userData = JSON.parse(storage.getString("user_info") || "{}");
+
+            await userFunctions.deleteImageProfile("auth/user/image-profile/", hideLoader, () => {}, () => {}, false).then((res: any) => {
+                const {code} = res?.data || {};
+
+                if (code === 200) {
+                    showToast("success", "Imagen eliminada", "Tu imagen de perfil ha sido eliminada exitosamente.");
+                    setImageData((prevState: any) => ({
+                        ...prevState,
+                        image_profile: {
+                            uri: "",
+                            name: "",
+                            type: "",
+                        },
+                    }));
+                    setFormValue((prevState: any) => ({
+                        ...prevState,
+                        image_profile: {
+                            uri: "",
+                            name: "",
+                            type: "",
+                        },
+                    }));
+                    actionSheetRef.current?.hide();
+
+                    userData.image_profile = "";
+                    storage.set("user_info", JSON.stringify(userData));
+                }
+            }).catch(() => {
+                showToast("error", "Error", "Ha ocurrido un error al eliminar la imagen de perfil.");
+            }).finally(() => {
+                hideLoader();
+            });
+            actionSheetRef.current?.hide();
+        }
+
         useImperativeHandle(ref, () => ({
             show: () => actionSheetRef.current?.show(),
             hide: () => actionSheetRef.current?.hide(),
@@ -105,14 +153,15 @@ const ActionSheetCreateFolder = forwardRef<ActionSheetRef, ActionSheetCreateFold
                 >
                     <View style={styles.actionSheetContent}>
                         <TouchableOpacity style={styles.row} onPress={openCameraActionSheet}>
-                            <Icon name="camera" size={20} color={"gray"} />
+                            <Icon name="camera" size={20} color={"gray"}/>
                             <Text style={styles.sheetTitle}>Tomar foto</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={[styles.row, styles.borderTop]} onPress={selectImage}>
                             <Icon name="image" size={20} color={"gray"}/>
                             <Text style={styles.sheetTitle}>Selecciona imagen de la galeria</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={[styles.row, styles.borderTop]} onPress={() => console.log("eliminar imagen")}>
+                        <TouchableOpacity style={[styles.row, styles.borderTop]}
+                                          onPress={delteImageProfile}>
                             <Icon name="trash" size={20} color={"red"}/>
                             <Text style={[styles.sheetTitle, {color: "red"}]}>Eliminar imagen de perfil</Text>
                         </TouchableOpacity>

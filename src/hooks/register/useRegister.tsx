@@ -1,6 +1,5 @@
 import React, {useState} from "react";
 import {showToast} from "../../service/toast.tsx";
-import {MMKV} from 'react-native-mmkv';
 import authFunctions from "../../service/auth/authFunctions.tsx";
 import useLoaderStore from "../../store/loaderStore.tsx";
 import {BackHandler, Keyboard} from "react-native";
@@ -8,7 +7,6 @@ import {useToastStore} from "../../store/toastStore.tsx";
 import {useFocusEffect} from "@react-navigation/native";
 
 const useRegister = ({navigation}: any) => {
-    const storage = new MMKV();
     const [formValues, setFormValues] = useState({
         name: "",
         email: "",

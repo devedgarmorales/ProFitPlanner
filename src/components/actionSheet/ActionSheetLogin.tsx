@@ -1,4 +1,5 @@
 import * as React from "react";
+import ActionSheet from "react-native-actions-sheet";
 import {
     StyleSheet,
     Text,
@@ -8,7 +9,6 @@ import {
 } from "react-native";
 import useLogin from "../../hooks/login/useLogin.tsx";
 import CustomInput from "../CustomInput.tsx";
-import ActionSheet from "react-native-actions-sheet";
 
 const ActionSheetLogin = ({navigation}: any) => {
     const {
@@ -22,7 +22,7 @@ const ActionSheetLogin = ({navigation}: any) => {
     } = useLogin();
 
     return (
-        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', zIndex: 1}}>
             <ActionSheet
                 ref={actionSheetRef}
                 gestureEnabled
@@ -152,7 +152,7 @@ const styles = StyleSheet.create({
     leftDirection: {
         marginBottom: 10,
         marginTop: 6,
-        width: Platform.OS === "ios" ? "44%" : "50%",
+        width: "50%",
     },
     rightDirection: {
         marginBottom: 10,

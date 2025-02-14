@@ -57,7 +57,11 @@ const Header = () => {
                 </View>
                 <TouchableOpacity onPress={() => navigation.navigate("Perfil")}>
                     <Image
-                        source={{ uri: user.image_profile || "https://picsum.photos/200/300" }}
+                        source={
+                            user.image_profile
+                                ? { uri: user.image_profile }
+                                : require("../assets/img/user_default.png")
+                        }
                         style={styles.profileImage}
                     />
                 </TouchableOpacity>

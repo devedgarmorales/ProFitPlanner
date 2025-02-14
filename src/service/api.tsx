@@ -39,10 +39,9 @@ api.interceptors.response.use(
 
 const handleApiError = (error: any, hideLoader: any, showActionSheet: any, showModal: any) => {
     if (axios.isAxiosError(error)) {
-        console.log("error", error)
         const status = error.response?.status;
         const resError = error.response?.data || {};
-        console.log("status", status)
+
         switch (status) {
             case 400:
                 //console.error('Solicitud incorrecta (400):', resError);
@@ -53,7 +52,6 @@ const handleApiError = (error: any, hideLoader: any, showActionSheet: any, showM
                                 'Solicitud incorrecta (400)';
 
                 if (resError?.errors?.length > 0) {
-                    console.log("resError", resError)
                     resError.errors.forEach((error: any, index: number) => {
                         setTimeout(() => {
                             showToast('error', resError?.message, `${error?.message}` || 'Solicitud incorrecta (400)');
@@ -95,7 +93,11 @@ const handleApiError = (error: any, hideLoader: any, showActionSheet: any, showM
                 hideLoader && hideLoader();
                 break;
             case 404:
-                console.error('No encontrado (404):', resError);
+                showToast(
+                    'error',
+                    '¡Ocurrió un error!',
+                    resError.message || 'No encontrado (404)'
+                );
                 break;
             case 500:
                 //console.error('Error interno del servidor (500):', resError);
@@ -118,7 +120,7 @@ const handleApiError = (error: any, hideLoader: any, showActionSheet: any, showM
     }
 };
 
-type HttpMethod = "GET" | "POST" | "PUT";
+type HttpMethod = "GET" | "POST" | "PUT" | "DELETE";
 
 const makeRequest = async (
     method: HttpMethod,
@@ -143,6 +145,9 @@ const makeRequest = async (
             case "PUT":
                 response = await api.put(endpoint, body);
                 break;
+            case "DELETE":
+                response = await api.delete(endpoint);
+                break;
             default:
                 console.error(`Unsupported method: ${method}`);
         }
@@ -161,5 +166,8 @@ export const makePostRequest = (endpoint: string, body: any, hideLoader: () => v
 
 export const makePutRequest = (endpoint: string, body: any, hideLoader: () => void, showActionSheet: () => void, showModal: () => void, token?: boolean) =>
     makeRequest("PUT", endpoint, body, hideLoader, showActionSheet, showModal, token);
+
+export const makeDeleteRequest = (endpoint: string, hideLoader: () => void, showActionSheet: () => void, showModal: () => void, token?: boolean) =>
+    makeRequest("DELETE", endpoint, {}, hideLoader, showActionSheet, showModal, token);
 
 

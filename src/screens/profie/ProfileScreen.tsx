@@ -31,9 +31,11 @@ const ProfileScreen = ({navigation}: any) => {
                 <View style={styles.imageContainer}>
                     <TouchableOpacity onPress={activateActionSheet}>
                         <Image
-                            source={{
-                                uri: user.image_profile.uri || "https://picsum.photos/200/300",
-                            }}
+                            source={
+                                user.image_profile?.uri
+                                    ? { uri: user.image_profile.uri }
+                                    : require("../../assets/img/user_default.png")
+                            }
                             style={styles.profileImage}
                         />
                         <View style={styles.editIcon}>

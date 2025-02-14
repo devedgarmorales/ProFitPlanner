@@ -67,6 +67,8 @@ const useLogin = () => {
     };
 
     const sendLogin = async (navigation: any) => {
+        showLoader();
+        actionSheetRef.current?.hide();
         const {email, password} = formValues;
 
         if (!email || !password) {
@@ -86,8 +88,6 @@ const useLogin = () => {
         }
 
         try {
-            showLoader();
-
             await authFunctions.loginAndLogout("token/", body, hideLoader, showActionSheet, () => {
             }).then(async (res) => {
                 const {data} = res || {};
@@ -144,6 +144,8 @@ const useLogin = () => {
         } catch (error) {
             console.error("Error sending login request: ", error);
             hideLoader();
+            actionSheetRef.current?.show();
+            unMount();
         }
     };
 

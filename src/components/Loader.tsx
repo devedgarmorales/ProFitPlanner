@@ -1,27 +1,38 @@
 import React from 'react';
-import { View, ActivityIndicator, Modal, StyleSheet } from 'react-native';
+import { View, ActivityIndicator, StyleSheet } from 'react-native';
 import useLoaderStore from '../store/loaderStore.tsx';
+import {Portal, Modal} from "react-native-paper";
 
 const Loader = () => {
     const isLoading = useLoaderStore((state) => state.isLoading);
 
     return (
-        <Modal
-            transparent
-            animationType="fade"
-            visible={isLoading}
-            statusBarTranslucent
+        <Portal
+            key={isLoading ? "loading" : "not-loading"}
         >
-            <View style={styles.overlay}>
+            <Modal
+                visible={isLoading}
+                dismissable={false}
+                contentContainerStyle={styles.modalContainer}
+
+            >
                 <View style={styles.loaderContainer}>
                     <ActivityIndicator size="large" color="#ffffff" />
                 </View>
-            </View>
-        </Modal>
+            </Modal>
+        </Portal>
     );
 };
 
 const styles = StyleSheet.create({
+    modalContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        position: 'absolute',
+        width: '100%',
+        zIndex: 9999,
+    },
     overlay: {
         flex: 1,
         justifyContent: 'center',

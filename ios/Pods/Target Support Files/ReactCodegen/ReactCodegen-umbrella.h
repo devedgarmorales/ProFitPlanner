@@ -37,6 +37,8 @@
 #import "reactnativemmkvJSI.h"
 #import "rnasyncstorage/rnasyncstorage.h"
 #import "rnasyncstorageJSI.h"
+#import "RNExitAppSpec/RNExitAppSpec.h"
+#import "RNExitAppSpecJSI.h"
 #import "rngesturehandler_codegen/rngesturehandler_codegen.h"
 #import "rngesturehandler_codegenJSI.h"
 #import "RNImagePickerSpec/RNImagePickerSpec.h"

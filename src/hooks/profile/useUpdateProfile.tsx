@@ -82,7 +82,7 @@ const useUpdateProfile = ({navigation}: any) => {
             "token": accessToken,
         };
 
-        setSizeToast(80);
+        setSizeToast(120);
         setToastPosition('top');
 
         try {
