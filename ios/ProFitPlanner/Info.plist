@@ -28,12 +28,12 @@
 	<dict>
 		<key>NSExceptionDomains</key>
 		<dict>
-			<key>ec2-52-91-63-173.compute-1.amazonaws.com</key>
+			<key>jhpzxd3nfj.execute-api.us-east-1.amazonaws.com</key>
 			<dict>
 				<key>NSIncludesSubdomains</key>
-				<true/>
-				<key>NSAllowsArbitraryLoads</key>
-				<true/>
+                <true/>
+                <key>NSAllowsArbitraryLoads</key>
+                <true/>
 			</dict>
 		</dict>
 	</dict>

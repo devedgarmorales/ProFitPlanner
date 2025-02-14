@@ -1,4 +1,4 @@
-import React, {useRef, useState} from "react";
+import React, {useRef, useState, forwardRef, useImperativeHandle} from "react";
 import {StyleSheet, Text, TextInput, TouchableOpacity, View} from "react-native";
 import {ActionSheetRef} from "react-native-actions-sheet";
 import Separator from "../components/Separator.tsx";
@@ -10,22 +10,24 @@ import useUpdateToken from "../store/updateTokenRefresh.tsx";
 import {useFocusEffect} from "@react-navigation/native";
 import {useCheckTokenValidate} from "../utils/checkTokenValidate.tsx";
 
-const ThreeButtonDashboard = ({navigation}: any) => {
+const ThreeButtonDashboard = forwardRef(({navigation, refreshing}: any, ref) => {
     const actionSheetRef = useRef<ActionSheetRef>(null);
     const inputRef = useRef<TextInput>(null);
     const [dataFolders, setDataFolders] = useState<Array<string>>([]);
+
     const activateActionSheet = () => {
         actionSheetRef.current?.show();
         setTimeout(() => {
             inputRef.current?.focus();
         }, 100);
     };
+
     const {setSizeToast, setToastPosition} = useToastStore();
     const {update, stopUpdate} = useUpdateToken();
 
     useCheckTokenValidate();
 
-    const petition = async () => {
+    const initialData = async () => {
         if (!update) {
             stopUpdate();
         }
@@ -34,38 +36,49 @@ const ThreeButtonDashboard = ({navigation}: any) => {
         }, () => {
         }, () => {
         }, () => {
-        }).then((res: any) => {
-            if (res === undefined) return;
+        })
+            .then((res: any) => {
+                if (res === undefined) return;
 
-            const {code, data} = res.data;
+                const {code, data} = res.data;
 
-            if (code === 200) {
-                setSizeToast(240);
-                setToastPosition("top");
-                const allDataFolders = data.folders.map((folder: any) => {
-                    return {
+                if (code === 200) {
+                    setSizeToast(240);
+                    setToastPosition("top");
+                    const allDataFolders = data.folders.map((folder: any) => ({
                         title: folder.name,
                         image: folder.cover_image_url,
-                    };
-                });
+                    }));
 
-                setDataFolders(allDataFolders.reverse());
-            }
-
-        });
-    }
+                    setDataFolders(allDataFolders.reverse());
+                }
+            });
+    };
 
     useFocusEffect(
         React.useCallback(() => {
-            petition().then();
+            initialData().then();
         }, [])
     );
 
     React.useEffect(() => {
         if (update) {
-            petition().then();
+            initialData().then();
         }
     }, [update]);
+
+    const onRefresh = () => {
+        refreshing(true);
+
+        setTimeout(() => {
+            refreshing(false);
+            initialData().then();
+        }, 1500);
+    };
+
+    useImperativeHandle(ref, () => ({
+        onRefresh: onRefresh,
+    }));
 
     return (
         <View style={{flex: 1}}>
@@ -83,27 +96,29 @@ const ThreeButtonDashboard = ({navigation}: any) => {
                     <Text style={styles.buttonText}>Comenzar Entrenamiento Rápido</Text>
                 </TouchableOpacity>
 
-                <View style={{
-                    marginTop: 20,
-                    marginBottom: 20,
-                }}>
+                <View style={{marginTop: 20, marginBottom: 20}}>
                     <Separator/>
                 </View>
-
-                <Folders dataFolders={dataFolders} navigation={navigation}/>
             </View>
 
-            <ActionSheetCreateFolder ref={actionSheetRef} navigation={navigation} dataFolders={dataFolders}
-                                     setDataFolders={setDataFolders} inputRef={inputRef} />
+            <Folders dataFolders={dataFolders} navigation={navigation}/>
+
+            <ActionSheetCreateFolder
+                ref={actionSheetRef}
+                navigation={navigation}
+                dataFolders={dataFolders}
+                setDataFolders={setDataFolders}
+                inputRef={inputRef}
+            />
         </View>
-    )
-};
+    );
+});
 
 const styles = StyleSheet.create({
     buttonContainer: {
         flex: 1,
-        marginTop: 40,
         backgroundColor: "#ffffff",
+        paddingHorizontal: 20,
     },
     row: {
         flexDirection: "row",
@@ -116,7 +131,7 @@ const styles = StyleSheet.create({
         paddingVertical: 15,
         alignItems: "center",
         justifyContent: "center",
-        width: "49%"
+        width: "49%",
     },
     buttonText: {
         color: "#000",

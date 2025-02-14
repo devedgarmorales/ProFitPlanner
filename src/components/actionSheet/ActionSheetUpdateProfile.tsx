@@ -1,20 +1,17 @@
 import React, {forwardRef, useImperativeHandle, useRef} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import Icon from "react-native-vector-icons/FontAwesome";
-import {openPicker} from "@baronha/react-native-multiple-image-picker";
+import {openCamera, openPicker} from "@baronha/react-native-multiple-image-picker";
 import ActionSheet, {ActionSheetRef} from 'react-native-actions-sheet';
-import ActionSheetCameraOptions from "./ActionSheetCameraOptions.tsx";
 
 interface ActionSheetCreateFolderProps {
-    navigation: any;
     setImageData: any;
     setFormValue: any;
 }
 
 const ActionSheetCreateFolder = forwardRef<ActionSheetRef, ActionSheetCreateFolderProps>(
-    ({navigation, setImageData, setFormValue}, ref) => {
+    ({setImageData, setFormValue}, ref) => {
         const actionSheetRef = useRef<ActionSheetRef>(null);
-        const actionSheetRefCamera = useRef<ActionSheetRef>(null);
 
         async function selectImage() {
             try {
@@ -49,13 +46,47 @@ const ActionSheetCreateFolder = forwardRef<ActionSheetRef, ActionSheetCreateFold
 
                 actionSheetRef.current?.hide();
             } catch (e) {
-                console.log(e)
+                console.error(e);
             }
         }
 
-        const openCameraActionSheet = () => {
-            actionSheetRef.current?.hide();
-            actionSheetRefCamera.current?.show();
+        async function openCameraActionSheet () {
+            if (actionSheetRef.current) {
+                actionSheetRef.current?.hide();
+
+                setTimeout(async() => {
+                    try {
+                        const response = await openCamera({
+                            mediaType: 'image',
+                            cameraDevice: 'back',
+                            language: "system",
+                        })
+
+                        const {fileName, path} = response;
+
+                        setImageData((prevState: any) => ({
+                            ...prevState,
+                            image_profile: {
+                                ...prevState.image_profile,
+                                uri: path,
+                                name: fileName,
+                                type: 'image/jpeg',
+                            },
+                        }));
+                        setFormValue((prevState: any) => ({
+                            ...prevState,
+                            image_profile: {
+                                ...prevState.image_profile,
+                                uri: path,
+                                name: fileName,
+                                type: 'image/jpeg',
+                            },
+                        }));
+                    } catch (e) {
+                        console.log(e)
+                    }
+                }, 300);
+            }
         }
 
         useImperativeHandle(ref, () => ({
@@ -87,7 +118,6 @@ const ActionSheetCreateFolder = forwardRef<ActionSheetRef, ActionSheetCreateFold
                         </TouchableOpacity>
                     </View>
                 </ActionSheet>
-                <ActionSheetCameraOptions navigation={navigation} ref={actionSheetRefCamera} setImageData={setImageData} setFormValue={setFormValue}  />
             </>
         );
     }

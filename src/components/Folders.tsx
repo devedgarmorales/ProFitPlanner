@@ -1,11 +1,14 @@
+import React from "react";
 import {Dimensions, FlatList, Image, StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import DropShadow from "react-native-drop-shadow";
 import useFolderStore from "../store/folderStore.tsx";
+import Icon from 'react-native-vector-icons/AntDesign';
 
 const screenWidth = Dimensions.get('window').width;
 // @ts-ignore
-const CardItem = ({image, title}) => (
-    <View style={styles.card}>
+const CardItem = ({index, image, title}) => (
+    <View style={[styles.card, {
+        marginLeft: index > 0 ? 10 : 0,}]}>
         <Image
             source={{uri: image}}
             style={styles.image}
@@ -26,7 +29,7 @@ const Folders = ({dataFolders, navigation}: any) => {
     };
 
     return (
-        <View>
+        <>
             <View style={{
                 flexDirection: "row",
                 alignItems: "center",
@@ -35,11 +38,13 @@ const Folders = ({dataFolders, navigation}: any) => {
                 <Text style={{
                     fontSize: 26,
                     color: "black",
-                    marginHorizontal: 20
+                    paddingHorizontal: 20
                 }}>Mis Folders</Text>
                 {(dataFolders !== undefined && dataFolders.length > 3) && (
                     <TouchableOpacity onPress={handleShowMore}>
-                        <Text style={styles.buttonText}>Ver más...</Text>
+                        <Text style={styles.buttonText}>
+                            <Icon name="right" size={20} color={"gray"}/>
+                        </Text>
                     </TouchableOpacity>
                 )}
             </View>
@@ -54,11 +59,13 @@ const Folders = ({dataFolders, navigation}: any) => {
                     }}>No tienes ningún folder creado</Text>
                 )
             }
+
             <FlatList
                 data={dataFolders}
                 keyExtractor={(_, index) => index.toString()}
                 horizontal
-                renderItem={({item}) => (
+                contentContainerStyle={styles.listContainer}
+                renderItem={({item, index}) => (
                     <DropShadow
                         style={{
                             shadowColor: "#6c6b6b",
@@ -72,16 +79,15 @@ const Folders = ({dataFolders, navigation}: any) => {
                         }}
                     >
                         <CardItem
+                            index={index}
                             image={item.image !== null ? item.image : ''}
                             title={item.title !== null ? item.title : ''}
                         />
                     </DropShadow>
                 )}
                 showsHorizontalScrollIndicator={false}
-                ListHeaderComponent={<View style={{ height: 24 }} />}
-                ListFooterComponent={<View style={{ height: 24 }} />}
             />
-        </View>
+        </>
     )
 };
 
@@ -95,7 +101,6 @@ const styles = StyleSheet.create({
         marginRight: 10,
         position: 'relative',
         marginVertical: 10,
-        marginLeft: 4
     },
     image: {
         width: '100%',
@@ -133,6 +138,12 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         paddingRight: 10,
         paddingTop: 10
+    },
+    listContainer: {
+        flexGrow: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingHorizontal: 10,
     },
 });
 

@@ -19,6 +19,7 @@ interface CustomInputProps extends TextInputProps {
     backgroundColor?: string;
     showBackground?: boolean;
     showOnFocus?: boolean;
+    disabled?: boolean;
 }
 
 const CustomInput: React.FC<CustomInputProps> = ({
@@ -33,6 +34,7 @@ const CustomInput: React.FC<CustomInputProps> = ({
                                                      color, backgroundColor = "#fff",
                                                      showBackground = true,
                                                      showOnFocus = false,
+                                                     disabled = false,
                                                      ...textInputProps
                                                  }) => {
     const [isFocused, setIsFocused] = useState(false);
@@ -108,6 +110,7 @@ const CustomInput: React.FC<CustomInputProps> = ({
                 onBlur={handleBlur}
                 onChangeText={(text) => onValueChange(name, text)}
                 placeholder=""
+                editable={!disabled}
                 {...textInputProps}
             />
             {

@@ -10,7 +10,7 @@ import {
 import {
   NativeStackScreenProps,
 } from "@react-navigation/native-stack";
-import { RootStackParamList } from "../../types/types";
+import { RootStackParamList } from "../../interface/navigation/types.ts";
 import {MMKV} from 'react-native-mmkv';
 import {useActionSheetStore} from "../../store/actionSheetLoginStore.tsx";
 

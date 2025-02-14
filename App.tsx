@@ -14,7 +14,7 @@ import Loader from "./src/components/Loader";
 import ModalToken from "./src/components/ModalToken";
 import { useToastStore } from "./src/store/toastStore";
 import useTokenModalStore from "./src/store/tokenModalStore";
-import { RootStackParamList } from "./src/types/types";
+import { RootStackParamList } from "./src/interface/navigation/types.ts";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 

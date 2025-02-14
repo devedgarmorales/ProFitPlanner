@@ -42,7 +42,7 @@ const handleApiError = (error: any, hideLoader: any, showActionSheet: any, showM
         console.log("error", error)
         const status = error.response?.status;
         const resError = error.response?.data || {};
-
+        console.log("status", status)
         switch (status) {
             case 400:
                 //console.error('Solicitud incorrecta (400):', resError);
@@ -53,6 +53,7 @@ const handleApiError = (error: any, hideLoader: any, showActionSheet: any, showM
                                 'Solicitud incorrecta (400)';
 
                 if (resError?.errors?.length > 0) {
+                    console.log("resError", resError)
                     resError.errors.forEach((error: any, index: number) => {
                         setTimeout(() => {
                             showToast('error', resError?.message, `${error?.message}` || 'Solicitud incorrecta (400)');
@@ -70,6 +71,12 @@ const handleApiError = (error: any, hideLoader: any, showActionSheet: any, showM
                 break;
             case 401:
                 //console.error('No autorizado (401):', resError.detail);
+                if (resError.detail === 'Given token not valid for any token type') {
+                    showModal && showModal();
+                    hideLoader && hideLoader();
+                    return;
+                }
+
                 showToast(
                     'error',
                     '¡Ocurrió un error!',

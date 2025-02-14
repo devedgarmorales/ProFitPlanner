@@ -31,7 +31,6 @@ const Header = () => {
                 const storedUser = storage.getString("user_info");
                 if (storedUser) {
                     const userData = JSON.parse(storedUser);
-
                     setUser({
                         first_name: userData.first_name || "",
                         last_name: userData.last_name || "",
@@ -52,12 +51,13 @@ const Header = () => {
             <View style={styles.header}>
                 <View>
                     <Text style={styles.text}>Buenas tardes,</Text>
-                    <Text
-                        style={styles.userText}>{user.first_name !== '' ? user.first_name + " " + user.last_name : user.username}</Text>
+                    <Text style={styles.userText}>
+                        {user.first_name !== '' ? user.first_name + " " + user.last_name : user.username}
+                    </Text>
                 </View>
                 <TouchableOpacity onPress={() => navigation.navigate("Perfil")}>
                     <Image
-                        source={{uri: user.image_profile || "https://picsum.photos/200/300"}}
+                        source={{ uri: user.image_profile || "https://picsum.photos/200/300" }}
                         style={styles.profileImage}
                     />
                 </TouchableOpacity>
@@ -69,16 +69,16 @@ const Header = () => {
 const styles = StyleSheet.create({
     safeArea: {
         backgroundColor: "#ffffff",
+        justifyContent: "center",
+        paddingTop: 10,
     },
     header: {
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "center",
         paddingHorizontal: 20,
-        paddingVertical: 10,
         backgroundColor: "#ffffff",
-        borderBottomWidth: 1,
-        borderBottomColor: "#e0e0e0",
+        width: "100%",
     },
     profileImage: {
         width: 60,

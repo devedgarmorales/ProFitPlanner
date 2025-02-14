@@ -4,7 +4,7 @@ import DropShadow from "react-native-drop-shadow";
 import {useEffect} from "react";
 import {useNavigation} from "@react-navigation/native";
 import {NativeStackNavigationProp} from "@react-navigation/native-stack";
-import {RootStackParamList} from "../../types/types.ts";
+import {RootStackParamList} from "../../interface/navigation/types.ts";
 
 type NavigationProps = NativeStackNavigationProp<RootStackParamList>;
 // @ts-ignore
