@@ -1,14 +1,14 @@
 import React, {useEffect, useState, useRef} from "react";
-import {BackHandler, Keyboard} from "react-native";
+import {BackHandler, Keyboard, Platform} from "react-native";
 import {ActionSheetRef} from "react-native-actions-sheet";
-import authFunctions from "../../service/auth/authFunctions.tsx";
+import {useFocusEffect} from "@react-navigation/native";
 import {MMKV} from 'react-native-mmkv';
+import authFunctions from "../../service/auth/authFunctions.tsx";
 import useLoaderStore from "../../store/loaderStore.tsx";
 import {useToastStore} from "../../store/toastStore.tsx";
 import {showToast} from "../../service/toast.tsx";
 import {useActionSheetStore} from "../../store/actionSheetLoginStore.tsx";
 import userFunctions from "../../service/user/userFunctions.tsx";
-import {useFocusEffect} from "@react-navigation/native";
 
 const useLogin = () => {
     const storage = new MMKV();
@@ -48,12 +48,6 @@ const useLogin = () => {
         }
     }, []);
 
-    useEffect(() => {
-        if (actionSheetRef.current) {
-            showActionSheet();
-        }
-    }, []);
-
     useFocusEffect(
         React.useCallback(() => {
             return () => {
@@ -61,6 +55,16 @@ const useLogin = () => {
             };
         }, [])
     )
+
+    useEffect(() => {
+        if (Platform.OS === "ios") {
+            setTimeout(() => {
+                showActionSheet();
+            }, 300);
+        } else {
+            showActionSheet();
+        }
+    }, []);
 
     const handleInputChange = (field: string, value: any) => {
         setFormValues({
@@ -77,9 +81,6 @@ const useLogin = () => {
             setToastPosition('top');
             hideLoader();
             setShowErrorColor(true);
-            // showToast(
-            //     'error', '¡Ocurrió un error!', 'Los campos son requeridos'
-            // );
             return;
         }
 

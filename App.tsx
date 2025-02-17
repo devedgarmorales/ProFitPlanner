@@ -28,7 +28,7 @@ function App() {
         success: (props: any) => (
             <BaseToast
                 {...props}
-                style={{borderLeftColor: 'green'}}
+                style={{borderLeftColor: 'green', marginTop: Platform.OS === "ios" ? 30 : 0}}
                 contentContainerStyle={{paddingHorizontal: 15}}
                 text1Style={{
                     fontSize: 17,
