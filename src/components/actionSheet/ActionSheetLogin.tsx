@@ -19,6 +19,7 @@ const ActionSheetLogin = ({navigation}: any) => {
         formValues,
         actionSheetRef,
         hideActionSheet,
+        showErrorColor,
     } = useLogin();
 
     return (
@@ -47,10 +48,14 @@ const ActionSheetLogin = ({navigation}: any) => {
                                 keyboardType="email-address"
                                 autoCapitalize="none"
                                 placeholder=""
+                                showOnFocus={showErrorColor}
+                                colorFocused={(!formValues.email && showErrorColor) ? "#ff001e" : undefined}
                             />
                         </View>
 
-                        <View style={styles.passwordContainer}>
+                        <View style={[styles.passwordContainer, {
+                            marginBottom: showErrorColor ? 4 : 14
+                        }]}>
                             <CustomInput
                                 label="Ingresa tu contraseña"
                                 value={formValues.password}
@@ -60,8 +65,23 @@ const ActionSheetLogin = ({navigation}: any) => {
                                 placeholder=""
                                 setPasswordVisible={setPasswordVisible}
                                 passwordVisible={passwordVisible}
+                                showOnFocus={showErrorColor}
+                                colorFocused={(!formValues.password && showErrorColor) ? "#ff001e" : undefined}
                             />
                         </View>
+
+                        {
+                            showErrorColor && (
+                                <View style={{
+                                    marginBottom: 6,
+                                }}>
+                                    <Text style={{
+                                        color: "#ff001e",
+                                        fontSize: 12,
+                                    }}>*Completa todos los campos</Text>
+                                </View>
+                            )
+                        }
 
                         <View style={styles.linksContainer}>
                             <TouchableOpacity
@@ -129,7 +149,6 @@ const styles = StyleSheet.create({
     passwordContainer: {
         flexDirection: "row",
         alignItems: "center",
-        marginBottom: 14,
     },
     input: {
         height: 40,

@@ -18,6 +18,7 @@ const useLogin = () => {
         email: "",
         password: "",
     });
+    const [showErrorColor, setShowErrorColor] = useState(false);
     const {showLoader, hideLoader} = useLoaderStore();
     const {setToastPosition, setSizeToast} = useToastStore();
 
@@ -29,7 +30,9 @@ const useLogin = () => {
             name: "",
             email: "",
             password: "",
-        })
+        });
+        setPasswordVisible(false);
+        setShowErrorColor(false);
     };
 
     useEffect(() => {
@@ -67,17 +70,21 @@ const useLogin = () => {
     };
 
     const sendLogin = async (navigation: any) => {
-        showLoader();
-        actionSheetRef.current?.hide();
         const {email, password} = formValues;
 
         if (!email || !password) {
             setSizeToast(80);
             setToastPosition('top');
-            return showToast(
-                'error', '¡Ocurrió un error!', 'Los campos son requeridos'
-            );
+            hideLoader();
+            setShowErrorColor(true);
+            // showToast(
+            //     'error', '¡Ocurrió un error!', 'Los campos son requeridos'
+            // );
+            return;
         }
+
+        showLoader();
+        hideActionSheet();
 
         setSizeToast(240);
         Keyboard.dismiss();
@@ -88,61 +95,37 @@ const useLogin = () => {
         }
 
         try {
-            await authFunctions.loginAndLogout("token/", body, hideLoader, showActionSheet, () => {
-            }).then(async (res) => {
-                const {data} = res || {};
+            const res = await authFunctions.loginAndLogout("token/", body, hideLoader, showActionSheet, () => {});
 
-                if (data === undefined) return;
+            const {data} = res || {};
+            if (!data) return;
 
-                const {code} = data || {};
+            const {code, data: tokens} = data || {};
+            if (code !== 200) return;
 
-                if (code === 200) {
-                    hideActionSheet();
-                    setToastPosition('bottom');
+            hideActionSheet();
+            setToastPosition('bottom');
 
-                    const {access, refresh} = data.data || {};
+            const {access, refresh} = tokens || {};
+            storage.set('auth_tokens', JSON.stringify({access, refresh}));
 
-                    storage.set(
-                        'auth_tokens',
-                        JSON.stringify({
-                            access: access,
-                            refresh: refresh,
-                        })
-                    )
+            const response = await userFunctions.getUserInfo("auth/user/", hideLoader, showActionSheet, () => {});
 
-                    await userFunctions.getUserInfo("auth/user/", hideLoader, showActionSheet, () => {
-                    }).then((response) => {
-                        const {data} = response || {};
+            const {data: userData} = response || {};
+            if (!userData) return;
 
-                        if (data === undefined) return;
+            const {code: userCode, data: userInfo} = userData || {};
 
-                        const {code, data: respond} = data || {};
+            if (userCode === 200) {
+                const {email, username, first_name, last_name, image_profile} = userInfo || {};
+                storage.set('user_info', JSON.stringify({email, username, first_name, last_name, image_profile}));
+            }
 
-                        if (code === 200) {
-                            const {email, username, first_name, last_name, image_profile} = respond || {};
-
-                            storage.set(
-                                'user_info',
-                                JSON.stringify({
-                                    email,
-                                    username,
-                                    first_name,
-                                    last_name,
-                                    image_profile
-                                })
-                            )
-                        }
-                    });
-
-                    navigation.navigate({
-                        name: "DashboardTabs",
-                    });
-                    showToast('success', '¡Bienvenido!', 'Inicio de sesión exitoso');
-                    hideLoader();
-                }
-            });
+            navigation.navigate("DashboardTabs");
+            showToast('success', '¡Bienvenido!', 'Inicio de sesión exitoso');
         } catch (error) {
-            console.error("Error sending login request: ", error);
+            console.error("Error sending login request:", error);
+        } finally {
             hideLoader();
             actionSheetRef.current?.show();
             unMount();
@@ -177,7 +160,8 @@ const useLogin = () => {
         setFormValues,
         onClose,
         actionSheetRef,
-        hideActionSheet
+        hideActionSheet,
+        showErrorColor,
     };
 };
 

@@ -4,7 +4,7 @@ import {
     TextInput,
     Animated,
     StyleSheet,
-    TextInputProps, TouchableOpacity,
+    TextInputProps, TouchableOpacity, Text,
 } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 
@@ -20,6 +20,7 @@ interface CustomInputProps extends TextInputProps {
     showBackground?: boolean;
     showOnFocus?: boolean;
     disabled?: boolean;
+    colorFocused?: string;
 }
 
 const CustomInput: React.FC<CustomInputProps> = ({
@@ -35,6 +36,7 @@ const CustomInput: React.FC<CustomInputProps> = ({
                                                      showBackground = true,
                                                      showOnFocus = false,
                                                      disabled = false,
+                                                     colorFocused = "#007BFF",
                                                      ...textInputProps
                                                  }) => {
     const [isFocused, setIsFocused] = useState(false);
@@ -72,7 +74,7 @@ const CustomInput: React.FC<CustomInputProps> = ({
             inputRange: [0, 1],
             outputRange: [16, 12],
         }),
-        color: isFocused ? "#007BFF" : "#999",
+        color: isFocused ? colorFocused : "#999",
         backgroundColor: showBackground ? backgroundColor : undefined,
     });
 
@@ -82,21 +84,21 @@ const CustomInput: React.FC<CustomInputProps> = ({
         }
     }, [showOnFocus]);
 
-    /*const getUnderlineStyle = (
-        animatedValue: any,
-        isFocused: any
-    ) => ({
-        height: 2,
-        backgroundColor: isFocused ? "#007AFF" : "#888",
-        transform: [
-            {
-                scaleX: animatedValue.interpolate({
-                    inputRange: [0, 1],
-                    outputRange: [0, 1],
-                }),
-            },
-        ],
-    });*/
+    // const getUnderlineStyle = (
+    //     animatedValue: any,
+    //     isFocused: any
+    // ) => ({
+    //     height: 2,
+    //     backgroundColor: isFocused ? "#007AFF" : "#888",
+    //     transform: [
+    //         {
+    //             scaleX: animatedValue.interpolate({
+    //                 inputRange: [0, 1],
+    //                 outputRange: [0, 1],
+    //             }),
+    //         },
+    //     ],
+    // });
 
     return (
         <View style={
@@ -169,6 +171,13 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
         position: "absolute",
         right: 2,
+    },
+    underline: {
+        position: "absolute",
+        left: 0,
+        right: 0,
+        bottom: -1,
+        height: 2,
     },
 });
 

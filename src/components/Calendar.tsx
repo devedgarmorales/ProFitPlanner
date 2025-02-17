@@ -14,9 +14,16 @@ const DateBadge = ({day, date}) => {
             width: ITEM_WIDTH,
             height: ITEM_HEIGHT,
         }]}>
-            {/*{color: actualDayNumber === date ? '#ffffff' : '#424242'}*/}
             <Text style={[styles.day, {color: '#424242'}]}>{day}</Text>
-            <Text style={[styles.date, {color: '#424242'}, (actualDayNumber === date && Platform.OS === 'ios') ? styles.circleIos : (actualDayNumber === date && Platform.OS !== 'ios') ? styles.circle : null]}>{date}</Text>
+            <Text
+                style={[
+                    styles.date,
+                    { color: '#424242' },
+                    actualDayNumber === date ? (Platform.OS === 'ios' ? styles.circleIos : styles.circle) : null,
+                ]}
+            >
+                {date}
+            </Text>
         </View>
     );
 };
@@ -52,9 +59,9 @@ const Calendar = () => {
                     showsHorizontalScrollIndicator={false}
                     contentContainerStyle={styles.listContainer}
                     renderItem={({item}) => (
-                        <View>
+                        <>
                             <DateBadge day={item.day} date={item.date}/>
-                        </View>
+                        </>
                     )}
                 />
             </View>

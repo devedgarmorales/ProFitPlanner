@@ -20,7 +20,7 @@ const DashboardScreen = ({navigation}: any) => {
         hideActionSheet();
     }, []);
 
-    const refreshingFunction = (state: any) => {
+    const refreshingFunction = (state: boolean) => {
         setRefreshing(state);
     }
 
