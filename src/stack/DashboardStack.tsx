@@ -10,13 +10,7 @@ import ShowAllFolders from "../screens/dashboardScreen/ShowAllFolders.tsx";
 import FolderEdit from "../screens/dashboardScreen/FolderEdit.tsx";
 
 import {useCheckTokenValidate} from "../utils/checkTokenValidate.tsx";
-
-export type RootStackParamList = {
-    Dashboard: undefined;
-    ShowAllFolders: undefined;
-    FolderDetail: { id: string, title: string };
-    FolderEdit: { id: string, title: string };
-};
+import {RootStackParamList} from "../interface/navigation/dashboardNavInterface.ts";
 
 const Stack = createStackNavigator<RootStackParamList>();
 

@@ -1,9 +1,9 @@
 import React, {useEffect, useState} from "react";
-import {BackHandler, FlatList, StyleSheet, View} from "react-native";
+import {BackHandler, FlatList, RefreshControl, StyleSheet, View} from "react-native";
 import {useNavigation} from "@react-navigation/native";
 import {NativeStackNavigationProp} from "@react-navigation/native-stack";
-import useFolderStore from "../../store/folderStore.tsx";
-import {RootStackParamList} from "../../interface/navigation/types.ts";
+import {useFolderStore} from "../../store/folderStore.tsx";
+import {RootStackParamList} from "../../interface/navigation/principalNavInterface.ts";
 import SearchComponent from "../../components/SearchComponent.tsx";
 import FoldersRenderList from "../../components/FoldersRenderList.tsx";
 
@@ -11,6 +11,7 @@ type NavigationProps = NativeStackNavigationProp<RootStackParamList>;
 
 const ShowAllFolders = () => {
     const {dataFolders} = useFolderStore();
+    const [refreshing, setRefreshing] = useState(false);
     const navigation = useNavigation<NavigationProps>();
     const [dataFoldersFiltered, setDataFoldersFiltered] = useState(dataFolders);
 
@@ -20,6 +21,19 @@ const ShowAllFolders = () => {
         });
         setDataFoldersFiltered(filterData);
     };
+
+    const refreshingFunction = (state: boolean) => {
+        setRefreshing(state);
+    }
+
+    const onRefreshFunction = () => {
+        refreshingFunction(true);
+    }
+
+    useEffect(() => {
+        refreshingFunction(false);
+        setDataFoldersFiltered(dataFolders);
+    }, [dataFolders, refreshing]);
 
     useEffect(() => {
         const handler = BackHandler.addEventListener(
@@ -35,18 +49,24 @@ const ShowAllFolders = () => {
 
     return (
         <View style={styles.container}>
-            <SearchComponent onSearch={handleSearch} setDataFoldersFiltered={setDataFoldersFiltered} />
+            <SearchComponent onSearch={handleSearch} setDataFoldersFiltered={setDataFoldersFiltered}/>
 
             <FlatList
                 data={dataFoldersFiltered}
                 keyExtractor={(_, index) => index.toString()}
                 numColumns={2}
                 renderItem={({item, index}) => (
-                    <FoldersRenderList item={item} index={index} navigation={navigation} />
+                    <FoldersRenderList item={item} index={index} navigation={navigation}/>
                 )}
                 columnWrapperStyle={styles.columnWrapper}
                 showsVerticalScrollIndicator={false}
-                ListFooterComponent={<View style={{ height: 14 }} />}
+                ListFooterComponent={<View style={{height: 14}}/>}
+                refreshControl={
+                    <RefreshControl
+                        refreshing={refreshing}
+                        onRefresh={onRefreshFunction}
+                    />
+                }
             />
         </View>
     )

@@ -5,10 +5,14 @@ import {
     StyleSheet,
     TouchableOpacity, Image, Dimensions, Alert,
 } from "react-native";
+import {NativeStackScreenProps} from "@react-navigation/native-stack";
 import CustomInput from "../../../components/CustomInput.tsx";
 import {useActionSheetStore} from "../../../store/actionSheetLoginStore.tsx";
+import {RootStackParamList} from "../../../interface/navigation/principalNavInterface.ts";
 
-const RecoverPassword = ({navigation}: any) => {
+type RecoverScreenProps = NativeStackScreenProps<RootStackParamList, "RecoverPassword">;
+
+const RecoverPassword = ({navigation}: RecoverScreenProps) => {
     const showActionSheet = useActionSheetStore((state) => state.showActionSheet);
 
     useEffect(() => {
@@ -37,9 +41,12 @@ const RecoverPassword = ({navigation}: any) => {
     const sendLogin = (formValues: any) => {
         console.log(formValues);
 
-        navigation.navigate({
-            name: "Login",
-        })
+        if (formValues.email === "") {
+            Alert.alert("Error", "El campo email es obligatorio");
+            return;
+        }
+
+        navigation.navigate("Login");
     };
 
     return (

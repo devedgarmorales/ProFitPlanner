@@ -1,26 +1,45 @@
-import React, {useRef} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {View, Text, StyleSheet, StatusBar, TouchableOpacity} from 'react-native';
 import {SafeAreaView} from "react-native-safe-area-context";
 import Icon from "react-native-vector-icons/AntDesign";
 import IconEnt from "react-native-vector-icons/Entypo";
 import {useNavigation} from "@react-navigation/native";
 import {ActionSheetRef} from "react-native-actions-sheet";
-import ActionSheetFolderOptions from "./actionSheet/ActionSheetFolderOptions.tsx";
 import {NativeStackNavigationProp} from "@react-navigation/native-stack";
+import ActionSheetFolderOptions from "./actionSheet/ActionSheetFolderOptions.tsx";
+import {useFolderStore} from "../store/folderStore.tsx";
 
 type RootStackParamList = {
     Dashboard: undefined;
+    FolderDetail: undefined;
 };
 
 type NavigationProps = NativeStackNavigationProp<RootStackParamList>;
 
-const FolderDetail = ({id, title}: any) => {
+interface FolderDetailProps {
+    id: string;
+    title: string;
+}
+
+const FolderDetail = ({id, title: initialTitle}: FolderDetailProps) => {
+    const [title, setTitle] = useState(initialTitle);
     const navigation = useNavigation<NavigationProps>();
     const actionSheetRef = useRef<ActionSheetRef>(null);
+    const {dataFolders} = useFolderStore();
 
     const openActionSheetOptionsFolder = () => {
-        actionSheetRef.current?.show();
+        if (actionSheetRef.current) {
+            actionSheetRef.current?.show();
+        }
     }
+
+    useEffect(() => {
+        dataFolders.map((folder: any) => {
+            if (folder.id === id) {
+                setTitle(folder.title);
+            }
+        });
+    }, [dataFolders]);
 
     return (
         <>

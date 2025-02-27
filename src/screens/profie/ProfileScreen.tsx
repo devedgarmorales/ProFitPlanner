@@ -1,11 +1,19 @@
 import React from "react";
 import {View, Image, TouchableOpacity, StyleSheet, Text, ScrollView, RefreshControl} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import {NativeStackScreenProps} from "@react-navigation/native-stack";
 import CustomInput from "../../components/CustomInput.tsx";
 import ActionSheetUpdateProfile from "../../components/actionSheet/ActionSheetUpdateProfile.tsx";
 import useUpdateProfile from "../../hooks/profile/useUpdateProfile.tsx";
 
-const ProfileScreen = ({navigation}: any) => {
+export type RootStackParamList = {
+    Login: undefined;
+    Profile: undefined;
+};
+
+type ProfileScreenProps = NativeStackScreenProps<RootStackParamList, "Profile">;
+
+const ProfileScreen = ({navigation}: ProfileScreenProps) => {
 
     const {
         user,

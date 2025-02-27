@@ -1,13 +1,15 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import apiFunctions from "../../service/folders/foldersFunctions.tsx";
 import CustomInput from "../../components/CustomInput.tsx";
 import {showToast} from "../../service/toast.tsx";
 import {useToastStore} from "../../store/toastStore.tsx";
+import {useFolderStore} from "../../store/folderStore.tsx";
 
 const FolderEdit = ({ navigation, route }: any) => {
     const { id, title } = route.params;
     const {setSizeToast, setToastPosition} = useToastStore();
+    const {dataFolders, setDataFolders} = useFolderStore();
     const [formValues, setFormValues] = React.useState({
         name: title,
     });
@@ -29,6 +31,16 @@ const FolderEdit = ({ navigation, route }: any) => {
         setToastPosition('bottom');
         await apiFunctions.putFolders(`folders/${id}/`, formValues, () => {}, () => {}, () => {}).then((res: any) => {
             console.log("updateFolder", res);
+            const newDataFolders = dataFolders.map((folder: any) => {
+                if (folder.id === id) {
+                    return {
+                        ...folder,
+                        title: formValues.name,
+                    };
+                }
+                return folder;
+            });
+            setDataFolders(newDataFolders);
             showToast('success', 'Folder', 'Actualizado correctamente');
             navigation.goBack();
         });

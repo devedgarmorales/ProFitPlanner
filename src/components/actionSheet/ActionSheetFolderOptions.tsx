@@ -6,6 +6,8 @@ import ActionSheetBase from "./ActionSheetBase.tsx";
 import apiFunctions from "../../service/folders/foldersFunctions.tsx";
 import {showToast} from "../../service/toast.tsx";
 import {useToastStore} from "../../store/toastStore.tsx";
+import {useFolderStore} from "../../store/folderStore.tsx";
+import {useFlatListStore} from "../../store/flatListRefStore.tsx";
 
 interface ActionSheetFolderOptionsProps {
     id: number;
@@ -17,6 +19,8 @@ const ActionSheetFolderOptions = forwardRef<ActionSheetRef, ActionSheetFolderOpt
     ({id, title, navigation}, ref) => {
         const actionSheetRef = useRef<ActionSheetRef>(null);
         const {setSizeToast, setToastPosition} = useToastStore();
+        const {dataFolders, setDataFolders} = useFolderStore();
+        const flatListRef = useFlatListStore((state) => state.flatListRef);
 
         const deleteFolderFunction = async () => {
             setSizeToast(240);
@@ -28,6 +32,9 @@ const ActionSheetFolderOptions = forwardRef<ActionSheetRef, ActionSheetFolderOpt
             })
                 .then((res: any) => {
                     console.log("deleteFolderFunction", res);
+
+                    setDataFolders(dataFolders.filter((folder: any) => folder.id !== id));
+                    flatListRef.current?.scrollToOffset({offset: 0, animated: true});
                     showToast('success', 'Folder', 'Eliminado correctamente');
                     actionSheetRef.current?.hide();
                     navigation.goBack();

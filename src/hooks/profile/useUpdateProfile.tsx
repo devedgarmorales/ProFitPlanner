@@ -1,21 +1,34 @@
 import {useEffect, useRef, useState} from "react";
 import {ActionSheetRef} from "react-native-actions-sheet";
+import {NativeStackNavigationProp} from "@react-navigation/native-stack";
 import {MMKV} from "react-native-mmkv";
+import {useBackExitApp} from "../../utils/useBackExitApp.tsx";
+import {useCheckTokenValidate} from "../../utils/checkTokenValidate.tsx";
 import useLoaderStore from "../../store/loaderStore.tsx";
 import {useToastStore} from "../../store/toastStore.tsx";
-import {useCheckTokenValidate} from "../../utils/checkTokenValidate.tsx";
 import authFunctions from "../../service/auth/authFunctions.tsx";
 import {showToast} from "../../service/toast.tsx";
 import userFunctions from "../../service/user/userFunctions.tsx";
 import {ProfileScreenInterface} from "../../interface/profileScreen/profileScreenInterface.ts";
 
+export type RootStackParamList = {
+    Login: undefined;
+    Profile: undefined;
+}
+
+interface UseUpdateProfileProps {
+    navigation: NativeStackNavigationProp<RootStackParamList, "Profile">;
+}
+
 const storage = new MMKV();
 
-const useUpdateProfile = ({navigation}: any) => {
+const useUpdateProfile = ({navigation}: UseUpdateProfileProps) => {
     const actionSheetRef = useRef<ActionSheetRef>(null);
     const {showLoader, hideLoader} = useLoaderStore();
     const {setSizeToast, setToastPosition} = useToastStore();
     const [refreshing, setRefreshing] = useState(false);
+
+    useBackExitApp();
 
     const [user, setUser] = useState({
         first_name: "",

@@ -140,7 +140,7 @@ const makeRequest = async (
             { type: "POST", petition: api.post},
             { type: "PUT", petition: api.put},
             { type: "DELETE", petition: api.delete}
-        ]
+        ];
 
         for (const res of typeRes) {
             if (res.type === method) {

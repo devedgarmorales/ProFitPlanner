@@ -11,8 +11,13 @@ import {
 import CheckBox from "@react-native-community/checkbox";
 import CustomInput from "../../../components/CustomInput.tsx";
 import useRegister from "../../../hooks/register/useRegister.tsx";
+import {NativeStackScreenProps} from "@react-navigation/native-stack";
+import {RootStackParamList} from "../../../interface/navigation/principalNavInterface.ts";
 
-const RegisterScreen = ({navigation}: any) => {
+type RegisterScreenProps = NativeStackScreenProps<RootStackParamList, "Register">;
+
+const RegisterScreen = ({navigation}: RegisterScreenProps) => {
+
     const {
         formValues,
         handleCheckboxChange,

@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import {View, TextInput, StyleSheet, TouchableOpacity, Dimensions} from "react-native";
 import Icon from "react-native-vector-icons/Feather";
-import useFolderStore from "../store/folderStore.tsx";
+import {useFolderStore} from "../store/folderStore.tsx";
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -21,11 +21,7 @@ const SearchBar = ({onSearch, setDataFoldersFiltered}: any) => {
     };
 
     return (
-        <View style={{
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "center",
-        }}>
+        <View style={styles.container}>
             <View style={styles.searchContainer}>
                 <Icon name="search" size={20} color="gray" style={styles.searchIcon}/>
                 <TextInput
@@ -48,6 +44,11 @@ const SearchBar = ({onSearch, setDataFoldersFiltered}: any) => {
 };
 
 const styles = StyleSheet.create({
+    container: {
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center",
+    },
     searchContainer: {
         flexDirection: "row",
         alignItems: "center",

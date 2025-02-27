@@ -1,4 +1,4 @@
-import React, {useRef, useState, forwardRef, useImperativeHandle} from "react";
+import React, {useRef, forwardRef, useImperativeHandle} from "react";
 import {StyleSheet, Text, TextInput, TouchableOpacity, View} from "react-native";
 import {ActionSheetRef} from "react-native-actions-sheet";
 import {useFocusEffect} from "@react-navigation/native";
@@ -9,11 +9,21 @@ import {useToastStore} from "../store/toastStore.tsx";
 import apiFunctions from "../service/folders/foldersFunctions.tsx";
 import useUpdateToken from "../store/updateTokenRefresh.tsx";
 import {useCheckTokenValidate} from "../utils/checkTokenValidate.tsx";
+import {useFolderStore} from "../store/folderStore.tsx";
+import {NativeStackScreenProps} from "@react-navigation/native-stack";
+import {RootStackParamList} from "../interface/navigation/dashboardNavInterface.ts";
 
-const ThreeButtonDashboard = forwardRef(({navigation, refreshing}: any, ref) => {
+type DashboardScreenProps = NativeStackScreenProps<RootStackParamList, "Dashboard">;
+
+type ThreeButtonDashboardProps = {
+    navigation: DashboardScreenProps["navigation"];
+    refreshing: (value: boolean) => void;
+};
+
+const ThreeButtonDashboard = forwardRef(({navigation, refreshing}: ThreeButtonDashboardProps, ref) => {
     const actionSheetRef = useRef<ActionSheetRef>(null);
     const inputRef = useRef<TextInput>(null);
-    const [dataFolders, setDataFolders] = useState<Array<string>>([]);
+    const {setDataFolders} = useFolderStore();
 
     const activateActionSheet = () => {
         if (actionSheetRef.current) {
@@ -81,39 +91,40 @@ const ThreeButtonDashboard = forwardRef(({navigation, refreshing}: any, ref) => 
     }));
 
     return (
-            <View style={{flex: 1}}>
-                <View style={styles.buttonContainer}>
-                    <View style={styles.row}>
-                        <TouchableOpacity style={styles.button}>
-                            <Text style={styles.buttonText}>Nueva Rutina</Text>
-                        </TouchableOpacity>
-
-                        <TouchableOpacity style={styles.button} onPress={activateActionSheet}>
-                            <Text style={styles.buttonText}>Crear Folder</Text>
-                        </TouchableOpacity>
-                    </View>
-                    <TouchableOpacity style={[styles.button, styles.wideButton]}>
-                        <Text style={styles.buttonText}>Comenzar Entrenamiento Rápido</Text>
+        <View style={styles.container}>
+            <View style={styles.buttonContainer}>
+                <View style={styles.row}>
+                    <TouchableOpacity style={styles.button}>
+                        <Text style={styles.buttonText}>Nueva Rutina</Text>
                     </TouchableOpacity>
 
-                    <View style={{marginTop: 20, marginBottom: 20}}>
-                        <Separator/>
-                    </View>
+                    <TouchableOpacity style={styles.button} onPress={activateActionSheet}>
+                        <Text style={styles.buttonText}>Crear Folder</Text>
+                    </TouchableOpacity>
                 </View>
+                <TouchableOpacity style={[styles.button, styles.wideButton]}>
+                    <Text style={styles.buttonText}>Comenzar Entrenamiento Rápido</Text>
+                </TouchableOpacity>
 
-                <Folders dataFolders={dataFolders} navigation={navigation}/>
-
-                <ActionSheetCreateFolder
-                    key={Math.random()}
-                    ref={actionSheetRef}
-                    navigation={navigation}
-                    inputRef={inputRef}
-                />
+                <View style={{marginTop: 20, marginBottom: 20}}>
+                    <Separator/>
+                </View>
             </View>
+
+            <Folders navigation={navigation}/>
+
+            <ActionSheetCreateFolder
+                key={Math.random()}
+                ref={actionSheetRef}
+                navigation={navigation}
+                inputRef={inputRef}
+            />
+        </View>
     );
 });
 
 const styles = StyleSheet.create({
+    container: {flex: 1},
     buttonContainer: {
         flex: 1,
         backgroundColor: "#ffffff",

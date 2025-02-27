@@ -5,15 +5,14 @@ import {Text, View} from "react-native";
 import DashboardStack from "../stack/DashboardStack.tsx";
 import {useCheckTokenValidate} from "../utils/checkTokenValidate.tsx";
 import ProfileScreen from "../screens/profie/ProfileScreen.tsx";
+import {useBackExitApp} from "../utils/useBackExitApp.tsx";
 
 const Tab = createBottomTabNavigator();
 
 const WorkoutScreen = () => {
 
-    // useBackHandler(() => {
-    //     exitApp();
-    //     return true;
-    // });
+    useBackExitApp();
+
     useCheckTokenValidate();
 
     return (
@@ -32,6 +31,8 @@ const WorkoutScreen = () => {
 }
 
 const HistoryScreen = () => {
+
+    useBackExitApp();
 
     useCheckTokenValidate();
 
@@ -81,15 +82,15 @@ export default function BottomTabs() {
             <Tab.Screen name="Entrenamientos" component={WorkoutScreen}/>
             <Tab.Screen name="Historial" component={HistoryScreen}/>
             <Tab.Screen name="Perfil" component={ProfileScreen}
-                options={{
-                    title: 'Mi Perfil',
-                    headerShown: true,
-                    headerTitleAlign: 'center',
-                    headerTitleStyle: {
-                        fontWeight: 'bold',
-                        fontSize: 18,
-                    },
-                }}
+                        options={{
+                            title: 'Mi Perfil',
+                            headerShown: true,
+                            headerTitleAlign: 'center',
+                            headerTitleStyle: {
+                                fontWeight: 'bold',
+                                fontSize: 18,
+                            },
+                        }}
             />
         </Tab.Navigator>
     );

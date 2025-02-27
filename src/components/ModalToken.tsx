@@ -7,7 +7,7 @@ import useLoaderStore from "../store/loaderStore.tsx";
 import {useToastStore} from "../store/toastStore.tsx";
 import {useNavigation} from "@react-navigation/native";
 import {NativeStackNavigationProp} from "@react-navigation/native-stack";
-import {RootStackParamList} from "../interface/navigation/types.ts";
+import {RootStackParamList} from "../interface/navigation/principalNavInterface.ts";
 import useTokenModalStore from "../store/tokenModalStore.tsx";
 import useUpdateToken from "../store/updateTokenRefresh.tsx";
 

@@ -6,8 +6,14 @@ import authFunctions from "../../service/auth/authFunctions.tsx";
 import useLoaderStore from "../../store/loaderStore.tsx";
 import {useToastStore} from "../../store/toastStore.tsx";
 import {useActionSheetStore} from "../../store/actionSheetLoginStore.tsx";
+import {NativeStackNavigationProp} from "@react-navigation/native-stack";
+import {RootStackParamList} from "../../interface/navigation/principalNavInterface.ts";
 
-const useRegister = ({navigation}: any) => {
+interface UseRegisterProps {
+    navigation: NativeStackNavigationProp<RootStackParamList, "Register">;
+}
+
+const useRegister = ({navigation}: UseRegisterProps) => {
     const [formValues, setFormValues] = useState({
         name: "",
         email: "",
@@ -87,9 +93,7 @@ const useRegister = ({navigation}: any) => {
                 const {code} = data || {};
 
                 if (code === 201) {
-                    navigation.navigate({
-                        name: "Login",
-                    });
+                    navigation.navigate("Login");
                     showToast('success', 'Inicia sesión', data.message);
                 }
 

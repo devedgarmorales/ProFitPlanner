@@ -5,9 +5,7 @@ interface FolderState {
     setDataFolders: (folders: any[]) => void;
 }
 
-const useFolderStore = create<FolderState>((set) => ({
+export const useFolderStore = create<FolderState>((set) => ({
     dataFolders: [],
     setDataFolders: (folders) => set(() => ({ dataFolders: folders })),
 }));
-
-export default useFolderStore;

@@ -1,34 +1,22 @@
-import React, {useEffect, useState, useRef} from "react";
+import React from "react";
 import {StyleSheet, ScrollView, RefreshControl} from "react-native";
+import {NativeStackScreenProps} from "@react-navigation/native-stack";
 import Calendar from "../../components/Calendar.tsx";
 import ThreeButtonDashboard from "../../components/ThreeButtonDashboard.tsx";
-import useLogin from "../../hooks/login/useLogin.tsx";
 import Separator from "../../components/Separator.tsx";
-import {useBackHandler, exitApp} from "../../utils/goBackNav.tsx";
+import useDashboard from "../../hooks/dashboard/useDashboard.tsx";
+import {RootStackParamList} from "../../interface/navigation/dashboardNavInterface.ts";
 
-const DashboardScreen = ({navigation}: any) => {
-    const {hideActionSheet} = useLogin();
-    const [refreshing, setRefreshing] = useState(false);
-    const sonRef = useRef<{ onRefresh: () => void } | null>(null);
+type DashboardScreenProps = NativeStackScreenProps<RootStackParamList, "Dashboard">;
 
-    useBackHandler(() => {
-        exitApp();
-        return true;
-    });
+const DashboardScreen = ({navigation}: DashboardScreenProps) => {
 
-    useEffect(() => {
-        hideActionSheet();
-    }, []);
-
-    const refreshingFunction = (state: boolean) => {
-        setRefreshing(state);
-    }
-
-    const onRefreshFunction = () => {
-        if (sonRef.current) {
-            sonRef.current.onRefresh();
-        }
-    }
+    const {
+        refreshingFunction,
+        onRefreshFunction,
+        sonRef,
+        refreshing
+    } = useDashboard();
 
     return (
         <ScrollView style={styles.container}
@@ -38,7 +26,7 @@ const DashboardScreen = ({navigation}: any) => {
                     }>
             <Separator/>
             <Calendar/>
-            <ThreeButtonDashboard navigation={navigation} refreshing={refreshingFunction}/>
+            <ThreeButtonDashboard navigation={navigation} refreshing={refreshingFunction} ref={sonRef} />
         </ScrollView>
     );
 };

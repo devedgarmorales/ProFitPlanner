@@ -1,9 +1,17 @@
 import React from "react";
 import {Dimensions, Image, StyleSheet, Text, TouchableOpacity, View} from "react-native";
+import {NativeStackScreenProps} from "@react-navigation/native-stack";
+import {RootStackParamList} from "../interface/navigation/dashboardNavInterface.ts";
 
 const screenWidth = Dimensions.get('window').width;
 
-const CardItem = ({image, title}: any) => (
+interface CardItemProps {
+    index: number;
+    image: string;
+    title: string;
+}
+
+const CardItem = ({image, title}: CardItemProps) => (
     <View style={[styles.card, {
         marginLeft: 10,
     }]}>
@@ -18,20 +26,24 @@ const CardItem = ({image, title}: any) => (
     </View>
 );
 
+interface FoldersRenderListProps {
+    item: { id: string; title: string; image: string };
+    index: number;
+    navigation: NativeStackScreenProps<RootStackParamList, "Dashboard">["navigation"];
+}
+
 const FoldersRenderList = ({
                                item,
                                index,
                                navigation,
-                           }: any) => {
+                           }: FoldersRenderListProps) => {
     return (
         <TouchableOpacity onPress={() => navigation.navigate('FolderDetail', {id: item.id, title: item.title})}>
-            <>
-                <CardItem
-                    index={index}
-                    image={item.image !== null ? item.image : ''}
-                    title={item.title !== null ? item.title : ''}
-                />
-            </>
+            <CardItem
+                index={index}
+                image={item.image !== null ? item.image : ''}
+                title={item.title !== null ? item.title : ''}
+            />
         </TouchableOpacity>
     );
 };

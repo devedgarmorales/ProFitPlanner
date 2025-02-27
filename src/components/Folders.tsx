@@ -1,14 +1,34 @@
-import React from "react";
+import React, {useEffect, useRef} from "react";
 import {FlatList, StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import Icon from 'react-native-vector-icons/AntDesign';
 import FoldersRenderList from "./FoldersRenderList.tsx";
-import useFolderStore from "../store/folderStore.tsx";
+import {useFolderStore} from "../store/folderStore.tsx";
+import {useFlatListStore} from "../store/flatListRefStore.tsx";
+import {NativeStackScreenProps} from "@react-navigation/native-stack";
+import {RootStackParamList} from "../interface/navigation/dashboardNavInterface.ts";
 
-const Folders = ({dataFolders, navigation}: any) => {
-    const {setDataFolders} = useFolderStore();
+type DashboardScreenProps = NativeStackScreenProps<RootStackParamList, "Dashboard">;
+
+type FoldersProps = {
+    navigation: DashboardScreenProps["navigation"];
+};
+
+const Folders = ({navigation}: FoldersProps) => {
+    const FolderRef = useRef<FlatList>(null);
+    const {dataFolders} = useFolderStore();
+    const {setFlatListRef} = useFlatListStore();
+
+    useEffect(() => {
+        if (FolderRef.current) {
+            setFlatListRef(FolderRef);
+        }
+
+        return () => {
+            setFlatListRef({current: null});
+        };
+    }, []);
 
     const handleShowMore = () => {
-        setDataFolders(dataFolders);
         navigation.navigate('ShowAllFolders');
     };
 
@@ -32,7 +52,9 @@ const Folders = ({dataFolders, navigation}: any) => {
             }
 
             <FlatList
+                ref={FolderRef}
                 data={dataFolders}
+                extraData={dataFolders}
                 keyExtractor={(_, index) => index.toString()}
                 horizontal
                 contentContainerStyle={styles.listContainer}

@@ -2,7 +2,7 @@ import * as React from "react";
 import {Image, StyleSheet, View, Dimensions} from "react-native";
 import {NativeStackScreenProps} from "@react-navigation/native-stack";
 import ActionSheetLogin from "../../../components/actionSheet/ActionSheetLogin.tsx";
-import {RootStackParamList} from "../../../interface/navigation/types.ts";
+import {RootStackParamList} from "../../../interface/navigation/principalNavInterface.ts";
 
 type LoginScreenProps = NativeStackScreenProps<RootStackParamList, "Login">;
 
