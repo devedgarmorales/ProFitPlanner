@@ -78,7 +78,6 @@ const useLogin = () => {
 
         if (!email || !password) {
             setSizeToast(80);
-            setToastPosition('top');
             hideLoader();
             setShowErrorColor(true);
             return;
@@ -121,14 +120,14 @@ const useLogin = () => {
                 const {email, username, first_name, last_name, image_profile} = userInfo || {};
                 storage.set('user_info', JSON.stringify({email, username, first_name, last_name, image_profile}));
             }
-
+            hideActionSheet();
             navigation.navigate("DashboardTabs");
             showToast('success', '¡Bienvenido!', 'Inicio de sesión exitoso');
         } catch (error) {
             console.error("Error sending login request:", error);
         } finally {
             hideLoader();
-            actionSheetRef.current?.show();
+            showActionSheet();
             unMount();
         }
     };

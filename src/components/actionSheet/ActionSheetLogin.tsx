@@ -1,5 +1,4 @@
 import * as React from "react";
-import ActionSheet from "react-native-actions-sheet";
 import {
     StyleSheet,
     Text,
@@ -7,8 +6,9 @@ import {
     View,
     Platform,
 } from "react-native";
-import useLogin from "../../hooks/login/useLogin.tsx";
+import ActionSheetBase from "./ActionSheetBase.tsx";
 import CustomInput from "../CustomInput.tsx";
+import useLogin from "../../hooks/login/useLogin.tsx";
 
 const ActionSheetLogin = ({navigation}: any) => {
     const {
@@ -23,17 +23,8 @@ const ActionSheetLogin = ({navigation}: any) => {
     } = useLogin();
 
     return (
-        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', zIndex: 1}}>
-            <ActionSheet
-                ref={actionSheetRef}
-                gestureEnabled
-                closable={false}
-                isModal={true}
-                overlayColor="transparent"
-                indicatorStyle={{
-                    width: 100,
-                    alignSelf: "center",
-                }}>
+        <View style={styles.content}>
+            <ActionSheetBase showBackgroundColor={true} actionSheetRef={actionSheetRef} gesture={false} closeable={false}>
                 <View style={styles.modalContainer}>
                     <View style={styles.actionSheet}>
                         <Text style={styles.title}>Bienvenido a ProFitPlanner</Text>
@@ -75,10 +66,9 @@ const ActionSheetLogin = ({navigation}: any) => {
                                 <View style={{
                                     marginBottom: 6,
                                 }}>
-                                    <Text style={{
-                                        color: "#ff001e",
-                                        fontSize: 12,
-                                    }}>*Completa todos los campos</Text>
+                                    <Text style={[styles.emptyFields, {
+                                        color: "#ff001e"
+                                    }]}>*Completa todos los campos</Text>
                                 </View>
                             )
                         }
@@ -114,12 +104,13 @@ const ActionSheetLogin = ({navigation}: any) => {
                         </TouchableOpacity>
                     </View>
                 </View>
-            </ActionSheet>
+            </ActionSheetBase>
         </View>
     );
 };
 
 const styles = StyleSheet.create({
+    content: {flex: 1, justifyContent: 'center', alignItems: 'center', zIndex: 1},
     modalContainer: {
         justifyContent: "flex-end",
     },
@@ -129,7 +120,7 @@ const styles = StyleSheet.create({
         borderTopLeftRadius: 20,
         borderTopRightRadius: 20,
         paddingBottom: Platform.OS === "ios" ? 0 : 30,
-        paddingTop: 50,
+        paddingTop: 40,
         paddingHorizontal: 30,
     },
     title: {
@@ -150,24 +141,6 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "center",
     },
-    input: {
-        height: 40,
-        color: "#000",
-        padding: 0,
-        paddingHorizontal: 10,
-    },
-    inputPassword: {
-        flex: 1,
-        height: 40,
-        paddingHorizontal: 10,
-    },
-    underline: {
-        position: "absolute",
-        left: 0,
-        right: 0,
-        bottom: -1,
-        height: 2,
-    },
     leftDirection: {
         marginBottom: 10,
         marginTop: 6,
@@ -178,13 +151,13 @@ const styles = StyleSheet.create({
         marginTop: 6,
         alignSelf: "flex-end",
     },
+    emptyFields: {
+        fontSize: 12,
+    },
     linksContainer: {
         marginBottom: 20,
     },
     link: {
-        color: "#007BFF",
-    },
-    link2: {
         color: "#007BFF",
     },
     button: {
@@ -197,9 +170,6 @@ const styles = StyleSheet.create({
         color: "white",
         fontWeight: "bold",
         fontSize: 16,
-    },
-    eyeIcon: {
-        paddingHorizontal: 10,
     },
 });
 

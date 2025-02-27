@@ -4,7 +4,7 @@ import {
     TextInput,
     Animated,
     StyleSheet,
-    TextInputProps, TouchableOpacity, Text,
+    TextInputProps, TouchableOpacity,
 } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 
@@ -21,6 +21,8 @@ interface CustomInputProps extends TextInputProps {
     showOnFocus?: boolean;
     disabled?: boolean;
     colorFocused?: string;
+    inputRef?: any;
+    height?: number;
 }
 
 const CustomInput: React.FC<CustomInputProps> = ({
@@ -37,6 +39,8 @@ const CustomInput: React.FC<CustomInputProps> = ({
                                                      showOnFocus = false,
                                                      disabled = false,
                                                      colorFocused = "#007BFF",
+                                                     inputRef = null,
+                                                     height = 40,
                                                      ...textInputProps
                                                  }) => {
     const [isFocused, setIsFocused] = useState(false);
@@ -106,13 +110,14 @@ const CustomInput: React.FC<CustomInputProps> = ({
         }>
             <Animated.Text style={getLabelStyle()}>{label}</Animated.Text>
             <TextInput
-                style={styles.input}
+                style={[styles.input, {height}]}
                 value={value}
                 onFocus={handleFocus}
                 onBlur={handleBlur}
                 onChangeText={(text) => onValueChange(name, text)}
                 placeholder=""
                 editable={!disabled}
+                ref={inputRef}
                 {...textInputProps}
             />
             {
@@ -162,7 +167,6 @@ const styles = StyleSheet.create({
     },
     input: {
         fontSize: 16,
-        height: 40,
         color: "#000",
         width: "100%",
         paddingHorizontal: 10

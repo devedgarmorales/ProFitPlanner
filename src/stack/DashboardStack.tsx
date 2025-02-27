@@ -1,11 +1,24 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
-import DashboardScreen from '../screens/dashboardScreen/DashboardScreen.tsx';
-import FolderDetail from "../screens/dashboardScreen/FolderDetail.tsx";
-import {useCheckTokenValidate} from "../utils/checkTokenValidate.tsx";
-import Header from "../components/Header.tsx";
 
-const Stack = createStackNavigator();
+import Header from "../components/Header.tsx";
+import HeaderFolderDetail from "../components/HeaderFolderDetail.tsx";
+
+import DashboardScreen from '../screens/dashboardScreen/DashboardScreen.tsx';
+import FolderDetail from '../screens/dashboardScreen/FolderDetail.tsx';
+import ShowAllFolders from "../screens/dashboardScreen/ShowAllFolders.tsx";
+import FolderEdit from "../screens/dashboardScreen/FolderEdit.tsx";
+
+import {useCheckTokenValidate} from "../utils/checkTokenValidate.tsx";
+
+export type RootStackParamList = {
+    Dashboard: undefined;
+    ShowAllFolders: undefined;
+    FolderDetail: { id: string, title: string };
+    FolderEdit: { id: string, title: string };
+};
+
+const Stack = createStackNavigator<RootStackParamList>();
 
 export default function TabStack() {
 
@@ -24,10 +37,31 @@ export default function TabStack() {
                 }}
             />
             <Stack.Screen
-                name="FolderDetails"
+                name="FolderDetail"
                 component={FolderDetail}
+                options={({ route }) => ({
+                    headerShown: true,
+                    header: () => <HeaderFolderDetail id={route.params.id} title={route.params.title} />,
+                    title: '',
+                })}
+            />
+            <Stack.Screen
+                name="ShowAllFolders"
+                component={ShowAllFolders}
                 options={{
                     title: 'Mis Folders',
+                    headerTitleAlign: 'center',
+                    headerTitleStyle: {
+                        fontWeight: 'bold',
+                        fontSize: 18,
+                    },
+                }}
+            />
+            <Stack.Screen
+                name="FolderEdit"
+                component={FolderEdit}
+                options={{
+                    title: 'Editar Folder',
                     headerTitleAlign: 'center',
                     headerTitleStyle: {
                         fontWeight: 'bold',

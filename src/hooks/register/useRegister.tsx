@@ -1,10 +1,11 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
+import {BackHandler, Keyboard} from "react-native";
+import {useFocusEffect} from "@react-navigation/native";
 import {showToast} from "../../service/toast.tsx";
 import authFunctions from "../../service/auth/authFunctions.tsx";
 import useLoaderStore from "../../store/loaderStore.tsx";
-import {BackHandler, Keyboard} from "react-native";
 import {useToastStore} from "../../store/toastStore.tsx";
-import {useFocusEffect} from "@react-navigation/native";
+import {useActionSheetStore} from "../../store/actionSheetLoginStore.tsx";
 
 const useRegister = ({navigation}: any) => {
     const [formValues, setFormValues] = useState({
@@ -12,12 +13,27 @@ const useRegister = ({navigation}: any) => {
         email: "",
         password: "",
         confirmPassword: "",
-    })
+    });
+    const [showErrorColor, setShowErrorColor] = useState(false);
     const [isSelected, setIsSelected] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const {showLoader, hideLoader} = useLoaderStore();
     const {setSizeToast} = useToastStore();
+
+    const showActionSheet = useActionSheetStore((state) => state.showActionSheet);
+
+    useEffect(() => {
+        const handleBeforeRemove = () => {
+            showActionSheet();
+        };
+
+        const unsubscribe = navigation.addListener('beforeRemove', handleBeforeRemove);
+
+        return () => {
+            unsubscribe();
+        };
+    }, [navigation]);
 
     useFocusEffect(
         React.useCallback(() => {
@@ -46,7 +62,9 @@ const useRegister = ({navigation}: any) => {
     const sendRegisterData = async () => {
         if (!formValues.name || !formValues.email || !formValues.password || !formValues.confirmPassword) {
             setSizeToast(80);
-            return showToast('error', '¡Ocurrió un error!', 'Todos los campos son obligatorios');
+            hideLoader();
+            setShowErrorColor(true);
+            return;
         }
 
         setSizeToast(200);
@@ -102,6 +120,7 @@ const useRegister = ({navigation}: any) => {
         setShowPassword,
         showConfirmPassword,
         setShowConfirmPassword,
+        showErrorColor,
     }
 };
 

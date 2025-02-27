@@ -2,7 +2,8 @@ import React, {forwardRef, useImperativeHandle, useRef} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import Icon from "react-native-vector-icons/FontAwesome";
 import {openCamera, openPicker} from "@baronha/react-native-multiple-image-picker";
-import ActionSheet, {ActionSheetRef} from 'react-native-actions-sheet';
+import {ActionSheetRef} from 'react-native-actions-sheet';
+import ActionSheetBase from "./ActionSheetBase.tsx";
 import userFunctions from "../../service/user/userFunctions.tsx";
 import useLoaderStore from "../../store/loaderStore.tsx";
 import {showToast} from "../../service/toast.tsx";
@@ -97,13 +98,15 @@ const ActionSheetCreateFolder = forwardRef<ActionSheetRef, ActionSheetCreateFold
             }
         }
 
-        async function delteImageProfile() {
+        async function deleteImageProfile() {
             showLoader();
             setSizeToast(120);
             setToastPosition('top');
             const userData = JSON.parse(storage.getString("user_info") || "{}");
 
-            await userFunctions.deleteImageProfile("auth/user/image-profile/", hideLoader, () => {}, () => {}, false).then((res: any) => {
+            await userFunctions.deleteImageProfile("auth/user/image-profile/", hideLoader, () => {
+            }, () => {
+            }, false).then((res: any) => {
                 const {code} = res?.data || {};
 
                 if (code === 200) {
@@ -143,31 +146,28 @@ const ActionSheetCreateFolder = forwardRef<ActionSheetRef, ActionSheetCreateFold
         } as ActionSheetRef));
 
         return (
-            <>
-                <ActionSheet
-                    ref={actionSheetRef}
-                    gestureEnabled={true}
-                    indicatorStyle={{
-                        width: 100,
-                    }}
-                >
-                    <View style={styles.actionSheetContent}>
-                        <TouchableOpacity style={styles.row} onPress={openCameraActionSheet}>
-                            <Icon name="camera" size={20} color={"gray"}/>
-                            <Text style={styles.sheetTitle}>Tomar foto</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={[styles.row, styles.borderTop]} onPress={selectImage}>
-                            <Icon name="image" size={20} color={"gray"}/>
-                            <Text style={styles.sheetTitle}>Selecciona imagen de la galeria</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={[styles.row, styles.borderTop]}
-                                          onPress={delteImageProfile}>
-                            <Icon name="trash" size={20} color={"red"}/>
-                            <Text style={[styles.sheetTitle, {color: "red"}]}>Eliminar imagen de perfil</Text>
-                        </TouchableOpacity>
-                    </View>
-                </ActionSheet>
-            </>
+            <ActionSheetBase
+                showBackgroundColor={false}
+                actionSheetRef={actionSheetRef}
+                closeable={true}
+                gesture={false}
+            >
+                <View style={styles.actionSheetContent}>
+                    <TouchableOpacity style={styles.row} onPress={openCameraActionSheet}>
+                        <Icon name="camera" size={20} color={"gray"}/>
+                        <Text style={styles.sheetTitle}>Tomar foto</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={[styles.row, styles.borderTop]} onPress={selectImage}>
+                        <Icon name="image" size={20} color={"gray"}/>
+                        <Text style={styles.sheetTitle}>Selecciona imagen de la galeria</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={[styles.row, styles.borderTop]}
+                                      onPress={deleteImageProfile}>
+                        <Icon name="trash" size={20} color={"red"}/>
+                        <Text style={[styles.sheetTitle, {color: "red"}]}>Eliminar imagen de perfil</Text>
+                    </TouchableOpacity>
+                </View>
+            </ActionSheetBase>
         );
     }
 );

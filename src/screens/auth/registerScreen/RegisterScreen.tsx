@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React from "react";
 import {
     Dimensions,
     Image,
@@ -11,24 +11,8 @@ import {
 import CheckBox from "@react-native-community/checkbox";
 import CustomInput from "../../../components/CustomInput.tsx";
 import useRegister from "../../../hooks/register/useRegister.tsx";
-import {useActionSheetStore} from "../../../store/actionSheetLoginStore.tsx";
 
 const RegisterScreen = ({navigation}: any) => {
-
-    const showActionSheet = useActionSheetStore((state) => state.showActionSheet);
-
-    useEffect(() => {
-        const handleBeforeRemove = () => {
-            showActionSheet();
-        };
-
-        const unsubscribe = navigation.addListener('beforeRemove', handleBeforeRemove);
-
-        return () => {
-            unsubscribe();
-        };
-    }, [navigation]);
-
     const {
         formValues,
         handleCheckboxChange,
@@ -39,6 +23,7 @@ const RegisterScreen = ({navigation}: any) => {
         setShowPassword,
         showConfirmPassword,
         setShowConfirmPassword,
+        showErrorColor,
     } = useRegister({navigation});
 
     return (
@@ -51,13 +36,8 @@ const RegisterScreen = ({navigation}: any) => {
 
             <Text style={styles.title}>Registro</Text>
             <Text style={styles.subtitle}>Crea tu cuenta para comenzar</Text>
-            <View style={{
-                backgroundColor: "#fff",
-                paddingHorizontal: 20,
-                borderRadius: 10,
-                marginHorizontal: 20,
-            }}>
 
+            <View style={styles.content}>
                 <View style={[styles.containerInput, {marginTop: 30}]}>
                     <CustomInput
                         label="Ingresa tu usuario"
@@ -66,7 +46,9 @@ const RegisterScreen = ({navigation}: any) => {
                         onValueChange={handleInputChange}
                         keyboardType="default"
                         autoCapitalize="none"
-                        color="#000000"
+                        placeholder=""
+                        showOnFocus={showErrorColor}
+                        colorFocused={(!formValues.name && showErrorColor) ? "#ff001e" : undefined}
                     />
                 </View>
                 <View style={styles.containerInput}>
@@ -77,7 +59,9 @@ const RegisterScreen = ({navigation}: any) => {
                         onValueChange={handleInputChange}
                         keyboardType="email-address"
                         autoCapitalize="none"
-                        color="#000000"
+                        placeholder=""
+                        showOnFocus={showErrorColor}
+                        colorFocused={(!formValues.email && showErrorColor) ? "#ff001e" : undefined}
                     />
                 </View>
                 <View style={styles.containerInput}>
@@ -88,9 +72,10 @@ const RegisterScreen = ({navigation}: any) => {
                         onValueChange={handleInputChange}
                         secureTextEntry={!showPassword}
                         placeholder=""
+                        showOnFocus={showErrorColor}
+                        colorFocused={(!formValues.password && showErrorColor) ? "#ff001e" : undefined}
                         setPasswordVisible={setShowPassword}
                         passwordVisible={showPassword}
-                        color="#000000"
                     />
                 </View>
                 <View style={styles.containerInput}>
@@ -101,16 +86,32 @@ const RegisterScreen = ({navigation}: any) => {
                         onValueChange={handleInputChange}
                         secureTextEntry={!showConfirmPassword}
                         placeholder=""
+                        showOnFocus={showErrorColor}
+                        colorFocused={(!formValues.confirmPassword && showErrorColor) ? "#ff001e" : undefined}
                         setPasswordVisible={setShowConfirmPassword}
                         passwordVisible={showConfirmPassword}
                         color="#000000"
                     />
                 </View>
+
+                {
+                    showErrorColor && (
+                        <View style={{
+                            marginTop: 6,
+                        }}>
+                            <Text style={[styles.emptyFields, {
+                                color: "#ff001e"
+                            }]}>*Completa todos los campos</Text>
+                        </View>
+                    )
+                }
+
                 <TouchableOpacity disabled={!isSelected} onPress={() =>
                     sendRegisterData()
                 } style={styles.button}>
                     <Text style={styles.buttonText}>Registrarse</Text>
                 </TouchableOpacity>
+
                 <View style={[styles.containerCheckbox, {
                     paddingBottom: 30
                 }]}>
@@ -155,6 +156,12 @@ const styles = StyleSheet.create({
         color: "#ACABA1",
         marginBottom: 20,
     },
+    content: {
+        backgroundColor: "#fff",
+        paddingHorizontal: 20,
+        borderRadius: 10,
+        marginHorizontal: 20,
+    },
     input: {
         width: "80%",
         height: 50,
@@ -167,7 +174,7 @@ const styles = StyleSheet.create({
     },
     button: {
         height: 50,
-        marginTop: 40,
+        marginTop: 30,
         backgroundColor: "#007BFF",
         borderRadius: 5,
         justifyContent: "center",
@@ -189,6 +196,9 @@ const styles = StyleSheet.create({
     text: {
         fontSize: 16,
         color: "#181818",
+    },
+    emptyFields: {
+        fontSize: 12,
     },
     link: {
         color: "blue",

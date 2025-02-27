@@ -1,13 +1,12 @@
 import * as React from "react";
 import {Image, StyleSheet, View, Dimensions} from "react-native";
-import ActionSheetLogin from "../../../components/actionSheet/ActionSheetLogin.tsx";
 import {NativeStackScreenProps} from "@react-navigation/native-stack";
+import ActionSheetLogin from "../../../components/actionSheet/ActionSheetLogin.tsx";
 import {RootStackParamList} from "../../../interface/navigation/types.ts";
 
 type LoginScreenProps = NativeStackScreenProps<RootStackParamList, "Login">;
 
 const LoginScreen = ({navigation}: LoginScreenProps) => {
-
     return (
         <>
             <View style={styles.content}>

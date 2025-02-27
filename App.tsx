@@ -1,5 +1,5 @@
 import * as React from "react";
-import {Platform} from "react-native";
+import {Platform, StyleSheet} from "react-native";
 import {PaperProvider} from 'react-native-paper';
 import {NavigationContainer} from "@react-navigation/native";
 import {createNativeStackNavigator} from "@react-navigation/native-stack";
@@ -25,7 +25,7 @@ function App() {
     const hasHomeButton = Platform.OS === 'ios' && parseFloat(Platform.Version) < 11 || Platform.OS === 'android';
 
     const toastConfig = {
-        success: (props: any) => (
+        success: (props: Object) => (
             <BaseToast
                 {...props}
                 style={{borderLeftColor: 'green', marginTop: Platform.OS === "ios" ? 30 : 0}}
@@ -40,7 +40,7 @@ function App() {
                 }}
             />
         ),
-        error: (props: any) => (
+        error: (props: Object) => (
             <ErrorToast
                 {...props}
                 contentContainerStyle={{
@@ -76,9 +76,7 @@ function App() {
     }, []);
 
     return (
-        <GestureHandlerRootView style={{
-            flex: 1,
-        }}>
+        <GestureHandlerRootView style={styles.container}>
             <PaperProvider>
                 <NavigationContainer>
                     <Stack.Navigator initialRouteName="Welcome">
@@ -122,5 +120,11 @@ function App() {
         </GestureHandlerRootView>
     );
 }
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+    },
+});
 
 export default App;

@@ -135,26 +135,24 @@ const makeRequest = async (
         api.defaults.headers["Content-Type"] = token ? "multipart/form-data" : "application/json";
 
         let response;
-        switch (method) {
-            case "GET":
-                response = await api.get(endpoint);
+        const typeRes = [
+            { type: "GET", petition: api.get},
+            { type: "POST", petition: api.post},
+            { type: "PUT", petition: api.put},
+            { type: "DELETE", petition: api.delete}
+        ]
+
+        for (const res of typeRes) {
+            if (res.type === method) {
+                response = await res.petition(endpoint, body);
                 break;
-            case "POST":
-                response = await api.post(endpoint, body);
-                break;
-            case "PUT":
-                response = await api.put(endpoint, body);
-                break;
-            case "DELETE":
-                response = await api.delete(endpoint);
-                break;
-            default:
-                console.error(`Unsupported method: ${method}`);
+            }
         }
 
-        return { data: response?.data };
+        return { data: response ? response.data : {} };
     } catch (error) {
         handleApiError(error, hideLoader, showActionSheet, showModal);
+        return { data: {} };
     }
 };
 

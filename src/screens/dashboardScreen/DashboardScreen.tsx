@@ -31,12 +31,14 @@ const DashboardScreen = ({navigation}: any) => {
     }
 
     return (
-        <ScrollView style={styles.container} refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={onRefreshFunction}/>
-        }>
+        <ScrollView style={styles.container}
+                    keyboardShouldPersistTaps="handled"
+                    refreshControl={
+                        <RefreshControl refreshing={refreshing} onRefresh={onRefreshFunction}/>
+                    }>
             <Separator/>
             <Calendar/>
-            <ThreeButtonDashboard navigation={navigation} refreshing={refreshingFunction} ref={sonRef}/>
+            <ThreeButtonDashboard navigation={navigation} refreshing={refreshingFunction}/>
         </ScrollView>
     );
 };

@@ -1,13 +1,13 @@
 import React, {useRef, useState, forwardRef, useImperativeHandle} from "react";
 import {StyleSheet, Text, TextInput, TouchableOpacity, View} from "react-native";
 import {ActionSheetRef} from "react-native-actions-sheet";
+import {useFocusEffect} from "@react-navigation/native";
 import Separator from "../components/Separator.tsx";
 import Folders from "../components/Folders.tsx";
 import ActionSheetCreateFolder from "./actionSheet/ActionSheetCreateFolder.tsx";
 import {useToastStore} from "../store/toastStore.tsx";
-import routinesFunctions from "../service/routines/routinesFunctions.tsx";
+import apiFunctions from "../service/folders/foldersFunctions.tsx";
 import useUpdateToken from "../store/updateTokenRefresh.tsx";
-import {useFocusEffect} from "@react-navigation/native";
 import {useCheckTokenValidate} from "../utils/checkTokenValidate.tsx";
 
 const ThreeButtonDashboard = forwardRef(({navigation, refreshing}: any, ref) => {
@@ -16,10 +16,9 @@ const ThreeButtonDashboard = forwardRef(({navigation, refreshing}: any, ref) => 
     const [dataFolders, setDataFolders] = useState<Array<string>>([]);
 
     const activateActionSheet = () => {
-        actionSheetRef.current?.show();
-        setTimeout(() => {
-            inputRef.current?.focus();
-        }, 100);
+        if (actionSheetRef.current) {
+            actionSheetRef.current?.show();
+        }
     };
 
     const {setSizeToast, setToastPosition} = useToastStore();
@@ -32,8 +31,7 @@ const ThreeButtonDashboard = forwardRef(({navigation, refreshing}: any, ref) => 
             stopUpdate();
         }
 
-        await routinesFunctions.getFolders("routines/folders/", () => {
-        }, () => {
+        await apiFunctions.getFolders("folders/", () => {
         }, () => {
         }, () => {
         })
@@ -45,7 +43,9 @@ const ThreeButtonDashboard = forwardRef(({navigation, refreshing}: any, ref) => 
                 if (code === 200) {
                     setSizeToast(240);
                     setToastPosition("top");
-                    const allDataFolders = data.folders.map((folder: any) => ({
+
+                    const allDataFolders = data.map((folder: any) => ({
+                        id: folder.id,
                         title: folder.name,
                         image: folder.cover_image_url,
                     }));
@@ -81,36 +81,35 @@ const ThreeButtonDashboard = forwardRef(({navigation, refreshing}: any, ref) => 
     }));
 
     return (
-        <View style={{flex: 1}}>
-            <View style={styles.buttonContainer}>
-                <View style={styles.row}>
-                    <TouchableOpacity style={styles.button}>
-                        <Text style={styles.buttonText}>Nueva Rutina</Text>
+            <View style={{flex: 1}}>
+                <View style={styles.buttonContainer}>
+                    <View style={styles.row}>
+                        <TouchableOpacity style={styles.button}>
+                            <Text style={styles.buttonText}>Nueva Rutina</Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity style={styles.button} onPress={activateActionSheet}>
+                            <Text style={styles.buttonText}>Crear Folder</Text>
+                        </TouchableOpacity>
+                    </View>
+                    <TouchableOpacity style={[styles.button, styles.wideButton]}>
+                        <Text style={styles.buttonText}>Comenzar Entrenamiento Rápido</Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity style={styles.button} onPress={activateActionSheet}>
-                        <Text style={styles.buttonText}>Crear Folder</Text>
-                    </TouchableOpacity>
+                    <View style={{marginTop: 20, marginBottom: 20}}>
+                        <Separator/>
+                    </View>
                 </View>
-                <TouchableOpacity style={[styles.button, styles.wideButton]}>
-                    <Text style={styles.buttonText}>Comenzar Entrenamiento Rápido</Text>
-                </TouchableOpacity>
 
-                <View style={{marginTop: 20, marginBottom: 20}}>
-                    <Separator/>
-                </View>
+                <Folders dataFolders={dataFolders} navigation={navigation}/>
+
+                <ActionSheetCreateFolder
+                    key={Math.random()}
+                    ref={actionSheetRef}
+                    navigation={navigation}
+                    inputRef={inputRef}
+                />
             </View>
-
-            <Folders dataFolders={dataFolders} navigation={navigation}/>
-
-            <ActionSheetCreateFolder
-                ref={actionSheetRef}
-                navigation={navigation}
-                dataFolders={dataFolders}
-                setDataFolders={setDataFolders}
-                inputRef={inputRef}
-            />
-        </View>
     );
 });
 
