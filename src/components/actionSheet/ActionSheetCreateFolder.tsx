@@ -7,15 +7,19 @@ import {
     Keyboard,
 } from 'react-native';
 import {ActionSheetRef} from "react-native-actions-sheet";
+import {NativeStackScreenProps} from "@react-navigation/native-stack";
+import Icon from 'react-native-vector-icons/MaterialIcons';
 import ActionSheetBase from "./ActionSheetBase.tsx";
 import {showToast} from '../../service/toast';
 import {useToastStore} from '../../store/toastStore';
 import updateTokenRefresh from "../../store/updateTokenRefresh.tsx";
 import apiFunctions from "../../service/folders/foldersFunctions.tsx";
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import {RootStackParamList} from "../../interface/navigation/dashboardNavInterface.ts";
+
+type DashboardScreenProps = NativeStackScreenProps<RootStackParamList, "Dashboard">;
 
 interface ActionSheetCreateFolderProps {
-    navigation: any;
+    navigation: DashboardScreenProps["navigation"];
     inputRef: React.RefObject<TextInput>;
 }
 

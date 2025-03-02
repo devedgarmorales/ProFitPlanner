@@ -3,19 +3,19 @@ import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import Icon from "react-native-vector-icons/FontAwesome";
 import {openCamera, openPicker} from "@baronha/react-native-multiple-image-picker";
 import {ActionSheetRef} from 'react-native-actions-sheet';
+import {MMKV} from "react-native-mmkv";
 import ActionSheetBase from "./ActionSheetBase.tsx";
 import userFunctions from "../../service/user/userFunctions.tsx";
 import useLoaderStore from "../../store/loaderStore.tsx";
 import {showToast} from "../../service/toast.tsx";
 import {useToastStore} from "../../store/toastStore.tsx";
-import {MMKV} from "react-native-mmkv";
 
-interface ActionSheetCreateFolderProps {
-    setImageData: any;
-    setFormValue: any;
+interface ActionSheetUpdateProfileProps {
+    setImageData: SetState<UserProfile>;
+    setFormValue: SetState<UserProfile>;
 }
 
-const ActionSheetCreateFolder = forwardRef<ActionSheetRef, ActionSheetCreateFolderProps>(
+const ActionSheetCreateFolder = forwardRef<ActionSheetRef, ActionSheetUpdateProfileProps>(
     ({setImageData, setFormValue}, ref) => {
         const actionSheetRef = useRef<ActionSheetRef>(null);
         const {showLoader, hideLoader} = useLoaderStore();
