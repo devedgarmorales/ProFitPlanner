@@ -101,13 +101,10 @@ const RegisterScreen = ({navigation}: RegisterScreenProps) => {
 
                 {
                     showErrorColor && (
-                        <View style={{
+                        <Text style={[styles.emptyFields, {
+                            color: "#ff001e",
                             marginTop: 6,
-                        }}>
-                            <Text style={[styles.emptyFields, {
-                                color: "#ff001e"
-                            }]}>*Completa todos los campos</Text>
-                        </View>
+                        }]}>*Completa todos los campos</Text>
                     )
                 }
 

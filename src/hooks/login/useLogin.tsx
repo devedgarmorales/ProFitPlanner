@@ -9,6 +9,9 @@ import {useToastStore} from "../../store/toastStore.tsx";
 import {showToast} from "../../service/toast.tsx";
 import {useActionSheetStore} from "../../store/actionSheetLoginStore.tsx";
 import userFunctions from "../../service/user/userFunctions.tsx";
+import {ScreenProps} from "../../interface/navigation/principalNavInterface.ts";
+
+type Props = ScreenProps<"Login">;
 
 const useLogin = () => {
     const storage = new MMKV();
@@ -54,7 +57,7 @@ const useLogin = () => {
                 unMount();
             };
         }, [])
-    )
+    );
 
     useEffect(() => {
         if (Platform.OS === "ios") {
@@ -66,14 +69,14 @@ const useLogin = () => {
         }
     }, []);
 
-    const handleInputChange = (field: string, value: any) => {
+    const handleInputChange = (field: string, value: string) => {
         setFormValues({
             ...formValues,
             [field]: value,
         });
     };
 
-    const sendLogin = async (navigation: any) => {
+    const sendLogin = async ({navigation}: Props) => {
         const {email, password} = formValues;
 
         if (!email || !password) {
@@ -95,11 +98,7 @@ const useLogin = () => {
         }
 
         try {
-            const res = await authFunctions.loginAndLogout("token/", body, hideLoader, showActionSheet, () => {});
-
-            const {data} = res || {};
-            if (!data) return;
-
+            const {data} = await authFunctions.loginAndLogout("token/", body, hideLoader, showActionSheet, () => {});
             const {code, data: tokens} = data || {};
             if (code !== 200) return;
 
@@ -132,10 +131,8 @@ const useLogin = () => {
         }
     };
 
-    const onClose = (navigation: any) => {
-        navigation.navigate({
-            name: "Welcome",
-        });
+    const onClose = ({navigation}: Props) => {
+       navigation.navigate("Welcome");
     };
 
     const showActionSheet = () => {

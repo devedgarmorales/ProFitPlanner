@@ -3,7 +3,7 @@ import {View, Text, StyleSheet, FlatList, Dimensions, Platform} from 'react-nati
 
 const actualDayNumber = new Date().getDate();
 
-const { width } = Dimensions.get("window");
+const {width} = Dimensions.get("window");
 const ITEM_WIDTH = width * 0.15;
 const ITEM_HEIGHT = width * 0.2;
 // @ts-ignore
@@ -18,7 +18,7 @@ const DateBadge = ({day, date}) => {
             <Text
                 style={[
                     styles.date,
-                    { color: '#424242' },
+                    {color: '#424242'},
                     actualDayNumber === date ? (Platform.OS === 'ios' ? styles.circleIos : styles.circle) : null,
                 ]}
             >
@@ -59,9 +59,7 @@ const Calendar = () => {
                     showsHorizontalScrollIndicator={false}
                     contentContainerStyle={styles.listContainer}
                     renderItem={({item}) => (
-                        <>
-                            <DateBadge day={item.day} date={item.date}/>
-                        </>
+                        <DateBadge day={item.day} date={item.date}/>
                     )}
                 />
             </View>

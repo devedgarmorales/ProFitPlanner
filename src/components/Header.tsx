@@ -27,27 +27,23 @@ const Header = () => {
 
     useFocusEffect(
         useCallback(() => {
-            try {
-                const storedUser = storage.getString("user_info");
-                if (storedUser) {
-                    const userData = JSON.parse(storedUser);
-                    setUser({
-                        first_name: userData.first_name || "",
-                        last_name: userData.last_name || "",
-                        username: userData.username || "",
-                        email: userData.email || "",
-                        image_profile: userData.image_profile || "",
-                    });
-                }
-            } catch (error) {
-                console.error("Error parsing user_info:", error);
+            const storedUser = storage.getString("user_info");
+            if (storedUser) {
+                const userData = JSON.parse(storedUser);
+                setUser({
+                    first_name: userData.first_name || "",
+                    last_name: userData.last_name || "",
+                    username: userData.username || "",
+                    email: userData.email || "",
+                    image_profile: userData.image_profile || "",
+                });
             }
         }, [])
     );
 
     return (
         <SafeAreaView edges={["top"]} style={styles.safeArea}>
-            <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
+            <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent/>
             <View style={styles.header}>
                 <View>
                     <Text style={styles.text}>Buenas tardes,</Text>
@@ -59,7 +55,7 @@ const Header = () => {
                     <Image
                         source={
                             user.image_profile
-                                ? { uri: user.image_profile }
+                                ? {uri: user.image_profile}
                                 : require("../assets/img/user_default.png")
                         }
                         style={styles.profileImage}

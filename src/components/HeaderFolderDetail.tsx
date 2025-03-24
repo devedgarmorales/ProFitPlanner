@@ -59,7 +59,7 @@ const FolderDetail = ({id, title: initialTitle}: FolderDetailProps) => {
                 </View>
             </SafeAreaView>
 
-           <ActionSheetFolderOptions id={id} title={title} navigation={navigation} ref={actionSheetRef} />
+            <ActionSheetFolderOptions id={id} title={title} navigation={navigation} ref={actionSheetRef}/>
         </>
     )
 };

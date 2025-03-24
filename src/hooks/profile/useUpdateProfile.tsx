@@ -13,11 +13,11 @@ import {ProfileScreenInterface} from "../../interface/profileScreen/profileScree
 
 export type RootStackParamList = {
     Login: undefined;
-    Profile: undefined;
+    Perfil: undefined;
 }
 
 interface UseUpdateProfileProps {
-    navigation: NativeStackNavigationProp<RootStackParamList, "Profile">;
+    navigation: NativeStackNavigationProp<RootStackParamList, "Perfil">;
 }
 
 const storage = new MMKV();
@@ -101,13 +101,13 @@ const useUpdateProfile = ({navigation}: UseUpdateProfileProps) => {
         try {
             showLoader();
 
-            const res: ProfileScreenInterface | undefined = await authFunctions.loginAndLogout("token/revoke/", body, hideLoader, () => {
+            const {data}: ProfileScreenInterface | undefined = await authFunctions.loginAndLogout("token/revoke/", body, hideLoader, () => {
             }, () => {
             });
 
-            const {data} = res || {};
+            const {code} = data || {};
 
-            if (data?.code === 200) {
+            if (code === 200) {
                 showToast("success", "Sesión cerrada", "Has cerrado sesión exitosamente.");
 
                 navigation.reset({
@@ -159,45 +159,40 @@ const useUpdateProfile = ({navigation}: UseUpdateProfileProps) => {
 
         try {
             showLoader();
-            await userFunctions.updateProfile("auth/user/", body, hideLoader, () => {
+            const {data} = await userFunctions.updateProfile("auth/user/", body, hideLoader, () => {
             }, () => {
-            }, true).then(
-                (res: any) => {
-                    const {code, data} = res?.data || {};
+            }, true);
+            const {code, data: infoUser} = data || {};
 
-                    if (code === undefined || data === undefined) return loadInitialData();
-
-                    if (code === 200) {
-                        showToast("success", "Perfil actualizado", "Tu perfil ha sido actualizado exitosamente.");
-                        setUser({
-                            first_name: data.first_name,
-                            last_name: data.last_name,
-                            username: data.username,
-                            email: data.email,
-                            image_profile: {
-                                uri: data.image_profile,
-                                name: "",
-                                type: "",
-                            }
-                        });
-
-                        setFormValues({
-                            first_name: data.first_name,
-                            last_name: data.last_name,
-                            username: data.username,
-                            email: data.email,
-                            image_profile: {
-                                uri: data.image_profile,
-                                name: "",
-                                type: "",
-                            }
-                        });
-
-                        storage.set("user_info", JSON.stringify(data));
+            if (code === 200) {
+                showToast("success", "Perfil actualizado", "Tu perfil ha sido actualizado exitosamente.");
+                setUser({
+                    first_name: infoUser.first_name,
+                    last_name: infoUser.last_name,
+                    username: infoUser.username,
+                    email: infoUser.email,
+                    image_profile: {
+                        uri: infoUser.image_profile,
+                        name: "",
+                        type: "",
                     }
-                    hideLoader();
-                }
-            );
+                });
+
+                setFormValues({
+                    first_name: infoUser.first_name,
+                    last_name: infoUser.last_name,
+                    username: infoUser.username,
+                    email: infoUser.email,
+                    image_profile: {
+                        uri: infoUser.image_profile,
+                        name: "",
+                        type: "",
+                    }
+                });
+
+                storage.set("user_info", JSON.stringify(infoUser));
+            }
+            hideLoader();
         } catch (e) {
             hideLoader();
             console.error("Error en la solicitud:", e);

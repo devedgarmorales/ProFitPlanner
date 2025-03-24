@@ -1,18 +1,12 @@
 import React, {useEffect, useState} from "react";
-import {BackHandler, FlatList, RefreshControl, StyleSheet, View} from "react-native";
-import {useNavigation} from "@react-navigation/native";
-import {NativeStackNavigationProp} from "@react-navigation/native-stack";
+import {BackHandler, FlatList, RefreshControl, StyleSheet, Text, View} from "react-native";
 import {useFolderStore} from "../../store/folderStore.tsx";
-import {RootStackParamList} from "../../interface/navigation/principalNavInterface.ts";
 import SearchComponent from "../../components/SearchComponent.tsx";
 import FoldersRenderList from "../../components/FoldersRenderList.tsx";
 
-type NavigationProps = NativeStackNavigationProp<RootStackParamList>;
-
-const ShowAllFolders = () => {
+const ShowAllFolders = ({navigation}: any) => {
     const {dataFolders} = useFolderStore();
     const [refreshing, setRefreshing] = useState(false);
-    const navigation = useNavigation<NavigationProps>();
     const [dataFoldersFiltered, setDataFoldersFiltered] = useState(dataFolders);
 
     const handleSearch = (query: string) => {
@@ -51,6 +45,21 @@ const ShowAllFolders = () => {
         <View style={styles.container}>
             <SearchComponent onSearch={handleSearch} setDataFoldersFiltered={setDataFoldersFiltered}/>
 
+            {
+                dataFoldersFiltered.length === 0 && (
+                    <View style={{
+                        flex: 1,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                    }}>
+                        <Text style={{
+                            fontWeight: 'bold',
+                            fontSize: 18,
+                            color: '#000000',}}>No se encontraron folders</Text>
+                    </View>
+                )
+            }
+
             <FlatList
                 data={dataFoldersFiltered}
                 keyExtractor={(_, index) => index.toString()}
@@ -61,6 +70,11 @@ const ShowAllFolders = () => {
                 columnWrapperStyle={styles.columnWrapper}
                 showsVerticalScrollIndicator={false}
                 ListFooterComponent={<View style={{height: 14}}/>}
+                ListEmptyComponent={
+                    <View style={styles.noDataContainer}>
+                        <Text>No se encontraron folders</Text>
+                    </View>
+                }
                 refreshControl={
                     <RefreshControl
                         refreshing={refreshing}
@@ -76,6 +90,11 @@ const styles = StyleSheet.create({
     container: {
         backgroundColor: '#fff',
         height: '100%',
+    },
+    noDataContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     shadow: {
         shadowColor: '#6c6b6b',

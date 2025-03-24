@@ -8,10 +8,10 @@ import useUpdateProfile from "../../hooks/profile/useUpdateProfile.tsx";
 
 export type RootStackParamList = {
     Login: undefined;
-    Profile: undefined;
+    Perfil: undefined;
 };
 
-type ProfileScreenProps = NativeStackScreenProps<RootStackParamList, "Profile">;
+type ProfileScreenProps = NativeStackScreenProps<RootStackParamList, "Perfil">;
 
 const ProfileScreen = ({navigation}: ProfileScreenProps) => {
 

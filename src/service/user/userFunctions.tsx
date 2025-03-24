@@ -1,4 +1,4 @@
-import {makeGetRequest, makePutRequest, makeDeleteRequest} from '../api';
+import {makeGetRequest, makePutRequest, makeDeleteRequest} from '../petitions.tsx';
 
 function getUserInfo(endpoint = "", hideLoader: () => void,  showActionSheet: () => void, showModal: () => void) {
     return makeGetRequest(endpoint, hideLoader, showActionSheet, showModal);

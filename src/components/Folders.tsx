@@ -1,10 +1,10 @@
 import React, {useEffect, useRef} from "react";
 import {FlatList, StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import Icon from 'react-native-vector-icons/AntDesign';
+import {NativeStackScreenProps} from "@react-navigation/native-stack";
 import FoldersRenderList from "./FoldersRenderList.tsx";
 import {useFolderStore} from "../store/folderStore.tsx";
 import {useFlatListStore} from "../store/flatListRefStore.tsx";
-import {NativeStackScreenProps} from "@react-navigation/native-stack";
 import {RootStackParamList} from "../interface/navigation/dashboardNavInterface.ts";
 
 type DashboardScreenProps = NativeStackScreenProps<RootStackParamList, "Dashboard">;
@@ -45,12 +45,6 @@ const Folders = ({navigation}: FoldersProps) => {
                 )}
             </View>
 
-            {
-                (dataFolders !== undefined && dataFolders.length === 0) && (
-                    <Text style={styles.empty}>No tienes ningún folder creado</Text>
-                )
-            }
-
             <FlatList
                 ref={FolderRef}
                 data={dataFolders}
@@ -59,9 +53,14 @@ const Folders = ({navigation}: FoldersProps) => {
                 horizontal
                 contentContainerStyle={styles.listContainer}
                 renderItem={({item, index}) => (
-                    <FoldersRenderList item={item} index={index} navigation={navigation} />
+                    <FoldersRenderList item={item} index={index} navigation={navigation}/>
                 )}
                 showsHorizontalScrollIndicator={false}
+                ListEmptyComponent={
+                    <View style={styles.noDataContainer}>
+                        <Text>No se encontraron folders</Text>
+                    </View>
+                }
             />
         </>
     )
@@ -71,6 +70,11 @@ const styles = StyleSheet.create({
     container: {
         flexDirection: "row",
         justifyContent: "space-between",
+    },
+    noDataContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     title: {
         fontSize: 26,

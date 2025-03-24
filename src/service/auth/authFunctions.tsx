@@ -1,4 +1,4 @@
-import {makePostRequest} from '../api';
+import {makePostRequest} from "../petitions.tsx";
 
 function loginAndLogout(endpoint = "", body = {}, hideLoader: () => void,  showActionSheet: () => void, showModal: () => void) {
     return makePostRequest(endpoint, body, hideLoader, showActionSheet, showModal);

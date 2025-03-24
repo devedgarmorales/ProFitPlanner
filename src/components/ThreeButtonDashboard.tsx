@@ -2,6 +2,7 @@ import React, {useRef, forwardRef, useImperativeHandle} from "react";
 import {StyleSheet, Text, TextInput, TouchableOpacity, View} from "react-native";
 import {ActionSheetRef} from "react-native-actions-sheet";
 import {useFocusEffect} from "@react-navigation/native";
+import {NativeStackScreenProps} from "@react-navigation/native-stack";
 import Separator from "../components/Separator.tsx";
 import Folders from "../components/Folders.tsx";
 import ActionSheetCreateFolder from "./actionSheet/ActionSheetCreateFolder.tsx";
@@ -10,7 +11,6 @@ import apiFunctions from "../service/folders/foldersFunctions.tsx";
 import useUpdateToken from "../store/updateTokenRefresh.tsx";
 import {useCheckTokenValidate} from "../utils/checkTokenValidate.tsx";
 import {useFolderStore} from "../store/folderStore.tsx";
-import {NativeStackScreenProps} from "@react-navigation/native-stack";
 import {RootStackParamList} from "../interface/navigation/dashboardNavInterface.ts";
 
 type DashboardScreenProps = NativeStackScreenProps<RootStackParamList, "Dashboard">;
@@ -41,28 +41,27 @@ const ThreeButtonDashboard = forwardRef(({navigation, refreshing}: ThreeButtonDa
             stopUpdate();
         }
 
-        await apiFunctions.getFolders("folders/", () => {
-        }, () => {
-        }, () => {
-        })
-            .then((res: any) => {
-                if (res === undefined) return;
+        const res = await apiFunctions.getFolders("folders/", () => {}, () => {}, () => {});
 
-                const {code, data} = res.data;
+        if (!res || !res.data) {
+            console.error("Respuesta inválida de la API");
+            return;
+        }
 
-                if (code === 200) {
-                    setSizeToast(240);
-                    setToastPosition("top");
+        const { code, data } = res.data;
 
-                    const allDataFolders = data.map((folder: any) => ({
-                        id: folder.id,
-                        title: folder.name,
-                        image: folder.cover_image_url,
-                    }));
+        if (code === 200 && data) {
+            setSizeToast(240);
+            setToastPosition("top");
 
-                    setDataFolders(allDataFolders.reverse());
-                }
-            });
+            const allDataFolders = data.map((folder: any) => ({
+                id: folder.id,
+                title: folder.name,
+                image: folder.cover_image_url,
+            }));
+
+            setDataFolders(allDataFolders.reverse());
+        }
     };
 
     useFocusEffect(

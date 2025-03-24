@@ -9,8 +9,11 @@ import {
 import ActionSheetBase from "./ActionSheetBase.tsx";
 import CustomInput from "../CustomInput.tsx";
 import useLogin from "../../hooks/login/useLogin.tsx";
+import {ScreenProps} from "../../interface/navigation/principalNavInterface.ts";
 
-const ActionSheetLogin = ({navigation}: any) => {
+type Props = ScreenProps<"Login">;
+
+const ActionSheetLogin = ({navigation, route}: Props) => {
     const {
         passwordVisible,
         setPasswordVisible,
@@ -24,7 +27,8 @@ const ActionSheetLogin = ({navigation}: any) => {
 
     return (
         <View style={styles.content}>
-            <ActionSheetBase showBackgroundColor={true} actionSheetRef={actionSheetRef} gesture={false} closeable={false}>
+            <ActionSheetBase showBackgroundColor={true} actionSheetRef={actionSheetRef} gesture={false}
+                             closeable={false}>
                 <View style={styles.modalContainer}>
                     <View style={styles.actionSheet}>
                         <Text style={styles.title}>Bienvenido a ProFitPlanner</Text>
@@ -63,13 +67,10 @@ const ActionSheetLogin = ({navigation}: any) => {
 
                         {
                             showErrorColor && (
-                                <View style={{
+                                <Text style={[styles.emptyFields, {
+                                    color: "#ff001e",
                                     marginBottom: 6,
-                                }}>
-                                    <Text style={[styles.emptyFields, {
-                                        color: "#ff001e"
-                                    }]}>*Completa todos los campos</Text>
-                                </View>
+                                }]}>*Completa todos los campos</Text>
                             )
                         }
 
@@ -96,7 +97,7 @@ const ActionSheetLogin = ({navigation}: any) => {
 
                         <TouchableOpacity
                             onPress={() => {
-                                sendLogin(navigation).then();
+                                sendLogin({navigation, route}).then();
                             }}
                             style={styles.button}
                         >

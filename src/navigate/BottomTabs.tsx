@@ -7,7 +7,14 @@ import {useCheckTokenValidate} from "../utils/checkTokenValidate.tsx";
 import ProfileScreen from "../screens/profie/ProfileScreen.tsx";
 import {useBackExitApp} from "../utils/useBackExitApp.tsx";
 
-const Tab = createBottomTabNavigator();
+export type RootStackParamList = {
+    Inicio: undefined;
+    Entrenamientos: undefined;
+    Historial: undefined;
+    Perfil: undefined;
+};
+
+const Tab = createBottomTabNavigator<RootStackParamList>();
 
 const WorkoutScreen = () => {
 
@@ -56,22 +63,17 @@ export default function BottomTabs() {
     return (
         <Tab.Navigator
             screenOptions={({route}) => ({
-                tabBarIcon: ({focused, color, size}) => {
-                    let iconName = "";
+                tabBarIcon: ({ focused, color, size }) => {
+                    const icons = {
+                        Inicio: { default: "home-outline", focused: "home" },
+                        Perfil: { default: "person-outline", focused: "person" },
+                        Entrenamientos: { default: "barbell-outline", focused: "barbell" },
+                        Historial: { default: "time-outline", focused: "time" },
+                    };
 
-                    if (route.name === "Inicio") {
-                        iconName = focused ? "home" : "home-outline";
-                    } else if (route.name === "Perfil") {
-                        iconName = focused ? "person" : "person-outline";
-                    } else if (route.name === "Settings") {
-                        iconName = focused ? "settings" : "settings-outline";
-                    } else if (route.name === "Entrenamientos") {
-                        iconName = focused ? "barbell" : "barbell-outline";
-                    } else if (route.name === "Historial") {
-                        iconName = focused ? "time" : "time-outline";
-                    }
+                    const iconName = icons[route.name] ? (focused ? icons[route.name].focused : icons[route.name].default) : "home";
 
-                    return <Icon name={iconName} size={size} color={color}/>;
+                    return <Icon name={iconName} size={size} color={color} />;
                 },
                 tabBarActiveTintColor: "blue",
                 tabBarInactiveTintColor: "gray",

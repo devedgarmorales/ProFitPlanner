@@ -37,7 +37,7 @@ api.interceptors.response.use(
     }
 );
 
-const handleApiError = (error: any, hideLoader: any, showActionSheet: any, showModal: any) => {
+export const handleApiError = (error: any, hideLoader: any, showActionSheet: any, showModal: any) => {
     if (axios.isAxiosError(error)) {
         const status = error.response?.status;
         const resError = error.response?.data || {};
@@ -122,7 +122,7 @@ const handleApiError = (error: any, hideLoader: any, showActionSheet: any, showM
 
 type HttpMethod = "GET" | "POST" | "PUT" | "DELETE";
 
-const makeRequest = async (
+export const makeRequest = async (
     method: HttpMethod,
     endpoint: string,
     body: any = {},
@@ -155,17 +155,5 @@ const makeRequest = async (
         return { data: {} };
     }
 };
-
-export const makeGetRequest = (endpoint: string, hideLoader: () => void, showActionSheet: () => void, showModal: () => void, token?: boolean) =>
-    makeRequest("GET", endpoint, {}, hideLoader, showActionSheet, showModal, token);
-
-export const makePostRequest = (endpoint: string, body: any, hideLoader: () => void, showActionSheet: () => void, showModal: () => void, token?: boolean) =>
-    makeRequest("POST", endpoint, body, hideLoader, showActionSheet, showModal, token);
-
-export const makePutRequest = (endpoint: string, body: any, hideLoader: () => void, showActionSheet: () => void, showModal: () => void, token?: boolean) =>
-    makeRequest("PUT", endpoint, body, hideLoader, showActionSheet, showModal, token);
-
-export const makeDeleteRequest = (endpoint: string, hideLoader: () => void, showActionSheet: () => void, showModal: () => void, token?: boolean) =>
-    makeRequest("DELETE", endpoint, {}, hideLoader, showActionSheet, showModal, token);
 
 

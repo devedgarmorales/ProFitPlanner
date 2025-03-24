@@ -10,7 +10,7 @@ import {useFolderStore} from "../../store/folderStore.tsx";
 import {useFlatListStore} from "../../store/flatListRefStore.tsx";
 
 interface ActionSheetFolderOptionsProps {
-    id: number;
+    id: string;
     title: string;
     navigation: any;
 }

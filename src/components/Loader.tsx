@@ -1,7 +1,7 @@
 import React from 'react';
-import { View, ActivityIndicator, StyleSheet } from 'react-native';
-import useLoaderStore from '../store/loaderStore.tsx';
+import {View, ActivityIndicator, StyleSheet} from 'react-native';
 import {Portal, Modal} from "react-native-paper";
+import useLoaderStore from '../store/loaderStore.tsx';
 
 const Loader = () => {
     const isLoading = useLoaderStore((state) => state.isLoading);
@@ -17,7 +17,7 @@ const Loader = () => {
 
             >
                 <View style={styles.loaderContainer}>
-                    <ActivityIndicator size="large" color="#ffffff" />
+                    <ActivityIndicator size="large" color="#ffffff"/>
                 </View>
             </Modal>
         </Portal>

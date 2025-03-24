@@ -1,4 +1,4 @@
-import {makeGetRequest, makePostRequest, makePutRequest, makeDeleteRequest} from '../api';
+import {makeGetRequest, makePostRequest, makePutRequest, makeDeleteRequest} from '../petitions.tsx';
 
 function getFolders(endpoint = "", hideLoader: () => void,  showActionSheet: () => void, showModal: () => void) {
     return makeGetRequest(endpoint, hideLoader, showActionSheet, showModal);
