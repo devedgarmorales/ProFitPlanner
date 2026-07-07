@@ -2,7 +2,9 @@
 node_modules/
 
 # iOS
+ios/Pods/
 ios/build/
+ios/Index/
 *.pbxuser
 !default.pbxuser
 *.mode1v3

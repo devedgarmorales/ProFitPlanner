@@ -1,6 +1,0 @@
-module Pods_ProFitPlanner_ProFitPlannerTests {
-  umbrella header "Pods-ProFitPlanner-ProFitPlannerTests-umbrella.h"
-
-  export *
-  module * { export * }
-}

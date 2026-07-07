@@ -5,8 +5,11 @@ import {MMKV} from "react-native-mmkv";
 
 const storage = new MMKV();
 
+const baseURL = Config.BASE_URL_API || 'http://127.0.0.1:8000/api/';
+console.log("BASE_URL_API is", baseURL);
+
 const api = axios.create({
-    baseURL: Config.BASE_URL_API,
+    baseURL: baseURL,
     timeout: 5000,
     headers: {
         'Content-Type': 'application/json',
@@ -108,7 +111,7 @@ export const handleApiError = (error: any, hideLoader: any, showActionSheet: any
             default:
                 hideLoader && hideLoader();
                 showActionSheet && showActionSheet();
-                //console.error('Error en el servidor:', resError || error.message);
+                console.error('Error en el servidor:', resError || error.message);
                 showToast(
                     'error',
                     '¡Ocurrió un error!',

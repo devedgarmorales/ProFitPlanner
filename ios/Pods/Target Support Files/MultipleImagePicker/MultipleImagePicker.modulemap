@@ -1,6 +1,0 @@
-module MultipleImagePicker {
-  umbrella header "MultipleImagePicker-umbrella.h"
-
-  export *
-  module * { export * }
-}

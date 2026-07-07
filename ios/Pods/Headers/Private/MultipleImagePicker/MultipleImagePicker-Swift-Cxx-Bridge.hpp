@@ -1,1 +1,0 @@
-../../../../../node_modules/@baronha/react-native-multiple-image-picker/nitrogen/generated/ios/MultipleImagePicker-Swift-Cxx-Bridge.hpp

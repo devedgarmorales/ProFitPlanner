@@ -93,14 +93,14 @@ const useLogin = () => {
         Keyboard.dismiss();
 
         const body = {
-            username: email,
+            email: email,
             password,
         }
 
         try {
             const {data} = await authFunctions.loginAndLogout("token/", body, hideLoader, showActionSheet, () => {});
-            const {code, data: tokens} = data || {};
-            if (code !== 200) return;
+            const {status, data: tokens} = data || {};
+            if (status !== 200) return;
 
             hideActionSheet();
             setToastPosition('bottom');
@@ -113,9 +113,9 @@ const useLogin = () => {
             const {data: userData} = response || {};
             if (!userData) return;
 
-            const {code: userCode, data: userInfo} = userData || {};
+            const {status: userStatus, data: userInfo} = userData || {};
 
-            if (userCode === 200) {
+            if (userStatus === 200) {
                 const {email, username, first_name, last_name, image_profile} = userInfo || {};
                 storage.set('user_info', JSON.stringify({email, username, first_name, last_name, image_profile}));
             }
