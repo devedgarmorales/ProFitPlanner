@@ -19,6 +19,7 @@ import {
   usePalette,
 } from '../../components/ClientUi';
 import { ListSkeleton } from '../../components/ClientSkeletons';
+import { useStartWorkout } from '../../hooks/client/useStartWorkout';
 import { mergeHistory } from '../../services/workout';
 import { nextRoutineDay, sessionProgress } from '../../services/workoutDisplay';
 
@@ -29,6 +30,9 @@ export function RoutinesScreen({
   const palette = usePalette();
   const active = data.workouts.find(
     (session) => session.status === 'in_progress'
+  );
+  const { error: startError, startDay } = useStartWorkout((sessionId) =>
+    navigation.navigate('Workout', { sessionId })
   );
   const progress = active ? sessionProgress(active.sets) : undefined;
   const suggestedRoutine = data.routines[0];
@@ -88,12 +92,7 @@ export function RoutinesScreen({
               {suggestedRoutine && suggestedDay && (
                 <Surface
                   accessibilityLabel={`Comenzar ${suggestedDay.name}`}
-                  onPress={() =>
-                    navigation.navigate('Day', {
-                      routineId: suggestedRoutine.id,
-                      dayId: suggestedDay.id,
-                    })
-                  }
+                  onPress={() => startDay(suggestedRoutine, suggestedDay)}
                 >
                   <Text variant="labelLarge" style={{ color: palette.accent }}>
                     TOCA HOY
@@ -112,9 +111,22 @@ export function RoutinesScreen({
                       label={`${suggestedDay.estimated_duration_minutes} min`}
                     />
                   </View>
-                  <Button mode="contained" icon="play" contentStyle={ui.cta}>
+                  <Button
+                    mode="contained"
+                    icon="play"
+                    contentStyle={ui.cta}
+                    onPress={() => startDay(suggestedRoutine, suggestedDay)}
+                  >
                     Comenzar
                   </Button>
+                  {!!startError && (
+                    <Text
+                      accessibilityRole="alert"
+                      style={{ color: palette.danger }}
+                    >
+                      {startError}
+                    </Text>
+                  )}
                 </Surface>
               )}
               {data.routines.length > 0 && (

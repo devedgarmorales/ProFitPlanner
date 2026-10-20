@@ -15,7 +15,6 @@ export type ClientStack = {
   Tabs: NavigatorScreenParams<ClientTabs> | undefined;
   Organizations: undefined;
   Routine: { routineId: string };
-  Day: { routineId: string; dayId: string };
   Workout: { sessionId: string };
   ExerciseProgress: { key: string; name: string };
   SessionDetail: { sessionId: string };

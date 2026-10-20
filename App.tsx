@@ -24,7 +24,6 @@ import { ClientTabNavigator } from './src/navigation/ClientTabNavigator';
 import { ExerciseProgressScreen } from './src/screens/client/ExerciseProgressScreen';
 import { SessionDetailScreen } from './src/screens/client/SessionDetailScreen';
 import { RoutineScreen } from './src/screens/client/RoutineScreen';
-import { DayScreen } from './src/screens/client/DayScreen';
 import { WorkoutScreen } from './src/screens/client/WorkoutScreen';
 const Stack = createNativeStackNavigator<ClientStack>();
 function App() {
@@ -79,11 +78,6 @@ function App() {
                     name="Routine"
                     component={RoutineScreen}
                     options={{ title: 'Rutina asignada' }}
-                  />
-                  <Stack.Screen
-                    name="Day"
-                    component={DayScreen}
-                    options={{ title: 'Tu entrenamiento' }}
                   />
                   <Stack.Screen
                     name="Workout"
