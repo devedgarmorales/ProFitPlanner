@@ -1,6 +1,8 @@
 import { describe, expect, it } from '@jest/globals';
 import {
   countRecords,
+  weekActivity,
+  weightSeries,
   demoUrl,
   formatClock,
   nextRoutineDay,
@@ -135,5 +137,68 @@ describe('demoUrl', () => {
     expect(demoUrl('javascript:alert(1)')).toBeUndefined();
     expect(demoUrl('')).toBeUndefined();
     expect(demoUrl(undefined)).toBeUndefined();
+  });
+});
+
+describe('weightSeries', () => {
+  const session = (id, started_at, weights, extra = {}) => ({
+    id,
+    status: 'completed',
+    started_at,
+    sets: weights.map((weight) => ({
+      exercise_id: 'a',
+      weight_unit: 'kg',
+      weight_used: String(weight),
+      reps_performed: 8,
+      completed: true,
+      ...extra,
+    })),
+  });
+
+  it('returns the best weight per session in chronological order', () => {
+    const history = [
+      session('3', '2026-10-15', [60, 62.5]),
+      session('1', '2026-10-01', [50]),
+      session('2', '2026-10-08', [55, 52]),
+    ];
+    expect(weightSeries(history, 'a:kg')).toEqual([
+      { date: '2026-10-01', weight: 50 },
+      { date: '2026-10-08', weight: 55 },
+      { date: '2026-10-15', weight: 62.5 },
+    ]);
+  });
+
+  it('keeps only the latest sessions and skips other units or open sessions', () => {
+    const history = [
+      session('1', '2026-10-01', [50]),
+      session('2', '2026-10-02', [51]),
+      session('3', '2026-10-03', [52]),
+      { ...session('4', '2026-10-04', [99]), status: 'in_progress' },
+      session('5', '2026-10-05', [95], { weight_unit: 'lb' }),
+    ];
+    expect(weightSeries(history, 'a:kg', 2).map((p) => p.weight)).toEqual([51, 52]);
+  });
+});
+
+describe('weekActivity', () => {
+  const now = new Date(2026, 9, 21, 12);
+  const at = (day) => new Date(2026, 9, day, 9).toISOString();
+
+  it('lists the last seven days ending today with the trained ones counted', () => {
+    const week = weekActivity(
+      [
+        { status: 'completed', started_at: at(21) },
+        { status: 'completed', started_at: at(21) },
+        { status: 'completed', started_at: at(19) },
+        { status: 'completed', started_at: at(10) },
+        { status: 'in_progress', started_at: at(20) },
+      ],
+      now
+    );
+    expect(week).toHaveLength(7);
+    expect(week[0].date).toBe('2026-10-15');
+    expect(week[6]).toMatchObject({ date: '2026-10-21', count: 2 });
+    expect(week.find((day) => day.date === '2026-10-19').count).toBe(1);
+    expect(week.find((day) => day.date === '2026-10-20').count).toBe(0);
   });
 });

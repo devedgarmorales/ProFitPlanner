@@ -8,6 +8,8 @@ import {
   clientStyles as styles,
 } from '../../components/ClientLayout';
 import { ListSkeleton, StatsSkeleton } from '../../components/ClientSkeletons';
+import { BarChart, WeekStrip } from '../../components/ClientCharts';
+import { weekActivity, weightSeries } from '../../services/workoutDisplay';
 import {
   EmptyState,
   Icon,
@@ -21,6 +23,8 @@ export function HistoryScreen() {
   const { history, completedCount, progress, refresh, busy } = useHistory();
   const palette = usePalette();
   const [open, setOpen] = useState<string>();
+  const week = weekActivity(history);
+  const weekTotal = week.reduce((sum, day) => sum + day.count, 0);
   const totalSets = history.reduce(
     (sum, session) => sum + session.sets.filter((set) => set.completed).length,
     0
@@ -53,6 +57,26 @@ export function HistoryScreen() {
               </View>
             )}
             <ClientStatus />
+            <Surface>
+              <View style={styles.row}>
+                <Text
+                  variant="titleMedium"
+                  numberOfLines={1}
+                  style={styles.grow}
+                >
+                  Esta semana
+                </Text>
+                <Pill
+                  tone="accent"
+                  label={
+                    weekTotal === 1
+                      ? '1 entrenamiento'
+                      : `${weekTotal} entrenamientos`
+                  }
+                />
+              </View>
+              <WeekStrip days={week} />
+            </Surface>
             {progress.length > 0 && (
               <>
                 <Text variant="titleMedium">
@@ -70,6 +94,10 @@ export function HistoryScreen() {
                       Última: {item.performances[0].weight} {item.unit} ×{' '}
                       {item.performances[0].reps} repeticiones
                     </Text>
+                    <BarChart
+                      unit={item.unit}
+                      points={weightSeries(history, item.id)}
+                    />
                     <Text style={{ color: palette.muted }}>
                       {item.performances[1]
                         ? `Anterior: ${item.performances[1].weight} ${item.unit} × ${item.performances[1].reps} repeticiones`

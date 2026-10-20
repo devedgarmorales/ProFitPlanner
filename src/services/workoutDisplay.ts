@@ -121,3 +121,47 @@ export function demoUrl(value?: string | null) {
   const url = (value || '').trim();
   return /^https?:\/\/\S+$/i.test(url) ? url : undefined;
 }
+
+export function weightSeries(
+  history: (RecordSession & {started_at: string})[],
+  key: string,
+  limit = 8
+) {
+  return history
+    .filter(session => session.status === 'completed')
+    .sort((a, b) => a.started_at.localeCompare(b.started_at))
+    .flatMap(session => {
+      const best = bestWeights(session).get(key);
+      return best
+        ? [{date: session.started_at.slice(0, 10), weight: best.weight}]
+        : [];
+    })
+    .slice(-limit);
+}
+
+const DAY_LETTERS = ['D', 'L', 'M', 'M', 'J', 'V', 'S'];
+
+function localDate(date: Date) {
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${date.getFullYear()}-${month}-${day}`;
+}
+
+export function weekActivity(
+  history: {status: string; started_at: string}[],
+  now = new Date()
+) {
+  const counts = new Map<string, number>();
+  history
+    .filter(session => session.status === 'completed')
+    .forEach(session => {
+      const date = localDate(new Date(session.started_at));
+      counts.set(date, (counts.get(date) ?? 0) + 1);
+    });
+  return Array.from({length: 7}, (_, index) => {
+    const day = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    day.setDate(day.getDate() - (6 - index));
+    const date = localDate(day);
+    return {date, label: DAY_LETTERS[day.getDay()], count: counts.get(date) ?? 0};
+  });
+}
