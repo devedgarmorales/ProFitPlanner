@@ -1,61 +1,59 @@
 import React, { useState } from 'react';
-import { FlatList, Pressable, View } from 'react-native';
-import { Text } from 'react-native-paper';
+import { FlatList, View } from 'react-native';
+import { SegmentedButtons, Text } from 'react-native-paper';
+import { ClientTabScreenProps } from '../../navigation/clientTypes';
 import { useHistory } from '../../hooks/client/useHistory';
 import {
   ClientLayout,
   ClientStatus,
   clientStyles as styles,
 } from '../../components/ClientLayout';
-import { ListSkeleton, StatsSkeleton } from '../../components/ClientSkeletons';
-import { BarChart, WeekStrip } from '../../components/ClientCharts';
-import { weekActivity, weightSeries } from '../../services/workoutDisplay';
+import { ListSkeleton } from '../../components/ClientSkeletons';
+import { Sparkline, WeekStrip } from '../../components/ClientCharts';
 import {
   EmptyState,
   Icon,
   Pill,
-  StatTile,
   Surface,
+  ui,
   usePalette,
 } from '../../components/ClientUi';
+import {
+  ExerciseSummary,
+  formatSessionDate,
+  sessionStats,
+  weekActivity,
+} from '../../services/workoutDisplay';
+import { HistorySession } from '../../interfaces/client';
 
-export function HistoryScreen() {
-  const { history, completedCount, progress, refresh, busy } = useHistory();
-  const palette = usePalette();
-  const [open, setOpen] = useState<string>();
+type View_ = 'exercises' | 'sessions';
+type Row =
+  | { kind: 'exercise'; item: ExerciseSummary }
+  | { kind: 'session'; item: HistorySession };
+
+const Separator = () => <View style={ui.rowGap} />;
+
+export function HistoryScreen({ navigation }: ClientTabScreenProps<'History'>) {
+  const { history, summaries, refresh, busy } = useHistory();
+  const [view, setView] = useState<View_>('exercises');
   const week = weekActivity(history);
   const weekTotal = week.reduce((sum, day) => sum + day.count, 0);
-  const totalSets = history.reduce(
-    (sum, session) => sum + session.sets.filter((set) => set.completed).length,
-    0
-  );
+  const rows: Row[] =
+    view === 'exercises'
+      ? summaries.map((item) => ({ kind: 'exercise', item }))
+      : history.map((item) => ({ kind: 'session', item }));
   return (
     <ClientLayout>
       <FlatList
         contentContainerStyle={styles.content}
-        data={history}
-        keyExtractor={(item) => item.id}
+        data={rows}
+        keyExtractor={(row) =>
+          row.kind === 'exercise' ? row.item.key : row.item.id
+        }
         refreshing={busy}
         onRefresh={refresh}
         ListHeaderComponent={
           <View style={styles.content}>
-            <Text variant="headlineSmall">Tu seguimiento</Text>
-            {busy && history.length === 0 ? (
-              <StatsSkeleton />
-            ) : (
-              <View style={styles.row}>
-                <StatTile
-                  icon="trophy-outline"
-                  value={completedCount}
-                  label="entrenamientos completados"
-                />
-                <StatTile
-                  icon="check-all"
-                  value={totalSets}
-                  label="series completadas"
-                />
-              </View>
-            )}
             <ClientStatus />
             <Surface>
               <View style={styles.row}>
@@ -77,37 +75,14 @@ export function HistoryScreen() {
               </View>
               <WeekStrip days={week} />
             </Surface>
-            {progress.length > 0 && (
-              <>
-                <Text variant="titleMedium">
-                  Cargas recientes por ejercicio
-                </Text>
-                <Text variant="bodySmall" style={{ color: palette.muted }}>
-                  Mayor carga por sesión; se comparan las últimas dos sesiones
-                  del mismo ejercicio y unidad. No es una recomendación de
-                  carga.
-                </Text>
-                {progress.map((item) => (
-                  <Surface key={item.id}>
-                    <Text variant="titleSmall">{item.name}</Text>
-                    <Text>
-                      Última: {item.performances[0].weight} {item.unit} ×{' '}
-                      {item.performances[0].reps} repeticiones
-                    </Text>
-                    <BarChart
-                      unit={item.unit}
-                      points={weightSeries(history, item.id)}
-                    />
-                    <Text style={{ color: palette.muted }}>
-                      {item.performances[1]
-                        ? `Anterior: ${item.performances[1].weight} ${item.unit} × ${item.performances[1].reps} repeticiones`
-                        : 'Primer registro: todavía no hay una sesión anterior.'}
-                    </Text>
-                  </Surface>
-                ))}
-                <Text variant="titleMedium">Sesiones</Text>
-              </>
-            )}
+            <SegmentedButtons
+              value={view}
+              onValueChange={(value) => setView(value as View_)}
+              buttons={[
+                { value: 'exercises', label: 'Ejercicios' },
+                { value: 'sessions', label: 'Sesiones' },
+              ]}
+            />
           </View>
         }
         ListEmptyComponent={
@@ -115,66 +90,111 @@ export function HistoryScreen() {
             <ListSkeleton />
           ) : (
             <EmptyState icon="history" title="Sin historial">
-              <Text>Todavía no hay entrenamientos registrados.</Text>
+              <Text style={ui.center}>
+                Cuando termines tu primer entrenamiento aparecerá aquí.
+              </Text>
             </EmptyState>
           )
         }
-        renderItem={({ item }) => {
-          const expanded = open === item.id;
-          const done = item.sets.filter((set) => set.completed);
-          return (
-            <Surface>
-              <Pressable
-                accessibilityRole="button"
-                accessibilityState={{ expanded }}
-                onPress={() => setOpen(expanded ? undefined : item.id)}
-                style={styles.row}
-              >
-                <View style={styles.grow}>
-                  <Text variant="titleMedium">
-                    {item.routine_name} · {item.day_name}
-                  </Text>
-                  <Text style={{ color: palette.muted }}>
-                    Coach: {item.coach_name}
-                  </Text>
-                  <Text style={{ color: palette.muted }}>
-                    {new Date(item.started_at).toLocaleString()}
-                  </Text>
-                </View>
-                <Icon
-                  name={expanded ? 'chevron-up' : 'chevron-down'}
-                  size={24}
-                  color={palette.muted}
-                />
-              </Pressable>
-              <View style={styles.row}>
-                <Pill
-                  icon={
-                    item.status === 'completed'
-                      ? 'check-circle'
-                      : 'play-circle-outline'
-                  }
-                  tone={item.status === 'completed' ? 'accent' : 'warning'}
-                  label={
-                    item.status === 'completed' ? 'Completado' : 'En curso'
-                  }
-                />
-                <Pill label={`${done.length}/${item.sets.length} series`} />
-              </View>
-              {expanded &&
-                done.map((set) => (
-                  <Text key={set.exercise_set}>
-                    {set.exercise_name || 'Serie registrada'}
-                    {set.set_number ? ` · Serie ${set.set_number}` : ''}:{' '}
-                    {set.reps_performed} repeticiones · {set.weight_used || '—'}{' '}
-                    {set.weight_unit || ''}
-                    {set.notes ? ` · ${set.notes}` : ''}
-                  </Text>
-                ))}
-            </Surface>
-          );
-        }}
+        renderItem={({ item: row }) => (
+          <View style={ui.itemPad}>
+            {row.kind === 'exercise' ? (
+              <ExerciseRow
+                summary={row.item}
+                onPress={() =>
+                  navigation.navigate('ExerciseProgress', {
+                    key: row.item.key,
+                    name: row.item.name,
+                  })
+                }
+              />
+            ) : (
+              <SessionRow
+                session={row.item}
+                onPress={() =>
+                  navigation.navigate('SessionDetail', {
+                    sessionId: row.item.id,
+                  })
+                }
+              />
+            )}
+          </View>
+        )}
+        ItemSeparatorComponent={Separator}
       />
     </ClientLayout>
+  );
+}
+
+function ExerciseRow({
+  summary,
+  onPress,
+}: {
+  summary: ExerciseSummary;
+  onPress: () => void;
+}) {
+  const palette = usePalette();
+  const { delta } = summary;
+  return (
+    <Surface
+      accessibilityLabel={`Progreso de ${summary.name}`}
+      onPress={onPress}
+    >
+      <View style={styles.row}>
+        <Text variant="titleSmall" numberOfLines={2} style={styles.grow}>
+          {summary.name}
+        </Text>
+        <Icon name="chevron-right" size={22} color={palette.muted} />
+      </View>
+      <View style={styles.row}>
+        <Text
+          variant="bodyMedium"
+          style={[styles.grow, { color: palette.muted }]}
+        >
+          {summary.last.weight} {summary.unit} × {summary.last.reps}
+        </Text>
+        <Sparkline values={summary.points.map((point) => point.weight)} />
+        {delta !== null && delta !== 0 && (
+          <Pill
+            tone={delta > 0 ? 'accent' : 'warning'}
+            icon={delta > 0 ? 'arrow-up' : 'arrow-down'}
+            label={`${Math.abs(delta)}`}
+          />
+        )}
+      </View>
+    </Surface>
+  );
+}
+
+function SessionRow({
+  session,
+  onPress,
+}: {
+  session: HistorySession;
+  onPress: () => void;
+}) {
+  const palette = usePalette();
+  const stats = sessionStats(session);
+  return (
+    <Surface
+      accessibilityLabel={`Sesión ${session.day_name}`}
+      onPress={onPress}
+    >
+      <View style={styles.row}>
+        <View style={styles.grow}>
+          <Text variant="labelMedium" style={{ color: palette.muted }}>
+            {formatSessionDate(session.started_at)}
+          </Text>
+          <Text variant="titleSmall" numberOfLines={1}>
+            {session.day_name}
+          </Text>
+        </View>
+        <Pill
+          tone={session.status === 'completed' ? 'accent' : 'warning'}
+          label={`${stats.sets}/${stats.totalSets}`}
+        />
+        <Icon name="chevron-right" size={22} color={palette.muted} />
+      </View>
+    </Surface>
   );
 }

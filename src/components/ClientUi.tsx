@@ -308,6 +308,7 @@ export function LaunchSplash({ label }: { label: string }) {
 export { Icon };
 
 export const ui = StyleSheet.create({
+  rowGap: { height: 8 },
   imageThumb: { width: 72, height: 72, borderRadius: radius.sm },
   imageLarge: { width: '100%', height: 240, borderRadius: radius.md },
   exerciseTop: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },

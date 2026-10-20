@@ -19,3 +19,11 @@ jest.mock('react-native-reanimated', () => {
     withTiming: value => value,
   };
 });
+jest.mock('react-native-svg', () => {
+  const {View} = require('react-native');
+  return {__esModule: true, default: View, Svg: View, Polyline: View, Circle: View};
+});
+jest.mock('react-native-gifted-charts', () => {
+  const {View} = require('react-native');
+  return {LineChart: View};
+});

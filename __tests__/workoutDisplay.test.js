@@ -1,8 +1,12 @@
 import { describe, expect, it } from '@jest/globals';
 import {
   countRecords,
+  estimatedOneRm,
+  exerciseSeries,
+  exerciseSummaries,
+  groupSessionSets,
+  sessionStats,
   weekActivity,
-  weightSeries,
   demoUrl,
   formatClock,
   nextRoutineDay,
@@ -140,46 +144,6 @@ describe('demoUrl', () => {
   });
 });
 
-describe('weightSeries', () => {
-  const session = (id, started_at, weights, extra = {}) => ({
-    id,
-    status: 'completed',
-    started_at,
-    sets: weights.map((weight) => ({
-      exercise_id: 'a',
-      weight_unit: 'kg',
-      weight_used: String(weight),
-      reps_performed: 8,
-      completed: true,
-      ...extra,
-    })),
-  });
-
-  it('returns the best weight per session in chronological order', () => {
-    const history = [
-      session('3', '2026-10-15', [60, 62.5]),
-      session('1', '2026-10-01', [50]),
-      session('2', '2026-10-08', [55, 52]),
-    ];
-    expect(weightSeries(history, 'a:kg')).toEqual([
-      { date: '2026-10-01', weight: 50 },
-      { date: '2026-10-08', weight: 55 },
-      { date: '2026-10-15', weight: 62.5 },
-    ]);
-  });
-
-  it('keeps only the latest sessions and skips other units or open sessions', () => {
-    const history = [
-      session('1', '2026-10-01', [50]),
-      session('2', '2026-10-02', [51]),
-      session('3', '2026-10-03', [52]),
-      { ...session('4', '2026-10-04', [99]), status: 'in_progress' },
-      session('5', '2026-10-05', [95], { weight_unit: 'lb' }),
-    ];
-    expect(weightSeries(history, 'a:kg', 2).map((p) => p.weight)).toEqual([51, 52]);
-  });
-});
-
 describe('weekActivity', () => {
   const now = new Date(2026, 9, 21, 12);
   const at = (day) => new Date(2026, 9, day, 9).toISOString();
@@ -200,5 +164,101 @@ describe('weekActivity', () => {
     expect(week[6]).toMatchObject({ date: '2026-10-21', count: 2 });
     expect(week.find((day) => day.date === '2026-10-19').count).toBe(1);
     expect(week.find((day) => day.date === '2026-10-20').count).toBe(0);
+  });
+});
+
+const logged = (id, started_at, sets, extra = {}) => ({
+  id,
+  status: 'completed',
+  started_at,
+  completed_at: null,
+  day_name: 'Día A',
+  sets: sets.map(([weight, reps, exercise = 'a', name = `Ex ${exercise}`, n = 1]) => ({
+    exercise_set: `${id}-${exercise}-${n}`,
+    exercise_id: exercise,
+    exercise_name: name,
+    weight_unit: 'kg',
+    weight_used: String(weight),
+    reps_performed: reps,
+    set_number: n,
+    completed: true,
+    notes: '',
+  })),
+  ...extra,
+});
+
+describe('estimatedOneRm', () => {
+  it('uses the Epley formula and returns the weight for a single rep', () => {
+    expect(estimatedOneRm(100, 1)).toBe(100);
+    expect(estimatedOneRm(60, 10)).toBe(80);
+    expect(estimatedOneRm(22.5, 8)).toBe(28.5);
+  });
+});
+
+describe('exerciseSeries', () => {
+  it('returns one chronological point per session with best weight, volume and 1RM', () => {
+    const history = [
+      logged('2', '2026-10-08', [[55, 8], [50, 10]]),
+      logged('1', '2026-10-01', [[50, 8]]),
+    ];
+    expect(exerciseSeries(history, 'a:kg')).toEqual([
+      { date: '2026-10-01', weight: 50, reps: 8, volume: 400, oneRm: 63.3 },
+      { date: '2026-10-08', weight: 55, reps: 8, volume: 940, oneRm: 69.7 },
+    ]);
+  });
+
+  it('skips open sessions and other units', () => {
+    const history = [
+      logged('1', '2026-10-01', [[50, 8]]),
+      logged('2', '2026-10-02', [[99, 8]], { status: 'in_progress' }),
+    ];
+    expect(exerciseSeries(history, 'a:lb')).toEqual([]);
+    expect(exerciseSeries(history, 'a:kg')).toHaveLength(1);
+  });
+});
+
+describe('exerciseSummaries', () => {
+  it('lists every exercise with its last result and the change against the previous one', () => {
+    const history = [
+      logged('1', '2026-10-01', [[50, 8, 'a'], [20, 12, 'b']]),
+      logged('2', '2026-10-08', [[55, 8, 'a']]),
+    ];
+    const summaries = exerciseSummaries(history);
+    expect(summaries.map((item) => item.key)).toEqual(['a:kg', 'b:kg']);
+    expect(summaries[0]).toMatchObject({
+      name: 'Ex a',
+      unit: 'kg',
+      last: { weight: 55, reps: 8, date: '2026-10-08' },
+      delta: 5,
+    });
+    expect(summaries[1].delta).toBeNull();
+  });
+});
+
+describe('sessionStats', () => {
+  it('summarises duration, completed sets and volume', () => {
+    const session = logged('1', '2026-10-01T10:00:00.000Z', [[50, 8], [50, 8]], {
+      completed_at: '2026-10-01T10:45:00.000Z',
+    });
+    session.sets.push({ ...session.sets[0], completed: false, exercise_set: 'x' });
+    expect(sessionStats(session)).toEqual({
+      durationMin: 45,
+      sets: 2,
+      totalSets: 3,
+      volume: 800,
+    });
+  });
+});
+
+describe('groupSessionSets', () => {
+  it('groups completed sets by exercise keeping set order', () => {
+    const session = logged('1', '2026-10-01', [
+      [50, 8, 'a', 'Press', 2],
+      [45, 10, 'a', 'Press', 1],
+      [20, 12, 'b', 'Remo', 1],
+    ]);
+    const groups = groupSessionSets(session);
+    expect(groups.map((group) => group.name)).toEqual(['Press', 'Remo']);
+    expect(groups[0].sets.map((set) => set.set_number)).toEqual([1, 2]);
   });
 });

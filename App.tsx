@@ -21,6 +21,8 @@ import {
 import { LoginScreen } from './src/screens/client/LoginScreen';
 import { OrganizationsScreen } from './src/screens/client/OrganizationsScreen';
 import { ClientTabNavigator } from './src/navigation/ClientTabNavigator';
+import { ExerciseProgressScreen } from './src/screens/client/ExerciseProgressScreen';
+import { SessionDetailScreen } from './src/screens/client/SessionDetailScreen';
 import { RoutineScreen } from './src/screens/client/RoutineScreen';
 import { DayScreen } from './src/screens/client/DayScreen';
 import { WorkoutScreen } from './src/screens/client/WorkoutScreen';
@@ -87,6 +89,16 @@ function App() {
                     name="Workout"
                     component={WorkoutScreen}
                     options={{ title: 'Registro de entrenamiento' }}
+                  />
+                  <Stack.Screen
+                    name="ExerciseProgress"
+                    component={ExerciseProgressScreen}
+                    options={{ title: 'Progreso' }}
+                  />
+                  <Stack.Screen
+                    name="SessionDetail"
+                    component={SessionDetailScreen}
+                    options={{ title: 'Sesión' }}
                   />
                 </Stack.Navigator>
               </NavigationContainer>

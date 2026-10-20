@@ -17,6 +17,8 @@ export type ClientStack = {
   Routine: { routineId: string };
   Day: { routineId: string; dayId: string };
   Workout: { sessionId: string };
+  ExerciseProgress: { key: string; name: string };
+  SessionDetail: { sessionId: string };
 };
 
 export type ClientScreenProps<T extends keyof ClientStack> =
