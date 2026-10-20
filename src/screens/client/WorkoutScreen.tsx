@@ -12,16 +12,23 @@ import {
 import { WorkoutSetRow } from '../../components/WorkoutSetRow';
 import {
   EmptyState,
+  ExerciseMeta,
   Icon,
   Pill,
   ProgressBar,
+  StatTile,
   Surface,
   ui,
   usePalette,
 } from '../../components/ClientUi';
 import { mergeHistory } from '../../services/workout';
 import { exerciseProgress } from '../../services/workoutProgress';
-import { formatClock, sessionProgress } from '../../services/workoutDisplay';
+import {
+  countRecords,
+  formatClock,
+  sessionProgress,
+  sessionVolume,
+} from '../../services/workoutDisplay';
 
 const Separator = () => <View style={styles.gap} />;
 
@@ -54,6 +61,9 @@ export function WorkoutScreen({
   }
   const completed = session.status === 'completed';
   const progress = sessionProgress(session.sets);
+  const merged = mergeHistory(data.history, data.workouts);
+  const entry = merged.find((item) => item.id === session.id);
+  const records = completed && entry ? countRecords(entry, merged) : [];
   return (
     <ClientLayout>
       <SectionList
@@ -79,6 +89,44 @@ export function WorkoutScreen({
               />
               <Pill icon="timer-outline" label={`${workout.elapsed} min`} />
             </View>
+            {completed && (
+              <>
+                <View style={styles.row}>
+                  <StatTile
+                    icon="timer-outline"
+                    value={`${workout.elapsed} min`}
+                    label="duración"
+                  />
+                  <StatTile
+                    icon="check-all"
+                    value={progress.done}
+                    label="series"
+                  />
+                  <StatTile
+                    icon="weight-kilogram"
+                    value={sessionVolume(session.sets)}
+                    label="volumen"
+                  />
+                </View>
+                {records.length > 0 && (
+                  <Surface>
+                    <View style={styles.row}>
+                      <Icon name="trophy" size={22} color={palette.accent} />
+                      <Text variant="titleMedium">
+                        {records.length === 1
+                          ? 'Nuevo récord personal'
+                          : `${records.length} récords personales`}
+                      </Text>
+                    </View>
+                    {records.map((record) => (
+                      <Text key={record.name}>
+                        {record.name}: {record.weight} {record.unit}
+                      </Text>
+                    ))}
+                  </Surface>
+                )}
+              </>
+            )}
             <Surface>
               <Text>
                 {progress.done} de {progress.total} series completadas
@@ -129,6 +177,10 @@ export function WorkoutScreen({
         renderSectionHeader={({ section }) => (
           <View style={ui.exerciseHeader}>
             <Text variant="titleMedium">{section.exercise.name}</Text>
+            <ExerciseMeta
+              muscles={section.exercise.primary_muscles}
+              video={section.exercise.video_url}
+            />
             {!!section.client_notes && <Text>{section.client_notes}</Text>}
             {!completed && (
               <Button

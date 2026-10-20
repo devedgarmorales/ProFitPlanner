@@ -19,7 +19,8 @@ import {
   usePalette,
 } from '../../components/ClientUi';
 import { ListSkeleton } from '../../components/ClientSkeletons';
-import { sessionProgress } from '../../services/workoutDisplay';
+import { mergeHistory } from '../../services/workout';
+import { nextRoutineDay, sessionProgress } from '../../services/workoutDisplay';
 
 export function RoutinesScreen({ navigation }: ClientScreenProps<'Routines'>) {
   const { data, organization, user, busy, refresh } = useClientStore();
@@ -28,6 +29,14 @@ export function RoutinesScreen({ navigation }: ClientScreenProps<'Routines'>) {
     (session) => session.status === 'in_progress'
   );
   const progress = active ? sessionProgress(active.sets) : undefined;
+  const suggestedRoutine = data.routines[0];
+  const suggestedDay =
+    !active && suggestedRoutine
+      ? nextRoutineDay(
+          suggestedRoutine,
+          mergeHistory(data.history, data.workouts)
+        )
+      : undefined;
   return (
     <ClientLayout>
       <FlatList
@@ -58,7 +67,7 @@ export function RoutinesScreen({ navigation }: ClientScreenProps<'Routines'>) {
                 },
               ]}
             />
-            <View style={styles.content}>
+            <View style={ui.headerInner}>
               <ClientStatus />
               {active && progress && (
                 <Surface
@@ -84,6 +93,38 @@ export function RoutinesScreen({ navigation }: ClientScreenProps<'Routines'>) {
                     />
                   </View>
                   <ProgressBar percent={progress.percent} />
+                </Surface>
+              )}
+              {suggestedRoutine && suggestedDay && (
+                <Surface
+                  accessibilityLabel={`Comenzar ${suggestedDay.name}`}
+                  onPress={() =>
+                    navigation.navigate('Day', {
+                      routineId: suggestedRoutine.id,
+                      dayId: suggestedDay.id,
+                    })
+                  }
+                >
+                  <Text variant="labelLarge" style={{ color: palette.accent }}>
+                    TOCA HOY
+                  </Text>
+                  <Text variant="titleLarge">{suggestedDay.name}</Text>
+                  <Text style={{ color: palette.muted }}>
+                    {suggestedRoutine.name}
+                  </Text>
+                  <View style={styles.row}>
+                    <Pill
+                      icon="dumbbell"
+                      label={`${suggestedDay.exercises.length} ejercicios`}
+                    />
+                    <Pill
+                      icon="timer-outline"
+                      label={`${suggestedDay.estimated_duration_minutes} min`}
+                    />
+                  </View>
+                  <Button mode="contained" icon="play" contentStyle={ui.cta}>
+                    Comenzar
+                  </Button>
                 </Surface>
               )}
               {data.routines.length > 0 && (

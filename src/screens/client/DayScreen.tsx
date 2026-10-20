@@ -10,6 +10,7 @@ import {
 } from '../../components/ClientLayout';
 import {
   EmptyState,
+  ExerciseMeta,
   Icon,
   Pill,
   Surface,
@@ -94,6 +95,10 @@ export function DayScreen({ route, navigation }: ClientScreenProps<'Day'>) {
                 label={`Descanso: ${item.rest_between_sets_seconds} segundos`}
               />
             </View>
+            <ExerciseMeta
+              muscles={item.exercise.primary_muscles}
+              video={item.exercise.video_url}
+            />
             {!!item.client_notes && <Text>{item.client_notes}</Text>}
             {item.sets.map((set) => (
               <Text key={set.id} style={{ color: palette.muted }}>

@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
 import {
+  Linking,
   Pressable,
   StyleProp,
   StyleSheet,
@@ -11,6 +12,7 @@ import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { demoUrl } from '../services/workoutDisplay';
 import { clientPalette, radius, spacing } from '../styles/clientTheme';
 
 export function usePalette() {
@@ -216,9 +218,70 @@ export function Avatar({ name }: { name: string }) {
   );
 }
 
+export function ExerciseMeta({
+  muscles,
+  video,
+}: {
+  muscles?: { display_name: string }[];
+  video?: string | null;
+}) {
+  const palette = usePalette();
+  const url = demoUrl(video);
+  if (!muscles?.length && !url) {
+    return null;
+  }
+  return (
+    <View style={ui.metaRow}>
+      {muscles?.slice(0, 3).map((muscle) => (
+        <Pill key={muscle.display_name} label={muscle.display_name} />
+      ))}
+      {!!url && (
+        <Pressable
+          accessibilityRole="link"
+          accessibilityLabel="Ver demostración del ejercicio"
+          onPress={() => Linking.openURL(url).catch(() => undefined)}
+          style={ui.demoLink}
+        >
+          <Icon name="play-circle-outline" size={18} color={palette.accent} />
+          <Text variant="labelMedium" style={{ color: palette.accent }}>
+            Ver demostración
+          </Text>
+        </Pressable>
+      )}
+    </View>
+  );
+}
+
+export function LaunchSplash({ label }: { label: string }) {
+  const palette = usePalette();
+  return (
+    <LinearGradient colors={palette.gradient} style={ui.splash}>
+      <Icon name="dumbbell" size={56} color={palette.onGradient} />
+      <Text variant="headlineSmall" style={{ color: palette.onGradient }}>
+        ProFitPlanner
+      </Text>
+      <Text style={{ color: palette.onGradient, opacity: 0.8 }}>{label}</Text>
+    </LinearGradient>
+  );
+}
+
 export { Icon };
 
 export const ui = StyleSheet.create({
+  headerInner: { paddingHorizontal: 16, paddingTop: 16, gap: 12 },
+  metaRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+    gap: spacing.sm,
+  },
+  demoLink: { flexDirection: 'row', alignItems: 'center', gap: 4, padding: 4 },
+  splash: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: spacing.sm,
+  },
   stepperColumn: { gap: 4 },
   stepperContent: { textAlign: 'center', fontSize: 18 },
   fullBleed: { gap: 12, paddingBottom: 16 },

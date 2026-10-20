@@ -65,3 +65,19 @@ it('shows login when no secure session exists', () => {
   expect(JSON.stringify(tree!.toJSON())).toContain('Client login');
   act(() => tree!.unmount());
 });
+it('shows a splash instead of the organization picker while the single membership is selected', () => {
+  (useClientStore as unknown as ReturnType<typeof jest.fn>).mockReturnValue({
+    ready: true,
+    user: { id: 'u1' },
+    memberships: [{ id: 'm1', organization: { id: 'o1', name: 'Gym' } }],
+    organization: undefined,
+  });
+  let tree: renderer.ReactTestRenderer;
+  act(() => {
+    tree = renderer.create(<App />);
+  });
+  const rendered = JSON.stringify(tree!.toJSON());
+  expect(rendered).toContain('Preparando tu entrenamiento');
+  expect(rendered).not.toContain('Organizations');
+  act(() => tree!.unmount());
+});

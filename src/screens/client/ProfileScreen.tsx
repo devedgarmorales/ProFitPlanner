@@ -11,7 +11,7 @@ import {
 import { Avatar, Pill, ui, usePalette } from '../../components/ClientUi';
 
 export function ProfileScreen({ navigation }: ClientScreenProps<'Profile'>) {
-  const { user, organization, logout, busy } = useClientStore();
+  const { user, organization, memberships, logout, busy } = useClientStore();
   const palette = usePalette();
   const fullName = `${user?.first_name ?? ''} ${user?.last_name ?? ''}`.trim();
   return (
@@ -19,7 +19,6 @@ export function ProfileScreen({ navigation }: ClientScreenProps<'Profile'>) {
       <View style={styles.content}>
         <Avatar name={fullName || user?.email || ''} />
         <View style={ui.centerStack}>
-          <Text variant="headlineSmall">Mi cuenta</Text>
           <Text variant="titleMedium">{fullName}</Text>
           <Text style={{ color: palette.muted }}>{user?.email}</Text>
           {!!organization && (
@@ -27,13 +26,15 @@ export function ProfileScreen({ navigation }: ClientScreenProps<'Profile'>) {
           )}
         </View>
         <ClientStatus />
-        <Button
-          mode="outlined"
-          icon="swap-horizontal"
-          onPress={() => navigation.navigate('Organizations')}
-        >
-          Cambiar organización
-        </Button>
+        {memberships.length > 1 && (
+          <Button
+            mode="outlined"
+            icon="swap-horizontal"
+            onPress={() => navigation.navigate('Organizations')}
+          >
+            Cambiar organización
+          </Button>
+        )}
         <Text variant="bodySmall" style={{ color: palette.muted }}>
           Al cerrar sesión, el avance pendiente se conserva en este dispositivo
           y solo se muestra al volver a ingresar con tu cuenta y organización.

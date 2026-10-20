@@ -13,6 +13,7 @@ import { ClientStack } from './src/navigation/clientTypes';
 import { clientTheme } from './src/styles/clientTheme';
 import { useClientLifecycle } from './src/hooks/client/useClientLifecycle';
 import { useClientStore } from './src/store/clientStore';
+import { LaunchSplash } from './src/components/ClientUi';
 import {
   ClientErrorBoundary,
   clientStyles,
@@ -28,7 +29,7 @@ import { ProfileScreen } from './src/screens/client/ProfileScreen';
 const Stack = createNativeStackNavigator<ClientStack>();
 function App() {
   useClientLifecycle();
-  const { ready, user, organization } = useClientStore();
+  const { ready, user, organization, memberships } = useClientStore();
   const dark = useColorScheme() === 'dark';
   const theme = clientTheme(dark);
   const navigationTheme = dark ? DarkTheme : DefaultTheme;
@@ -41,6 +42,8 @@ function App() {
               <ActivityIndicator accessibilityLabel="Restaurando sesión" />
             ) : !user ? (
               <LoginScreen />
+            ) : !organization && memberships?.length ? (
+              <LaunchSplash label="Preparando tu entrenamiento…" />
             ) : (
               <NavigationContainer
                 theme={{
