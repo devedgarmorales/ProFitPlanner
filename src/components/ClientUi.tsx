@@ -1,5 +1,6 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import {
+  Image,
   Linking,
   Pressable,
   StyleProp,
@@ -252,6 +253,45 @@ export function ExerciseMeta({
   );
 }
 
+export function ExerciseImage({
+  uri,
+  name,
+  expandable,
+}: {
+  uri?: string | null;
+  name: string;
+  expandable?: boolean;
+}) {
+  const palette = usePalette();
+  const [expanded, setExpanded] = useState(false);
+  const source = demoUrl(uri);
+  if (!source) {
+    return null;
+  }
+  const image = (
+    <Image
+      accessibilityLabel={`Demostración de ${name}`}
+      source={{ uri: source }}
+      resizeMode="cover"
+      style={[
+        expanded ? ui.imageLarge : ui.imageThumb,
+        { backgroundColor: palette.cardAlt },
+      ]}
+    />
+  );
+  return expandable ? (
+    <Pressable
+      accessibilityRole="button"
+      accessibilityLabel={expanded ? 'Reducir imagen' : 'Ampliar imagen'}
+      onPress={() => setExpanded((value) => !value)}
+    >
+      {image}
+    </Pressable>
+  ) : (
+    image
+  );
+}
+
 export function LaunchSplash({ label }: { label: string }) {
   const palette = usePalette();
   return (
@@ -268,6 +308,9 @@ export function LaunchSplash({ label }: { label: string }) {
 export { Icon };
 
 export const ui = StyleSheet.create({
+  imageThumb: { width: 72, height: 72, borderRadius: radius.sm },
+  imageLarge: { width: '100%', height: 240, borderRadius: radius.md },
+  exerciseTop: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
   headerInner: { paddingHorizontal: 16, paddingTop: 16, gap: 12 },
   metaRow: {
     flexDirection: 'row',

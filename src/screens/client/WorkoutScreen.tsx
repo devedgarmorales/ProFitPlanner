@@ -12,6 +12,7 @@ import {
 import { WorkoutSetRow } from '../../components/WorkoutSetRow';
 import {
   EmptyState,
+  ExerciseImage,
   ExerciseMeta,
   Icon,
   Pill,
@@ -176,6 +177,11 @@ export function WorkoutScreen({
         }
         renderSectionHeader={({ section }) => (
           <View style={ui.exerciseHeader}>
+            <ExerciseImage
+              expandable
+              uri={section.exercise.image}
+              name={section.exercise.name}
+            />
             <Text variant="titleMedium">{section.exercise.name}</Text>
             <ExerciseMeta
               muscles={section.exercise.primary_muscles}

@@ -29,6 +29,7 @@ export interface DayExercise {
     id?: string | number;
     video_url?: string | null;
     category?: string | null;
+    image?: string | null;
     primary_muscles?: {display_name: string}[];
   };
   sets: PrescribedSet[];

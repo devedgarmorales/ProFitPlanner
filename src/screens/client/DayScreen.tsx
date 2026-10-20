@@ -10,8 +10,8 @@ import {
 } from '../../components/ClientLayout';
 import {
   EmptyState,
+  ExerciseImage,
   ExerciseMeta,
-  Icon,
   Pill,
   Surface,
   ui,
@@ -82,8 +82,11 @@ export function DayScreen({ route, navigation }: ClientScreenProps<'Day'>) {
         }
         renderItem={({ item }) => (
           <Surface>
-            <View style={styles.row}>
-              <Icon name="dumbbell" size={20} color={palette.accent} />
+            <View style={ui.exerciseTop}>
+              <ExerciseImage
+                uri={item.exercise.image}
+                name={item.exercise.name}
+              />
               <Text variant="titleMedium" style={styles.grow}>
                 {item.exercise.name}
               </Text>
