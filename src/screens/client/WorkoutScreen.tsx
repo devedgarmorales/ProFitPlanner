@@ -242,7 +242,9 @@ export function WorkoutScreen({
                 <Button
                   mode="contained"
                   contentStyle={ui.cta}
-                  onPress={() => navigation.navigate('History')}
+                  onPress={() =>
+                    navigation.navigate('Tabs', { screen: 'History' })
+                  }
                 >
                   Ver historial
                 </Button>

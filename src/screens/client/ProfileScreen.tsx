@@ -1,7 +1,7 @@
 import React from 'react';
 import { View } from 'react-native';
 import { Button, Text } from 'react-native-paper';
-import { ClientScreenProps } from '../../navigation/clientTypes';
+import { ClientTabScreenProps } from '../../navigation/clientTypes';
 import { useClientStore } from '../../store/clientStore';
 import {
   ClientLayout,
@@ -10,7 +10,7 @@ import {
 } from '../../components/ClientLayout';
 import { Avatar, Pill, ui, usePalette } from '../../components/ClientUi';
 
-export function ProfileScreen({ navigation }: ClientScreenProps<'Profile'>) {
+export function ProfileScreen({ navigation }: ClientTabScreenProps<'Profile'>) {
   const { user, organization, memberships, logout, busy } = useClientStore();
   const palette = usePalette();
   const fullName = `${user?.first_name ?? ''} ${user?.last_name ?? ''}`.trim();

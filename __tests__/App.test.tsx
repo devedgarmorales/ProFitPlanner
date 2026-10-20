@@ -33,6 +33,9 @@ jest.mock('@react-navigation/native-stack', () => ({
     Screen: () => null,
   }),
 }));
+jest.mock('../src/navigation/ClientTabNavigator', () => ({
+  ClientTabNavigator: () => null,
+}));
 jest.mock('../src/services/credentialStorage', () => ({
   getTokens: jest.fn(),
   setTokens: jest.fn(),

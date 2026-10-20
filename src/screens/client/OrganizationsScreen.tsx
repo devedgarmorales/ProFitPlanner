@@ -56,7 +56,7 @@ export function OrganizationsScreen({
                     await selectOrganization(item);
                     navigation.reset({
                       index: 0,
-                      routes: [{ name: 'Routines' }],
+                      routes: [{ name: 'Tabs' }],
                     });
                   }
             }

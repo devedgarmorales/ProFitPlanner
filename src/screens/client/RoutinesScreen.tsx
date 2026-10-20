@@ -1,7 +1,7 @@
 import React from 'react';
 import { FlatList, View } from 'react-native';
 import { Button, Text } from 'react-native-paper';
-import { ClientScreenProps } from '../../navigation/clientTypes';
+import { ClientTabScreenProps } from '../../navigation/clientTypes';
 import { useClientStore } from '../../store/clientStore';
 import {
   ClientLayout,
@@ -22,7 +22,9 @@ import { ListSkeleton } from '../../components/ClientSkeletons';
 import { mergeHistory } from '../../services/workout';
 import { nextRoutineDay, sessionProgress } from '../../services/workoutDisplay';
 
-export function RoutinesScreen({ navigation }: ClientScreenProps<'Routines'>) {
+export function RoutinesScreen({
+  navigation,
+}: ClientTabScreenProps<'Routines'>) {
   const { data, organization, user, busy, refresh } = useClientStore();
   const palette = usePalette();
   const active = data.workouts.find(
@@ -54,18 +56,6 @@ export function RoutinesScreen({ navigation }: ClientScreenProps<'Routines'>) {
               subtitle={
                 organization?.organization.name || 'Selecciona tu organización'
               }
-              actions={[
-                {
-                  icon: 'history',
-                  label: 'Historial',
-                  onPress: () => navigation.navigate('History'),
-                },
-                {
-                  icon: 'account-circle-outline',
-                  label: 'Mi cuenta',
-                  onPress: () => navigation.navigate('Profile'),
-                },
-              ]}
             />
             <View style={ui.headerInner}>
               <ClientStatus />

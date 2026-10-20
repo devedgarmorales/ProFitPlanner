@@ -20,12 +20,10 @@ import {
 } from './src/components/ClientLayout';
 import { LoginScreen } from './src/screens/client/LoginScreen';
 import { OrganizationsScreen } from './src/screens/client/OrganizationsScreen';
-import { RoutinesScreen } from './src/screens/client/RoutinesScreen';
+import { ClientTabNavigator } from './src/navigation/ClientTabNavigator';
 import { RoutineScreen } from './src/screens/client/RoutineScreen';
 import { DayScreen } from './src/screens/client/DayScreen';
 import { WorkoutScreen } from './src/screens/client/WorkoutScreen';
-import { HistoryScreen } from './src/screens/client/HistoryScreen';
-import { ProfileScreen } from './src/screens/client/ProfileScreen';
 const Stack = createNativeStackNavigator<ClientStack>();
 function App() {
   useClientLifecycle();
@@ -58,7 +56,7 @@ function App() {
               >
                 <Stack.Navigator
                   key={user.id}
-                  initialRouteName={organization ? 'Routines' : 'Organizations'}
+                  initialRouteName={organization ? 'Tabs' : 'Organizations'}
                   screenOptions={{
                     headerShadowVisible: false,
                     headerTitleStyle: { fontWeight: '700' },
@@ -66,8 +64,8 @@ function App() {
                   }}
                 >
                   <Stack.Screen
-                    name="Routines"
-                    component={RoutinesScreen}
+                    name="Tabs"
+                    component={ClientTabNavigator}
                     options={{ headerShown: false }}
                   />
                   <Stack.Screen
@@ -89,16 +87,6 @@ function App() {
                     name="Workout"
                     component={WorkoutScreen}
                     options={{ title: 'Registro de entrenamiento' }}
-                  />
-                  <Stack.Screen
-                    name="History"
-                    component={HistoryScreen}
-                    options={{ title: 'Historial' }}
-                  />
-                  <Stack.Screen
-                    name="Profile"
-                    component={ProfileScreen}
-                    options={{ title: 'Mi cuenta' }}
                   />
                 </Stack.Navigator>
               </NavigationContainer>
