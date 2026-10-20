@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import { Text, useTheme } from 'react-native-paper';
 import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
+import Animated, { FadeInDown } from 'react-native-reanimated';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { clientPalette, radius, spacing } from '../styles/clientTheme';
@@ -40,7 +41,8 @@ export function Hero({ title, subtitle, icon, children, actions }: HeroProps) {
             </Text>
           )}
           <Text
-            variant="headlineMedium"
+            variant="headlineSmall"
+            numberOfLines={1}
             style={[ui.heroTitle, { color: palette.onGradient }]}
           >
             {title}
@@ -160,7 +162,7 @@ export function Surface({
     { backgroundColor: palette.card, borderColor: palette.border },
     style,
   ];
-  return onPress ? (
+  const content = onPress ? (
     <Pressable
       accessibilityRole="button"
       accessibilityLabel={accessibilityLabel}
@@ -171,6 +173,9 @@ export function Surface({
     </Pressable>
   ) : (
     <View style={body}>{children}</View>
+  );
+  return (
+    <Animated.View entering={FadeInDown.duration(240)}>{content}</Animated.View>
   );
 }
 
@@ -214,6 +219,10 @@ export function Avatar({ name }: { name: string }) {
 export { Icon };
 
 export const ui = StyleSheet.create({
+  stepperColumn: { gap: 4 },
+  stepperContent: { textAlign: 'center', fontSize: 18 },
+  fullBleed: { gap: 12, paddingBottom: 16 },
+  itemPad: { paddingHorizontal: 16 },
   center: { textAlign: 'center' },
   centerStack: { alignItems: 'center', gap: 4 },
   checkOn: { backgroundColor: '#00000000' },

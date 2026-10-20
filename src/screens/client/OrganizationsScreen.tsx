@@ -8,6 +8,7 @@ import {
   ClientStatus,
   clientStyles as styles,
 } from '../../components/ClientLayout';
+import { ListSkeleton } from '../../components/ClientSkeletons';
 import {
   EmptyState,
   Icon,
@@ -29,17 +30,21 @@ export function OrganizationsScreen({
         keyExtractor={(item) => item.id}
         ListHeaderComponent={
           <View style={styles.content}>
-            <Text variant="headlineMedium">Elige tu organización</Text>
+            <Text variant="headlineSmall">Elige tu organización</Text>
             <ClientStatus />
           </View>
         }
         ListEmptyComponent={
-          <EmptyState icon="domain-off" title="Sin membresía activa">
-            <Text style={ui.center}>
-              No tienes una membresía activa de cliente. Solicita a tu coach que
-              verifique tu acceso.
-            </Text>
-          </EmptyState>
+          busy ? (
+            <ListSkeleton count={2} />
+          ) : (
+            <EmptyState icon="domain-off" title="Sin membresía activa">
+              <Text style={ui.center}>
+                No tienes una membresía activa de cliente. Solicita a tu coach
+                que verifique tu acceso.
+              </Text>
+            </EmptyState>
+          )
         }
         renderItem={({ item }) => (
           <Surface

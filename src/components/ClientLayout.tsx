@@ -50,10 +50,12 @@ export function ClientStatus() {
           <Text style={clientStyles.grow}>
             {pending} entrenamiento(s) con sincronización pendiente.
           </Text>
-          <Button compact onPress={sync}>
-            Sincronizar avance
-          </Button>
         </View>
+      )}
+      {pending > 0 && (
+        <Button compact onPress={sync}>
+          Sincronizar avance
+        </Button>
       )}
       {!!error && (
         <View style={clientStyles.row}>
@@ -61,10 +63,12 @@ export function ClientStatus() {
           <Text style={clientStyles.grow} accessibilityRole="alert">
             {error}
           </Text>
-          <Button compact onPress={clearError}>
-            Cerrar aviso
-          </Button>
         </View>
+      )}
+      {!!error && (
+        <Button compact onPress={clearError}>
+          Cerrar aviso
+        </Button>
       )}
     </Surface>
   );

@@ -34,7 +34,7 @@ export function DayScreen({ route, navigation }: ClientScreenProps<'Day'>) {
         keyExtractor={(item) => item.id}
         ListHeaderComponent={
           <View style={styles.content}>
-            <Text variant="headlineMedium">
+            <Text variant="headlineSmall">
               {day?.name || 'Día no disponible'}
             </Text>
             {!!day?.description && <Text>{day.description}</Text>}
@@ -83,7 +83,7 @@ export function DayScreen({ route, navigation }: ClientScreenProps<'Day'>) {
           <Surface>
             <View style={styles.row}>
               <Icon name="dumbbell" size={20} color={palette.accent} />
-              <Text variant="titleLarge" style={styles.grow}>
+              <Text variant="titleMedium" style={styles.grow}>
                 {item.exercise.name}
               </Text>
             </View>

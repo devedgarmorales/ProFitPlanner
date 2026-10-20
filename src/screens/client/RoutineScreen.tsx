@@ -31,7 +31,7 @@ export function RoutineScreen({
         keyExtractor={(item) => item.id}
         ListHeaderComponent={
           <View style={styles.content}>
-            <Text variant="headlineMedium">
+            <Text variant="headlineSmall">
               {routine?.name || 'Rutina no disponible'}
             </Text>
             {!!routine?.description && <Text>{routine.description}</Text>}
@@ -61,7 +61,7 @@ export function RoutineScreen({
                 <Text style={{ color: palette.onAccent }}>{index + 1}</Text>
               </View>
               <View style={styles.grow}>
-                <Text variant="titleLarge">{item.name}</Text>
+                <Text variant="titleMedium">{item.name}</Text>
                 <Text style={{ color: palette.muted }}>
                   {item.exercises.length} ejercicios ·{' '}
                   {item.estimated_duration_minutes} minutos estimados

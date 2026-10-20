@@ -7,6 +7,7 @@ import {
   ClientStatus,
   clientStyles as styles,
 } from '../../components/ClientLayout';
+import { ListSkeleton, StatsSkeleton } from '../../components/ClientSkeletons';
 import {
   EmptyState,
   Icon,
@@ -34,19 +35,23 @@ export function HistoryScreen() {
         onRefresh={refresh}
         ListHeaderComponent={
           <View style={styles.content}>
-            <Text variant="headlineMedium">Tu seguimiento</Text>
-            <View style={styles.row}>
-              <StatTile
-                icon="trophy-outline"
-                value={completedCount}
-                label="entrenamientos completados"
-              />
-              <StatTile
-                icon="check-all"
-                value={totalSets}
-                label="series completadas"
-              />
-            </View>
+            <Text variant="headlineSmall">Tu seguimiento</Text>
+            {busy && history.length === 0 ? (
+              <StatsSkeleton />
+            ) : (
+              <View style={styles.row}>
+                <StatTile
+                  icon="trophy-outline"
+                  value={completedCount}
+                  label="entrenamientos completados"
+                />
+                <StatTile
+                  icon="check-all"
+                  value={totalSets}
+                  label="series completadas"
+                />
+              </View>
+            )}
             <ClientStatus />
             {progress.length > 0 && (
               <>
@@ -78,9 +83,13 @@ export function HistoryScreen() {
           </View>
         }
         ListEmptyComponent={
-          <EmptyState icon="history" title="Sin historial">
-            <Text>Todavía no hay entrenamientos registrados.</Text>
-          </EmptyState>
+          busy ? (
+            <ListSkeleton />
+          ) : (
+            <EmptyState icon="history" title="Sin historial">
+              <Text>Todavía no hay entrenamientos registrados.</Text>
+            </EmptyState>
+          )
         }
         renderItem={({ item }) => {
           const expanded = open === item.id;
@@ -94,7 +103,7 @@ export function HistoryScreen() {
                 style={styles.row}
               >
                 <View style={styles.grow}>
-                  <Text variant="titleLarge">
+                  <Text variant="titleMedium">
                     {item.routine_name} · {item.day_name}
                   </Text>
                   <Text style={{ color: palette.muted }}>

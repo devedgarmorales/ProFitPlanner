@@ -66,7 +66,7 @@ export function WorkoutScreen({
         keyExtractor={(item) => item.id}
         ListHeaderComponent={
           <View style={styles.content}>
-            <Text variant="headlineMedium">{session.day_name}</Text>
+            <Text variant="headlineSmall">{session.day_name}</Text>
             <View style={styles.row}>
               <Pill
                 icon={completed ? 'check-circle' : 'play-circle-outline'}
@@ -85,8 +85,8 @@ export function WorkoutScreen({
               </Text>
               <ProgressBar percent={progress.percent} />
             </Surface>
-            {!completed && (
-              <Surface style={workout.remaining > 0 ? undefined : ui.restIdle}>
+            {!completed && workout.remaining > 0 && (
+              <Surface>
                 <View style={styles.row}>
                   <Icon name="timer-sand" size={22} color={palette.accent} />
                   <View style={styles.grow}>
@@ -94,9 +94,9 @@ export function WorkoutScreen({
                       variant="labelMedium"
                       style={{ color: palette.muted }}
                     >
-                      Descanso restante: {workout.remaining} s
+                      Descanso
                     </Text>
-                    <Text variant="headlineMedium">
+                    <Text variant="headlineSmall">
                       {formatClock(workout.remaining)}
                     </Text>
                   </View>
@@ -128,7 +128,7 @@ export function WorkoutScreen({
         }
         renderSectionHeader={({ section }) => (
           <View style={ui.exerciseHeader}>
-            <Text variant="titleLarge">{section.exercise.name}</Text>
+            <Text variant="titleMedium">{section.exercise.name}</Text>
             {!!section.client_notes && <Text>{section.client_notes}</Text>}
             {!completed && (
               <Button

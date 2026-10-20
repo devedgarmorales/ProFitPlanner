@@ -19,7 +19,7 @@ export function ProfileScreen({ navigation }: ClientScreenProps<'Profile'>) {
       <View style={styles.content}>
         <Avatar name={fullName || user?.email || ''} />
         <View style={ui.centerStack}>
-          <Text variant="headlineMedium">Mi cuenta</Text>
+          <Text variant="headlineSmall">Mi cuenta</Text>
           <Text variant="titleMedium">{fullName}</Text>
           <Text style={{ color: palette.muted }}>{user?.email}</Text>
           {!!organization && (

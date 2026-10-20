@@ -91,7 +91,7 @@ export const WorkoutSetRow = React.memo(function WorkoutSetRow({
         </Pressable>
       </View>
       {!!prescribed.set_notes && <Text>{prescribed.set_notes}</Text>}
-      <View style={styles.row}>
+      <View style={ui.stepperColumn}>
         <Stepper
           label={`Repeticiones serie ${prescribed.set_number}`}
           caption="Repeticiones"
@@ -175,14 +175,16 @@ function Stepper({
       </Text>
       <View style={ui.stepper}>
         <IconButton
+          mode="contained-tonal"
           icon="minus"
-          size={18}
+          size={20}
           accessibilityLabel={`Disminuir ${label}`}
           disabled={disabled}
           onPress={() => onStep(-step)}
         />
         <TextInput
           style={ui.stepperInput}
+          contentStyle={ui.stepperContent}
           dense
           accessibilityLabel={label}
           value={value}
@@ -193,8 +195,9 @@ function Stepper({
           activeUnderlineColor="transparent"
         />
         <IconButton
+          mode="contained-tonal"
           icon="plus"
-          size={18}
+          size={20}
           accessibilityLabel={`Aumentar ${label}`}
           disabled={disabled}
           onPress={() => onStep(step)}
