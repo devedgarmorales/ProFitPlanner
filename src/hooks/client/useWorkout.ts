@@ -3,6 +3,7 @@ import { Alert } from 'react-native';
 import { useClientStore } from '../../store/clientStore';
 import { apiError } from '../../services/clientApi';
 import { remainingSeconds, validateSet } from '../../services/workout';
+import { stepValue } from '../../services/workoutDisplay';
 import { WorkoutSet } from '../../interfaces/client';
 export function useWorkout(sessionId: string) {
   const state = useClientStore();
@@ -85,17 +86,17 @@ export function useSetEditor(sessionId: string, set: WorkoutSet) {
         values.reps,
         values.weight.replace(',', '.')
       );
-      useClientStore
-        .getState()
-        .editSet(sessionId, {
-          ...set,
-          ...validated,
-          notes: values.notes,
-          completed: values.completed,
-        });
+      useClientStore.getState().editSet(sessionId, {
+        ...set,
+        ...validated,
+        notes: values.notes,
+        completed: values.completed,
+      });
       setError('');
+      return true;
     } catch (failure) {
       setError(apiError(failure));
+      return false;
     }
   };
   return {
@@ -116,5 +117,15 @@ export function useSetEditor(sessionId: string, set: WorkoutSet) {
       save({ reps, weight, notes: value, completed: set.completed });
     },
     toggle: () => save({ reps, weight, notes, completed: !set.completed }),
+    stepReps: (delta: number) => {
+      const next = stepValue(reps, delta, 10000).split('.')[0];
+      setReps(next);
+      save({ reps: next, weight, notes, completed: set.completed });
+    },
+    stepWeight: (delta: number) => {
+      const next = stepValue(weight, delta);
+      setWeight(next);
+      save({ reps, weight: next, notes, completed: set.completed });
+    },
   };
 }

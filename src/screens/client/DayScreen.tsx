@@ -1,6 +1,6 @@
 import React from 'react';
 import { FlatList, View } from 'react-native';
-import { Button, Card, Text } from 'react-native-paper';
+import { Button, Text } from 'react-native-paper';
 import { ClientScreenProps } from '../../navigation/clientTypes';
 import { useRoutineSelection } from '../../hooks/client/useRoutineSelection';
 import {
@@ -8,10 +8,23 @@ import {
   ClientStatus,
   clientStyles as styles,
 } from '../../components/ClientLayout';
+import {
+  EmptyState,
+  Icon,
+  Pill,
+  Surface,
+  ui,
+  usePalette,
+} from '../../components/ClientUi';
+
 export function DayScreen({ route, navigation }: ClientScreenProps<'Day'>) {
   const { day, error, start } = useRoutineSelection(
     route.params.routineId,
     route.params.dayId
+  );
+  const palette = usePalette();
+  const canStart = !!day?.exercises.some(
+    (exercise) => exercise.sets.length > 0
   );
   return (
     <ClientLayout>
@@ -20,22 +33,42 @@ export function DayScreen({ route, navigation }: ClientScreenProps<'Day'>) {
         data={day?.exercises || []}
         keyExtractor={(item) => item.id}
         ListHeaderComponent={
-          <View>
+          <View style={styles.content}>
             <Text variant="headlineMedium">
               {day?.name || 'Día no disponible'}
             </Text>
-            <Text>{day?.description}</Text>
+            {!!day?.description && <Text>{day.description}</Text>}
+            {!!day && (
+              <View style={styles.row}>
+                <Pill
+                  icon="dumbbell"
+                  label={`${day.exercises.length} ejercicios`}
+                />
+                <Pill
+                  icon="timer-outline"
+                  label={`${day.estimated_duration_minutes} min`}
+                />
+              </View>
+            )}
             <ClientStatus />
-            {!!error && <Text accessibilityRole="alert">{error}</Text>}
+            {!!error && (
+              <Text accessibilityRole="alert" style={{ color: palette.danger }}>
+                {error}
+              </Text>
+            )}
           </View>
         }
-        ListEmptyComponent={<Text>Tu coach todavía no agregó ejercicios.</Text>}
+        ListEmptyComponent={
+          <EmptyState icon="dumbbell" title="Sin ejercicios">
+            <Text>Tu coach todavía no agregó ejercicios.</Text>
+          </EmptyState>
+        }
         ListFooterComponent={
           <Button
             mode="contained"
-            disabled={
-              !day?.exercises.some((exercise) => exercise.sets.length > 0)
-            }
+            icon="play"
+            contentStyle={ui.cta}
+            disabled={!canStart}
             onPress={() => {
               const sessionId = start();
               if (sessionId) {
@@ -47,20 +80,28 @@ export function DayScreen({ route, navigation }: ClientScreenProps<'Day'>) {
           </Button>
         }
         renderItem={({ item }) => (
-          <Card style={styles.card}>
-            <Text variant="titleLarge">{item.exercise.name}</Text>
-            <Text>
-              {item.sets.length} series · Descanso:{' '}
-              {item.rest_between_sets_seconds} segundos
-            </Text>
-            <Text>{item.client_notes}</Text>
+          <Surface>
+            <View style={styles.row}>
+              <Icon name="dumbbell" size={20} color={palette.accent} />
+              <Text variant="titleLarge" style={styles.grow}>
+                {item.exercise.name}
+              </Text>
+            </View>
+            <View style={styles.row}>
+              <Pill label={`${item.sets.length} series`} tone="accent" />
+              <Pill
+                icon="timer-sand"
+                label={`Descanso: ${item.rest_between_sets_seconds} segundos`}
+              />
+            </View>
+            {!!item.client_notes && <Text>{item.client_notes}</Text>}
             {item.sets.map((set) => (
-              <Text key={set.id}>
+              <Text key={set.id} style={{ color: palette.muted }}>
                 Serie {set.set_number}: {set.reps} repeticiones ·{' '}
                 {set.target_weight || '—'} {set.weight_unit}
               </Text>
             ))}
-          </Card>
+          </Surface>
         )}
       />
     </ClientLayout>

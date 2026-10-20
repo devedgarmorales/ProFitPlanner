@@ -8,10 +8,19 @@ import {
   ClientStatus,
   clientStyles as styles,
 } from '../../components/ClientLayout';
+import {
+  EmptyState,
+  Icon,
+  Surface,
+  ui,
+  usePalette,
+} from '../../components/ClientUi';
+
 export function OrganizationsScreen({
   navigation,
 }: ClientScreenProps<'Organizations'>) {
   const { memberships, selectOrganization, logout, busy } = useClientStore();
+  const palette = usePalette();
   return (
     <ClientLayout>
       <FlatList
@@ -19,30 +28,48 @@ export function OrganizationsScreen({
         data={memberships}
         keyExtractor={(item) => item.id}
         ListHeaderComponent={
-          <View>
+          <View style={styles.content}>
             <Text variant="headlineMedium">Elige tu organización</Text>
             <ClientStatus />
           </View>
         }
         ListEmptyComponent={
-          <Text>
-            No tienes una membresía activa de cliente. Solicita a tu coach que
-            verifique tu acceso.
-          </Text>
+          <EmptyState icon="domain-off" title="Sin membresía activa">
+            <Text style={ui.center}>
+              No tienes una membresía activa de cliente. Solicita a tu coach que
+              verifique tu acceso.
+            </Text>
+          </EmptyState>
         }
         renderItem={({ item }) => (
-          <Button
-            mode="outlined"
-            disabled={busy}
-            onPress={async () => {
-              await selectOrganization(item);
-              navigation.reset({ index: 0, routes: [{ name: 'Routines' }] });
-            }}
+          <Surface
+            accessibilityLabel={`Entrar a ${item.organization.name}`}
+            onPress={
+              busy
+                ? undefined
+                : async () => {
+                    await selectOrganization(item);
+                    navigation.reset({
+                      index: 0,
+                      routes: [{ name: 'Routines' }],
+                    });
+                  }
+            }
           >
-            {item.organization.name}
-          </Button>
+            <View style={styles.row}>
+              <Icon name="domain" size={24} color={palette.accent} />
+              <Text variant="titleMedium" style={styles.grow}>
+                {item.organization.name}
+              </Text>
+              <Icon name="chevron-right" size={24} color={palette.muted} />
+            </View>
+          </Surface>
         )}
-        ListFooterComponent={<Button onPress={logout}>Cerrar sesión</Button>}
+        ListFooterComponent={
+          <Button icon="logout" onPress={logout}>
+            Cerrar sesión
+          </Button>
+        }
       />
     </ClientLayout>
   );

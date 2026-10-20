@@ -9,7 +9,7 @@
     "start": "react-native start",
     "test": "jest",
     "typecheck": "tsc --noEmit",
-    "lint:client": "eslint App.tsx src/services src/interfaces/client.ts src/navigation src/screens/client src/hooks/client src/store/clientStore.ts src/styles/clientTheme.ts src/components/ClientLayout.tsx src/components/WorkoutSetRow.tsx __tests__",
+    "lint:client": "eslint App.tsx src/services src/interfaces/client.ts src/navigation src/screens/client src/hooks/client src/store/clientStore.ts src/styles/clientTheme.ts src/components/ClientLayout.tsx src/components/ClientUi.tsx src/components/WorkoutSetRow.tsx __tests__",
     "test:client": "jest --runInBand --watchman=false"
   },
   "dependencies": {

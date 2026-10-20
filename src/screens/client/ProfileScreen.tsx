@@ -8,26 +8,37 @@ import {
   ClientStatus,
   clientStyles as styles,
 } from '../../components/ClientLayout';
+import { Avatar, Pill, ui, usePalette } from '../../components/ClientUi';
+
 export function ProfileScreen({ navigation }: ClientScreenProps<'Profile'>) {
   const { user, organization, logout, busy } = useClientStore();
+  const palette = usePalette();
+  const fullName = `${user?.first_name ?? ''} ${user?.last_name ?? ''}`.trim();
   return (
     <ClientLayout>
       <View style={styles.content}>
-        <Text variant="headlineMedium">Mi cuenta</Text>
-        <Text>
-          {user?.first_name} {user?.last_name}
-        </Text>
-        <Text>{user?.email}</Text>
-        <Text>{organization?.organization.name}</Text>
+        <Avatar name={fullName || user?.email || ''} />
+        <View style={ui.centerStack}>
+          <Text variant="headlineMedium">Mi cuenta</Text>
+          <Text variant="titleMedium">{fullName}</Text>
+          <Text style={{ color: palette.muted }}>{user?.email}</Text>
+          {!!organization && (
+            <Pill icon="domain" label={organization.organization.name} />
+          )}
+        </View>
         <ClientStatus />
-        <Button onPress={() => navigation.navigate('Organizations')}>
+        <Button
+          mode="outlined"
+          icon="swap-horizontal"
+          onPress={() => navigation.navigate('Organizations')}
+        >
           Cambiar organización
         </Button>
-        <Text>
+        <Text variant="bodySmall" style={{ color: palette.muted }}>
           Al cerrar sesión, el avance pendiente se conserva en este dispositivo
           y solo se muestra al volver a ingresar con tu cuenta y organización.
         </Text>
-        <Button mode="outlined" disabled={busy} onPress={logout}>
+        <Button mode="contained" icon="logout" disabled={busy} onPress={logout}>
           Cerrar sesión
         </Button>
       </View>
