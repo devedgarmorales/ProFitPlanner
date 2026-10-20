@@ -92,10 +92,12 @@ android {
     }
     signingConfigs {
         release {
-          storeFile file('ProFitPlanner.keystore')
-          storePassword 'Brandy264389'
-          keyAlias 'ProFitPlanner'
-          keyPassword 'Brandy264389'
+          if (project.hasProperty('PROFIT_RELEASE_STORE_FILE')) {
+            storeFile file(PROFIT_RELEASE_STORE_FILE)
+            storePassword project.findProperty('PROFIT_RELEASE_STORE_PASSWORD') ?: System.getenv('PROFIT_RELEASE_STORE_PASSWORD')
+            keyAlias project.findProperty('PROFIT_RELEASE_KEY_ALIAS') ?: System.getenv('PROFIT_RELEASE_KEY_ALIAS')
+            keyPassword project.findProperty('PROFIT_RELEASE_KEY_PASSWORD') ?: System.getenv('PROFIT_RELEASE_KEY_PASSWORD')
+          }
         }
         debug {
             storeFile file('debug.keystore')
@@ -107,8 +109,10 @@ android {
     buildTypes {
         debug {
             debuggable true
+            manifestPlaceholders = [allowCleartextTraffic: "true"]
         }
         release {
+            manifestPlaceholders = [allowCleartextTraffic: "false"]
             // Caution! In production, you need to generate your own keystore file.
             // see https://reactnative.dev/docs/signed-apk-android.
             signingConfig signingConfigs.release

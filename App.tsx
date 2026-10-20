@@ -1,130 +1,101 @@
-import * as React from "react";
-import {Platform, StyleSheet} from "react-native";
-import {PaperProvider} from 'react-native-paper';
-import {NavigationContainer} from "@react-navigation/native";
-import {createNativeStackNavigator} from "@react-navigation/native-stack";
-import {GestureHandlerRootView} from "react-native-gesture-handler";
-import Orientation from "react-native-orientation-locker";
-import Toast, {BaseToast, ErrorToast} from "react-native-toast-message";
-import WelcomeScreen from "./src/screens/welcomeScreen/WelcomeScreen";
-import LoginScreen from "./src/screens/auth/loginScreen/LoginScreen";
-import RegisterScreen from "./src/screens/auth/registerScreen/RegisterScreen";
-import RecoverPassword from "./src/screens/auth/recoverPassword/RecoverPassword";
-import BottomTabs from "./src/navigate/BottomTabs";
-import Loader from "./src/components/Loader";
-import ModalToken from "./src/components/ModalToken";
-import {useToastStore} from "./src/store/toastStore";
-import useTokenModalStore from "./src/store/tokenModalStore";
-import {RootStackParamList} from "./src/interface/navigation/principalNavInterface.ts";
-
-const Stack = createNativeStackNavigator<RootStackParamList>();
-
+import React from 'react';
+import {useColorScheme} from 'react-native';
+import {ActivityIndicator, PaperProvider} from 'react-native-paper';
+import {
+  NavigationContainer,
+  DarkTheme,
+  DefaultTheme,
+} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import {SafeAreaProvider} from 'react-native-safe-area-context';
+import {ClientStack} from './src/navigation/clientTypes';
+import {clientTheme} from './src/styles/clientTheme';
+import {useClientLifecycle} from './src/hooks/client/useClientLifecycle';
+import {useClientStore} from './src/store/clientStore';
+import {ClientErrorBoundary, clientStyles} from './src/components/ClientLayout';
+import {LoginScreen} from './src/screens/client/LoginScreen';
+import {OrganizationsScreen} from './src/screens/client/OrganizationsScreen';
+import {RoutinesScreen} from './src/screens/client/RoutinesScreen';
+import {RoutineScreen} from './src/screens/client/RoutineScreen';
+import {DayScreen} from './src/screens/client/DayScreen';
+import {WorkoutScreen} from './src/screens/client/WorkoutScreen';
+import {HistoryScreen} from './src/screens/client/HistoryScreen';
+import {ProfileScreen} from './src/screens/client/ProfileScreen';
+const Stack = createNativeStackNavigator<ClientStack>();
 function App() {
-    const {position, sizeToast} = useToastStore();
-    const {show} = useTokenModalStore();
-    const hasHomeButton = Platform.OS === 'ios' && parseFloat(Platform.Version) < 11 || Platform.OS === 'android';
-
-    const toastConfig = {
-        success: (props: Object) => (
-            <BaseToast
-                {...props}
-                style={{borderLeftColor: 'green', marginTop: Platform.OS === "ios" ? 30 : 0}}
-                contentContainerStyle={{paddingHorizontal: 15}}
-                text1Style={{
-                    fontSize: 17,
-                    lineHeight: 24,
+  useClientLifecycle();
+  const {ready, user, organization} = useClientStore();
+  const dark = useColorScheme() === 'dark';
+  const theme = clientTheme(dark);
+  const navigationTheme = dark ? DarkTheme : DefaultTheme;
+  return (
+    <GestureHandlerRootView style={clientStyles.page}>
+      <SafeAreaProvider>
+        <PaperProvider theme={theme}>
+          <ClientErrorBoundary>
+            {!ready ? (
+              <ActivityIndicator accessibilityLabel="Restaurando sesión" />
+            ) : !user ? (
+              <LoginScreen />
+            ) : (
+              <NavigationContainer
+                theme={{
+                  ...navigationTheme,
+                  colors: {
+                    ...navigationTheme.colors,
+                    primary: theme.colors.primary,
+                    background: theme.colors.background,
+                    card: theme.colors.surface,
+                  },
                 }}
-                text2Style={{
-                    fontSize: 15,
-                    lineHeight: 24,
-                }}
-            />
-        ),
-        error: (props: Object) => (
-            <ErrorToast
-                {...props}
-                contentContainerStyle={{
-                    paddingHorizontal: 15,
-                    paddingVertical: 20,
-                }}
-                text2NumberOfLines={3}
-                text1Style={{
-                    fontSize: 17,
-                }}
-                text2Style={{
-                    fontSize: 15,
-                }}
-                style={{
-                    borderLeftColor: 'red',
-                    height: undefined,
-                    maxHeight: sizeToast,
-                    paddingVertical: 5,
-                    zIndex: 99999,
-                    marginTop: Platform.OS === "ios" ? 30 : 20,
-                }}
-            />
-
-        ),
-    };
-
-    React.useEffect(() => {
-        Orientation.lockToPortrait();
-
-        return () => {
-            Orientation.unlockAllOrientations();
-        };
-    }, []);
-
-    return (
-        <GestureHandlerRootView style={styles.container}>
-            <PaperProvider>
-                <NavigationContainer>
-                    <Stack.Navigator initialRouteName="Welcome">
-                        <Stack.Screen
-                            name="Welcome"
-                            component={WelcomeScreen}
-                            options={{headerShown: false}}
-                        />
-                        <Stack.Screen
-                            name="Login"
-                            component={LoginScreen}
-                            options={{headerShown: false}}
-                        />
-                        <Stack.Screen
-                            name="Register"
-                            component={RegisterScreen}
-                            options={{headerShown: false}}
-                        />
-                        <Stack.Screen
-                            name="RecoverPassword"
-                            component={RecoverPassword}
-                            options={{
-                                headerShown: false, gestureEnabled: true,
-                                headerBackButtonMenuEnabled: false,
-                            }}
-                        />
-                        <Stack.Screen
-                            name="DashboardTabs"
-                            component={BottomTabs}
-                            options={{headerShown: false, gestureEnabled: hasHomeButton}}
-                        />
-                    </Stack.Navigator>
-                    <ModalToken visible={show}/>
-                    <Loader/>
-                    <Toast
-                        position={position}
-                        config={toastConfig}
-                    />
-                </NavigationContainer>
-            </PaperProvider>
-        </GestureHandlerRootView>
-    );
+              >
+                <Stack.Navigator
+                  key={user.id}
+                  initialRouteName={organization ? 'Routines' : 'Organizations'}
+                >
+                  <Stack.Screen
+                    name="Routines"
+                    component={RoutinesScreen}
+                    options={{title: 'ProFitPlanner'}}
+                  />
+                  <Stack.Screen
+                    name="Organizations"
+                    component={OrganizationsScreen}
+                    options={{title: 'Organizaciones'}}
+                  />
+                  <Stack.Screen
+                    name="Routine"
+                    component={RoutineScreen}
+                    options={{title: 'Rutina asignada'}}
+                  />
+                  <Stack.Screen
+                    name="Day"
+                    component={DayScreen}
+                    options={{title: 'Tu entrenamiento'}}
+                  />
+                  <Stack.Screen
+                    name="Workout"
+                    component={WorkoutScreen}
+                    options={{title: 'Registro de entrenamiento'}}
+                  />
+                  <Stack.Screen
+                    name="History"
+                    component={HistoryScreen}
+                    options={{title: 'Historial'}}
+                  />
+                  <Stack.Screen
+                    name="Profile"
+                    component={ProfileScreen}
+                    options={{title: 'Mi cuenta'}}
+                  />
+                </Stack.Navigator>
+              </NavigationContainer>
+            )}
+          </ClientErrorBoundary>
+        </PaperProvider>
+      </SafeAreaProvider>
+    </GestureHandlerRootView>
+  );
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-    },
-});
-
 export default App;

@@ -10,87 +10,9 @@ PODS:
   - hermes-engine (0.75.3):
     - hermes-engine/Pre-built (= 0.75.3)
   - hermes-engine/Pre-built (0.75.3)
-  - HXPhotoPicker/Camera/Lite (4.2.4):
-    - HXPhotoPicker/Core
-  - HXPhotoPicker/Core (4.2.4):
-    - HXPhotoPicker/Resources
-  - HXPhotoPicker/Editor (4.2.4):
-    - HXPhotoPicker/Editor/KF (= 4.2.4)
-    - HXPhotoPicker/Editor/Lite (= 4.2.4)
-  - HXPhotoPicker/Editor/KF (4.2.4):
-    - HXPhotoPicker/Editor/Lite
-    - HXPhotoPicker/EditorView/KF
-    - Kingfisher (~> 8.0)
-  - HXPhotoPicker/Editor/Lite (4.2.4):
-    - HXPhotoPicker/EditorView/Lite
-  - HXPhotoPicker/EditorView/KF (4.2.4):
-    - HXPhotoPicker/EditorView/Lite
-    - Kingfisher (~> 8.0)
-  - HXPhotoPicker/EditorView/Lite (4.2.4):
-    - HXPhotoPicker/Core
-  - HXPhotoPicker/Picker (4.2.4):
-    - HXPhotoPicker/Picker/KF (= 4.2.4)
-    - HXPhotoPicker/Picker/Lite (= 4.2.4)
-  - HXPhotoPicker/Picker/KF (4.2.4):
-    - HXPhotoPicker/Picker/Lite
-    - Kingfisher (~> 8.0)
-  - HXPhotoPicker/Picker/Lite (4.2.4):
-    - HXPhotoPicker/Core
-  - HXPhotoPicker/Resources (4.2.4)
-  - Kingfisher (8.1.4)
   - MMKV (2.0.2):
     - MMKVCore (~> 2.0.2)
   - MMKVCore (2.0.2)
-  - MultipleImagePicker (2.2.0):
-    - DoubleConversion
-    - glog
-    - hermes-engine
-    - HXPhotoPicker/Camera/Lite (= 4.2.4)
-    - HXPhotoPicker/Editor (= 4.2.4)
-    - HXPhotoPicker/Picker (= 4.2.4)
-    - NitroModules
-    - RCT-Folly (= 2024.01.01.00)
-    - RCTRequired
-    - RCTTypeSafety
-    - React-callinvoker
-    - React-Core
-    - React-debug
-    - React-Fabric
-    - React-featureflags
-    - React-graphics
-    - React-ImageManager
-    - React-jsi
-    - React-NativeModulesApple
-    - React-RCTFabric
-    - React-rendererdebug
-    - React-utils
-    - ReactCodegen
-    - ReactCommon/turbomodule/bridging
-    - ReactCommon/turbomodule/core
-    - Yoga
-  - NitroModules (0.21.0):
-    - DoubleConversion
-    - glog
-    - hermes-engine
-    - RCT-Folly (= 2024.01.01.00)
-    - RCTRequired
-    - RCTTypeSafety
-    - React-callinvoker
-    - React-Core
-    - React-debug
-    - React-Fabric
-    - React-featureflags
-    - React-graphics
-    - React-ImageManager
-    - React-jsi
-    - React-NativeModulesApple
-    - React-RCTFabric
-    - React-rendererdebug
-    - React-utils
-    - ReactCodegen
-    - ReactCommon/turbomodule/bridging
-    - ReactCommon/turbomodule/core
-    - Yoga
   - RCT-Folly (2024.01.01.00):
     - boost
     - DoubleConversion
@@ -1805,8 +1727,6 @@ DEPENDENCIES:
   - fmt (from `../node_modules/react-native/third-party-podspecs/fmt.podspec`)
   - glog (from `../node_modules/react-native/third-party-podspecs/glog.podspec`)
   - hermes-engine (from `../node_modules/react-native/sdks/hermes-engine/hermes-engine.podspec`)
-  - "MultipleImagePicker (from `../node_modules/@baronha/react-native-multiple-image-picker`)"
-  - NitroModules (from `../node_modules/react-native-nitro-modules`)
   - RCT-Folly (from `../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec`)
   - RCT-Folly/Fabric (from `../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec`)
   - RCTDeprecation (from `../node_modules/react-native/ReactApple/Libraries/RCTFoundation/RCTDeprecation`)
@@ -1883,8 +1803,6 @@ DEPENDENCIES:
 SPEC REPOS:
   trunk:
     - BEMCheckBox
-    - HXPhotoPicker
-    - Kingfisher
     - MMKV
     - MMKVCore
     - SocketRocket
@@ -1905,10 +1823,6 @@ EXTERNAL SOURCES:
   hermes-engine:
     :podspec: "../node_modules/react-native/sdks/hermes-engine/hermes-engine.podspec"
     :tag: hermes-2024-08-15-RNv0.75.1-4b3bf912cc0f705b51b71ce1a5b8bd79b93a451b
-  MultipleImagePicker:
-    :path: "../node_modules/@baronha/react-native-multiple-image-picker"
-  NitroModules:
-    :path: "../node_modules/react-native-nitro-modules"
   RCT-Folly:
     :podspec: "../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec"
   RCTDeprecation:
@@ -2059,12 +1973,8 @@ SPEC CHECKSUMS:
   fmt: 4c2741a687cc09f0634a2e2c72a838b99f1ff120
   glog: 69ef571f3de08433d766d614c73a9838a06bf7eb
   hermes-engine: 8d2103d6c0176779aea4e25df6bb1410f9946680
-  HXPhotoPicker: 8a3f819f00675ea529866a195077f6f695890408
-  Kingfisher: a5cc3d8689cd40d7cb2edfa67a5ede0b53122813
   MMKV: 3eacda84cd1c4fc95cf848d3ecb69d85ed56006c
   MMKVCore: 508b4d3a8ce031f1b5c8bd235f0517fb3f4c73a9
-  MultipleImagePicker: 1a6c6174fa601190e2f1eb567cf5c44e56e712fa
-  NitroModules: be46e4906e2fb7b8493382241c9d7c4d5c06f1a5
   RCT-Folly: 4464f4d875961fce86008d45f4ecf6cef6de0740
   RCTDeprecation: 4191f6e64b72d9743f6fe1a8a16e89e868f5e9e7
   RCTRequired: 9bb589570f2bb3abc6518761e3fd1ad9b7f7f06c
@@ -2131,12 +2041,12 @@ SPEC CHECKSUMS:
   RNCMaskedView: 4c5ee1c8667d56077246cc6d1977f77393923560
   RNExitApp: 4432b9b7cc5ccec9f91c94e507849891282befd4
   RNGestureHandler: 5b24d10761754ad271b714e536c457fd89b17c54
-  RNReanimated: 000b758cfbcd9c20c15b7ef305f98f036b288feb
+  RNReanimated: cd3adc91f825bf4be68af7acd64e1bd82223bf0f
   RNScreens: 4a5ab20b324ed1e3fe3862796b8f8e0a6208c415
   RNVectorIcons: 182892e7d1a2f27b52d3c627eca5d2665a22ee28
   SocketRocket: abac6f5de4d4d62d24e11868d7a2f427e0ef940d
   Yoga: 4ef80d96a5534f0e01b3055f17d1e19a9fc61b63
 
-PODFILE CHECKSUM: ae6fbea74b2263ef01c3d0744b105aefa9351891
+PODFILE CHECKSUM: 1d435a353ed5337c40d1efa2aaacdc84b68096b8
 
 COCOAPODS: 1.16.2

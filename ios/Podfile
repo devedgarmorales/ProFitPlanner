@@ -29,6 +29,16 @@ target 'ProFitPlanner' do
   end
 
   post_install do |installer|
+    # Keep dependencies aligned with the app's minimum supported iOS version.
+    installer.pods_project.targets.each do |target|
+      target.build_configurations.each do |configuration|
+        current = configuration.build_settings['IPHONEOS_DEPLOYMENT_TARGET'].to_f
+        if current < 16.0
+          configuration.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '16.0'
+        end
+      end
+    end
+
     # https://github.com/facebook/react-native/blob/main/packages/react-native/scripts/react_native_pods.rb#L197-L202
     react_native_post_install(
       installer,
